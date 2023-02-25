@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    primary:
+      url: jdbc:postgresql://localhost:5432/nwd-atomskills-2023
+      username: nwd-atomskills-2023
+      password: nwd-atomskills-2023
+      driver-class-name: org.postgresql.Driver
+    camunda:
+      url: jdbc:postgresql://localhost:5432/nwd-atomskills-2023?currentSchema=camunda
+      username: camunda-admin
+      password: camunda-admin
+      driver-class-name: org.postgresql.Driver
+
+camunda.bpm.admin-user:
+  id: admin
+  password: admin
