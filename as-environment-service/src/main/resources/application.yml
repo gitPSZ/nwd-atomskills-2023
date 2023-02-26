@@ -14,3 +14,6 @@ spring:
 camunda.bpm.admin-user:
   id: admin
   password: admin
+
+crm:
+  max-executing-requests: ${CRM_MAX_EXECUTING_REQUESTS:5}

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0xujjak" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.7.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.18.0">
+  <bpmn:process id="crm_accept_request" isExecutable="true">
+    <bpmn:startEvent id="crmAcceptRequestStartEvent" name="Начало процесса">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="${crmAcceptRequestStartEventService.start(execution)}" event="start" />
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_0f2wzyw</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="checkOverloadRequestTask" name="Смотрим, превысили ли лимит заявок?" camunda:expression="${checkOverloadRequestTaskService.check(execution)}">
+      <bpmn:incoming>Flow_0f2wzyw</bpmn:incoming>
+      <bpmn:incoming>Flow_0h0kczw</bpmn:incoming>
+      <bpmn:outgoing>Flow_1gncpal</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0f2wzyw" sourceRef="crmAcceptRequestStartEvent" targetRef="checkOverloadRequestTask" />
+    <bpmn:exclusiveGateway id="Gateway_1tjm14u" name="Превысили?">
+      <bpmn:incoming>Flow_1gncpal</bpmn:incoming>
+      <bpmn:outgoing>Flow_1xkxvxq</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0zfdocm</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1gncpal" sourceRef="checkOverloadRequestTask" targetRef="Gateway_1tjm14u" />
+    <bpmn:intermediateCatchEvent id="Event_16cb27i" name="Ожидаем 15 секунд">
+      <bpmn:incoming>Flow_1xkxvxq</bpmn:incoming>
+      <bpmn:incoming>Flow_1roq2ma</bpmn:incoming>
+      <bpmn:outgoing>Flow_0kaa1bd</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_0blpbfe">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT15S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_1xkxvxq" name="да" sourceRef="Gateway_1tjm14u" targetRef="Event_16cb27i">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isOverloadRequest == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0kaa1bd" sourceRef="Event_16cb27i" targetRef="Gateway_0vtfepn" />
+    <bpmn:serviceTask id="createNewRequestTask" name="Создаем новую заявку" camunda:expression="${createNewRequestTaskService.exec(execution)}">
+      <bpmn:incoming>Flow_0zfdocm</bpmn:incoming>
+      <bpmn:outgoing>Flow_1roq2ma</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0zfdocm" name="нет" sourceRef="Gateway_1tjm14u" targetRef="createNewRequestTask">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isOverloadRequest == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1roq2ma" sourceRef="createNewRequestTask" targetRef="Event_16cb27i" />
+    <bpmn:exclusiveGateway id="Gateway_0vtfepn" name="Завершили ли процесс?">
+      <bpmn:incoming>Flow_0kaa1bd</bpmn:incoming>
+      <bpmn:outgoing>Flow_0h0kczw</bpmn:outgoing>
+      <bpmn:outgoing>Flow_15pi0ow</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0h0kczw" name="нет" sourceRef="Gateway_0vtfepn" targetRef="checkOverloadRequestTask">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${endProcess == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="crmAcceptRequestEndEvent" name="Завершение процесса">
+      <bpmn:incoming>Flow_15pi0ow</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_15pi0ow" sourceRef="Gateway_0vtfepn" targetRef="crmAcceptRequestEndEvent">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${endProcess == true}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="crm_accept_request">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="crmAcceptRequestStartEvent" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="179" y="189" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="153" y="232" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_17if6tb_di" bpmnElement="checkOverloadRequestTask" bioc:stroke="#0d4372" bioc:fill="#bbdefb" color:background-color="#bbdefb" color:border-color="#0d4372">
+        <dc:Bounds x="250" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1tjm14u_di" bpmnElement="Gateway_1tjm14u" isMarkerVisible="true" bioc:stroke="#6b3c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#6b3c00">
+        <dc:Bounds x="385" y="182" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="378" y="239" width="65" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0z0uaqq_di" bpmnElement="Event_16cb27i" bioc:stroke="#6b3c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#6b3c00">
+        <dc:Bounds x="392" y="82" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="378" y="45" width="64" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1gnhwhl_di" bpmnElement="createNewRequestTask" bioc:stroke="#0d4372" bioc:fill="#bbdefb" color:background-color="#bbdefb" color:border-color="#0d4372">
+        <dc:Bounds x="470" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0vtfepn_di" bpmnElement="Gateway_0vtfepn" isMarkerVisible="true" bioc:stroke="#6b3c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#6b3c00">
+        <dc:Bounds x="275" y="75" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="263" y="45" width="74" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0kxhnlc_di" bpmnElement="crmAcceptRequestEndEvent" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="179" y="82" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="165" y="125" width="64" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0f2wzyw_di" bpmnElement="Flow_0f2wzyw">
+        <di:waypoint x="215" y="207" />
+        <di:waypoint x="250" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1gncpal_di" bpmnElement="Flow_1gncpal">
+        <di:waypoint x="350" y="207" />
+        <di:waypoint x="385" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1xkxvxq_di" bpmnElement="Flow_1xkxvxq">
+        <di:waypoint x="410" y="182" />
+        <di:waypoint x="410" y="118" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="392" y="164" width="12" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kaa1bd_di" bpmnElement="Flow_0kaa1bd">
+        <di:waypoint x="392" y="100" />
+        <di:waypoint x="325" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zfdocm_di" bpmnElement="Flow_0zfdocm">
+        <di:waypoint x="435" y="207" />
+        <di:waypoint x="470" y="207" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="437" y="187" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1roq2ma_di" bpmnElement="Flow_1roq2ma">
+        <di:waypoint x="520" y="167" />
+        <di:waypoint x="520" y="100" />
+        <di:waypoint x="428" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0h0kczw_di" bpmnElement="Flow_0h0kczw">
+        <di:waypoint x="300" y="125" />
+        <di:waypoint x="300" y="167" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="306" y="123" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_15pi0ow_di" bpmnElement="Flow_15pi0ow">
+        <di:waypoint x="275" y="100" />
+        <di:waypoint x="215" y="100" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
