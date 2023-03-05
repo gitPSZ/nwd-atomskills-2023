@@ -1,0 +1,10 @@
+server:
+  port: 1040
+  milling-ports: "{'mm-1': '1041','mm-2': '1042','mm-3': '1043','mm-4': '1045','mm-5': '1047'}"
+  lathe-ports: "{'lm-1': '1051','lm-2': '1052','lm-3': '1054','lm-4': '1056'}"
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/nwd-atomskills-2023
+    username: nwd-atomskills-2023
+    password: nwd-atomskills-2023
+    driver-class-name: org.postgresql.Driver
