@@ -19,7 +19,7 @@ class MillingController(private val machineService: MachineService) {
         @PathVariable("machineCode") machineCode: String,
         @RequestBody advInfo: String
     ) {
-        machineService.setMachineStatus(machineCode, MachineStates.WAITING, JSONB.valueOf(advInfo))
+        machineService.setMachineStatus(machineCode, MachineStates.WAITING, JSONB.valueOf(advInfo));
     }
 
     @PostMapping("{machineCode}/set/working")
@@ -27,7 +27,7 @@ class MillingController(private val machineService: MachineService) {
         @PathVariable("machineCode") machineCode: String,
         @RequestBody advInfo: String
     ) {
-        machineService.setMachineStatus(machineCode, MachineStates.WORKING, JSONB.valueOf(advInfo))
+        machineService.setMachineStatus(machineCode, MachineStates.WORKING, JSONB.valueOf(advInfo));
     }
 
     @PostMapping("{machineCode}/set/broken")
@@ -35,6 +35,6 @@ class MillingController(private val machineService: MachineService) {
         @PathVariable("machineCode") machineCode: String,
         @RequestBody advInfo: String
     ) {
-        machineService.setMachineStatus(machineCode, MachineStates.BROKEN, JSONB.valueOf(advInfo))
+        machineService.setMachineStatus(machineCode, MachineStates.BROKEN, JSONB.valueOf(advInfo));
     }
 }
