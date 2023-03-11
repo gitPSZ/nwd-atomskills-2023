@@ -1,4 +1,4 @@
-package io.devs.asmachineservice.configurations
+package io.devs.asenvironmentservice.config
 
 import javax.servlet.FilterChain
 import javax.servlet.ServletRequest

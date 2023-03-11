@@ -1,4 +1,4 @@
-package io.devs.asmachineservice.dto
+package io.devs.asenvironmentservice.dto
 
 data class MachineStateDto(
     var code: String = "unknown",

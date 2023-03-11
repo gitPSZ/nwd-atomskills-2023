@@ -1,4 +1,4 @@
-package io.devs.asmachineservice.dto
+package io.devs.asenvironmentservice.dto
 
 import org.jooq.JSONB
 import java.time.LocalDateTime

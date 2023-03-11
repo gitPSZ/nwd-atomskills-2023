@@ -1,11 +1,11 @@
-package io.devs.asmachineservice.services
+package io.devs.asenvironmentservice.services
 
 import com.tej.JooQDemo.jooq.sample.model.mnf_machines.Routines
 import com.tej.JooQDemo.jooq.sample.model.mnf_machines.Tables.MACHINE_LOG
 import com.tej.JooQDemo.jooq.sample.model.mnf_machines.Tables.MACHINE_STATES
-import io.devs.asmachineservice.dto.MachineLogDto
-import io.devs.asmachineservice.dto.MachineStateDto
-import io.devs.asmachineservice.enums.MachineStates
+import io.devs.asenvironmentservice.dto.MachineLogDto
+import io.devs.asenvironmentservice.dto.MachineStateDto
+import io.devs.asenvironmentservice.enums.MachineStates
 import org.jooq.DSLContext
 import org.jooq.JSONB
 import org.jooq.impl.DSL.coalesce

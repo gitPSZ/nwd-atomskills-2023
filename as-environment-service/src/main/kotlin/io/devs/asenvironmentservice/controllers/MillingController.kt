@@ -1,8 +1,8 @@
-package io.devs.asmachineservice.controllers
+package io.devs.asenvironmentservice.controllers
 
-import io.devs.asmachineservice.dto.MachineLogDto
-import io.devs.asmachineservice.enums.MachineStates
-import io.devs.asmachineservice.services.MachineService
+import io.devs.asenvironmentservice.dto.MachineLogDto
+import io.devs.asenvironmentservice.enums.MachineStates
+import io.devs.asenvironmentservice.services.MachineService
 import org.jooq.JSONB
 import org.springframework.web.bind.annotation.*
 
