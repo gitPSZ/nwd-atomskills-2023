@@ -1,22 +1,48 @@
 package io.devs.asenvironmentservice.controllers
 
-import io.devs.asenvironmentservice.services.EnvironmentValueService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import io.devs.asenvironmentservice.dto.CrmRequestDto
+import io.devs.asenvironmentservice.dto.CrmRequestItemDto
+import io.devs.asenvironmentservice.services.CrmRequestService
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("crm/requests")
-class CrmRequestController(private val environmentValueService: EnvironmentValueService) {
+class CrmRequestController(private val crmRequestService: CrmRequestService) {
 
     @GetMapping
-    fun getAllRequests(): String {
-        return "all requests ${environmentValueService.getMaxExecutingRequests()}";
+    fun getAllRequests(): List<CrmRequestDto> {
+        return crmRequestService.getAllCrmRequests();
     }
 
-    @GetMapping("{id}")
-    fun getRequest(@PathVariable("id") requestId: Long): String {
-        return "request $requestId returned";
+    @GetMapping("active")
+    fun getActiveRequests(): List<CrmRequestDto> {
+        return crmRequestService.getActiveCrmRequests();
+    }
+
+    @GetMapping("{requestId}")
+    fun getRequest(@PathVariable("requestId") requestId: Long): CrmRequestDto {
+        return crmRequestService.getCrmRequest(requestId);
+    }
+
+    @GetMapping("{requestId}/items")
+    fun getRequestItems(@PathVariable("requestId") requestId: Long): List<CrmRequestItemDto> {
+        return crmRequestService.getCrmRequestItems(requestId);
+    }
+
+    @GetMapping("{requestId}/items/{itemId}")
+    fun getRequestItem(
+        @PathVariable("requestId") requestId: Long,
+        @PathVariable("itemId") itemId: Long
+    ): CrmRequestItemDto {
+        return crmRequestService.getCrmRequestItem(requestId, itemId);
+    }
+
+    @PutMapping("{requestId}/items/{itemId}/add-execution-qty/{addingQuantity}")
+    fun addRequestItemExecutionQty(
+        @PathVariable("requestId") requestId: Long,
+        @PathVariable("itemId") itemId: Long,
+        @PathVariable("addingQuantity") addingQuantity: Long
+    ): CrmRequestItemDto {
+        return crmRequestService.addRequestItemExecutionQty(requestId, itemId, addingQuantity);
     }
 }
