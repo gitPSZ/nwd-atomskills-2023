@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>io.devs</groupId>
 	<artifactId>as-environment-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>as-environment-service</name>
 	<description>Environment service to as 2023</description>
 	<properties>
