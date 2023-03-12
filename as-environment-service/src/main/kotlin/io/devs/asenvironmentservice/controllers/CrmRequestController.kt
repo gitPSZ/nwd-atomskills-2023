@@ -6,6 +6,7 @@ import io.devs.asenvironmentservice.services.CrmRequestService
 import org.springframework.web.bind.annotation.*
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("crm/requests")
 class CrmRequestController(private val crmRequestService: CrmRequestService) {
 

@@ -1,16 +1,16 @@
 server:
-  port: 1040
-  milling-ports: "{'mm-1': '1041','mm-2': '1042','mm-3': '1043','mm-4': '1045','mm-5': '1047'}"
-  lathe-ports: "{'lm-1': '1051','lm-2': '1052','lm-3': '1054','lm-4': '1056'}"
+  port: ${NWC_SRV_PORT:1040}
+  milling-ports: ${NWC_SRV_MILLING_PORTS:{'mm-1':'1041','mm-2':'1042','mm-3':'1043','mm-4':'1045','mm-5':'1047'}}
+  lathe-ports: ${NWC_SRV_LATHE_PORTS:{'lm-1':'1051','lm-2':'1052','lm-3':'1054','lm-4':'1056'}}
 spring:
   datasource:
     primary:
-      url: jdbc:postgresql://localhost:5432/nwd-atomskills-2023
+      url: 'jdbc:postgresql://${NWC_DB_HOST:localhost}:${NWC_DB_PORT:5432}/nwd-atomskills-2023'
       username: nwd-atomskills-2023
       password: nwd-atomskills-2023
       driver-class-name: org.postgresql.Driver
     camunda:
-      url: jdbc:postgresql://localhost:5432/nwd-atomskills-2023?currentSchema=camunda
+      url: 'jdbc:postgresql://${NWC_DB_HOST:localhost}:${NWC_DB_PORT:5432}/nwd-atomskills-2023?currentSchema=camunda'
       username: camunda-admin
       password: camunda-admin
       driver-class-name: org.postgresql.Driver
@@ -21,3 +21,6 @@ camunda.bpm.admin-user:
 
 crm:
   max-executing-requests: ${CRM_MAX_EXECUTING_REQUESTS:5}
+mnf:
+  min-repairing-duration: ${NWC_MNF_MIN_REPAIRING_DURATION:20}
+  max-repairing-duration: ${NWC_MNF_MAX_REPAIRING_DURATION:240}

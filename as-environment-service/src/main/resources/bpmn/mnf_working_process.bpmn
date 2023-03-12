@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_18m7zyk" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.7.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.18.0">
+  <bpmn:process id="mnf_working_process" isExecutable="true">
+    <bpmn:startEvent id="mnfStartWorkingEvent">
+      <bpmn:outgoing>Flow_0tabyii</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:intermediateCatchEvent id="mnfWaitingWorkingEvent" name="Ждем требуемое время для производства">
+      <bpmn:incoming>Flow_0tabyii</bpmn:incoming>
+      <bpmn:outgoing>Flow_1w6o4dh</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_0krvkb2">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">${workingDuration}</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="mnfEndWorkingEvent">
+      <bpmn:extensionElements>
+        <camunda:executionListener expression="${mnfEndWorkingEventService.end(execution)}" event="end" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1w6o4dh</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0tabyii" sourceRef="mnfStartWorkingEvent" targetRef="mnfWaitingWorkingEvent" />
+    <bpmn:sequenceFlow id="Flow_1w6o4dh" sourceRef="mnfWaitingWorkingEvent" targetRef="mnfEndWorkingEvent" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="mnf_working_process">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="mnfStartWorkingEvent" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="179" y="79" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1wdlfi7_di" bpmnElement="mnfWaitingWorkingEvent" bioc:stroke="#6b3c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#6b3c00">
+        <dc:Bounds x="252" y="79" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="227" y="122" width="87" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_18sx1kx_di" bpmnElement="mnfEndWorkingEvent" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="322" y="79" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0tabyii_di" bpmnElement="Flow_0tabyii">
+        <di:waypoint x="215" y="97" />
+        <di:waypoint x="252" y="97" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1w6o4dh_di" bpmnElement="Flow_1w6o4dh">
+        <di:waypoint x="288" y="97" />
+        <di:waypoint x="322" y="97" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

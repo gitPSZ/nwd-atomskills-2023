@@ -1,4 +1,5 @@
 package io.devs.asenvironmentservice.controllers
+
 import io.devs.asenvironmentservice.dto.MachineLogDto
 import io.devs.asenvironmentservice.enums.MachineStates
 import io.devs.asenvironmentservice.services.MachineService
@@ -6,8 +7,16 @@ import org.jooq.JSONB
 import org.springframework.web.bind.annotation.*
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("lathe")
 class LatheController(private val machineService: MachineService) {
+    private val MACHINE_TYPE: String = "lathe";
+
+    @GetMapping("{machineCode}/status/all")
+    fun getAllStatuses(@PathVariable("machineCode") machineCode: String): List<MachineLogDto> {
+        return machineService.getAllStatuses(machineCode);
+    }
+
     @GetMapping("{machineCode}/status")
     fun getStatus(@PathVariable("machineCode") machineCode: String): MachineLogDto {
         return machineService.getStatus(machineCode);
@@ -18,7 +27,7 @@ class LatheController(private val machineService: MachineService) {
         @PathVariable("machineCode") machineCode: String,
         @RequestBody advInfo: String
     ) {
-        machineService.setMachineStatus(machineCode, MachineStates.WAITING, JSONB.valueOf(advInfo));
+        machineService.setMachineStatus(machineCode, MachineStates.WAITING, JSONB.valueOf(advInfo), MACHINE_TYPE);
     }
 
     @PostMapping("{machineCode}/set/working")
@@ -26,7 +35,7 @@ class LatheController(private val machineService: MachineService) {
         @PathVariable("machineCode") machineCode: String,
         @RequestBody advInfo: String
     ) {
-        machineService.setMachineStatus(machineCode, MachineStates.WORKING, JSONB.valueOf(advInfo));
+        machineService.setMachineStatus(machineCode, MachineStates.WORKING, JSONB.valueOf(advInfo), MACHINE_TYPE);
     }
 
     @PostMapping("{machineCode}/set/broken")
@@ -34,6 +43,14 @@ class LatheController(private val machineService: MachineService) {
         @PathVariable("machineCode") machineCode: String,
         @RequestBody advInfo: String
     ) {
-        machineService.setMachineStatus(machineCode, MachineStates.BROKEN, JSONB.valueOf(advInfo));
+        machineService.setMachineStatus(machineCode, MachineStates.BROKEN, JSONB.valueOf(advInfo), MACHINE_TYPE);
+    }
+
+    @PostMapping("{machineCode}/set/repairing")
+    fun setRepairing(
+        @PathVariable("machineCode") machineCode: String,
+        @RequestBody advInfo: String
+    ) {
+        machineService.setMachineStatus(machineCode, MachineStates.REPAIRING, JSONB.valueOf(advInfo), MACHINE_TYPE);
     }
 }

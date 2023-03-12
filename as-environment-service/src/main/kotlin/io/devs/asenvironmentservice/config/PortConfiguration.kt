@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class PortConfiguration(
-    @Value("\${server.port:8080}") private var serverPort: Long,
+    @Value("\${server.port}") private var serverPort: Long,
     @Value("#{\${server.milling-ports}}") private var millingPorts: HashMap<String, Long>,
     @Value("#{\${server.lathe-ports}}") private var lathePorts: HashMap<String, Long>
 ) {

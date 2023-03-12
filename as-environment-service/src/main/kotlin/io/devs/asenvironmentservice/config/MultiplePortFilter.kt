@@ -44,7 +44,7 @@ class MultiplePortFilter(
                 .filter { entry -> entry.value == port.toLong() }
                 .map { entry -> entry.key }[0];
         }
-        if (!listOf("root", "crm").contains(requestType)) {
+        if (listOf("milling", "lathe").contains(requestType)) {
             val toUri: String = "/$requestType/$machineModel$path";
             return object : HttpServletRequestWrapper(request) {
                 override fun getRequestURI(): String {
