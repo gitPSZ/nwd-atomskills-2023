@@ -18,4 +18,12 @@ class EnvironmentValueService(private val environment: Environment) {
     fun getMaxRepairingDuration(): Long {
         return this.environment.getProperty("mnf.max-repairing-duration")!!.toLong();
     }
+
+    fun getMinBrokenChance(): Long {
+        return this.environment.getProperty("mnf.min-broken-chance")!!.toLong();
+    }
+
+    fun getMaxBrokenChance(): Long {
+        return this.environment.getProperty("mnf.max-broken-chance")!!.toLong();
+    }
 }
