@@ -1,0 +1,8 @@
+.main-grid{
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: 1fr auto 1fr;
+}
+:host ::ng-deep .p-password-input{
+    width: 100%
+}

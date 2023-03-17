@@ -1,0 +1,22 @@
+<div
+    class="main-div flex ">
+
+
+    <div
+        class="m-auto flex flex-row w-full justify-center cursor-pointer">
+
+        <div 
+            (click)="navigate(navigationButton)"
+            *ngFor="let navigationButton of this.messageService.observableNavigationButtons.value" 
+            class="flex flex-col justify-center w-64 h-64  m-6 rounded-xl shadow-2xl bg-slate-100 hover:bg-blue-50 active:bg-blue-100">
+            
+            <div class="mx-auto mb-6">
+                <i class="{{navigationButton.iconClass}} text-4xl text-blue-800"></i>
+            </div>
+            <div class="mx-auto text-2xl text-blue-900 font-bold text-center">{{navigationButton.caption}}</div>
+
+        </div>
+
+    </div>
+
+</div>

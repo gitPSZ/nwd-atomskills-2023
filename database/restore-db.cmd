@@ -1,7 +1,7 @@
 @echo off
 
 set file_path=.\dumps
-set host=127.0.0.1
+set host=localhost
 set port=5432
 set username=sys
 

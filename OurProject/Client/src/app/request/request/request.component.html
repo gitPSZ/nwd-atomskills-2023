@@ -1,0 +1,45 @@
+<div class="main-grid" style="height: 85vh;">
+    <!-- content -->
+    <div class="grid   col-start-2 row-start-2">
+        <span class="p-float-label mb-6">
+            <input id="float-input-name" [(ngModel)]="jobPlace"  pInputText class="w-full shadow-md"> 
+            <label for="float-input-name" >Рабочее место</label>
+        </span>
+
+
+        <span class="p-float-label mb-6">
+            <p-dropdown  [style]="{'width':'600px'}"  [options]="typeList" [(ngModel)]="selectedRequestList" placeholder="Тип заявки" optionLabel="captionState" >
+                <ng-template let-type pTemplate="item" >
+                    <div class="country-item flex flex-row"  >
+                        <img src="assets/submit_support_request.png"  />
+                        <div class="ml-2">{{type.captionState}}</div>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+            <label for="float-dropdown">Тип заявки</label>
+        </span>
+        <span class="p-float-label mb-6">
+            <p-dropdown  [style]="{'width':'600px'}"  [options]="priorities" [(ngModel)]="selectedPriority" placeholder="Приоритет" optionLabel="captionPriority" >
+                <ng-template let-priority pTemplate="item" >
+                    <div class="country-item flex flex-row"  >
+                        <div class="ml-2">{{priority.captionPriority}}</div>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+            <label for="float-dropdown">Приоритет</label>
+        </span>
+        <span class="p-float-label mb-6">
+            <input id="float-input-password" [(ngModel)]="inputText" pInputText class="w-full shadow-md"> 
+            <label for="float-input">Текст обращения</label>
+        </span>
+        <span class="p-float-label mb-6">
+            <p-calendar [(ngModel)]="dateEnd" dateFormat="dd.mm.yy"></p-calendar>
+            <label for="float-dropdown">Исполнить до: </label>
+        </span>
+
+      
+        <button label="Отправить заявку" class="transition duration-700 ease-in-out" (click)="sendClick()" 
+            [loading]="isPutRequestLoading" pButton class="shadow-md"></button>
+        
+    </div>
+</div>
