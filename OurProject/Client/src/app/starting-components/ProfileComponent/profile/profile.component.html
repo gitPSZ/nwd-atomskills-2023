@@ -1,0 +1,20 @@
+<div class="main-grid">
+    <div class=" text-2xl mb-5">
+        <span class="font-bold">
+            {{(messageService.observableUser | async)?.nameClient}} 
+        </span>
+        ({{(messageService.observableUser | async)?.roleName}})
+    </div>
+    
+    <div>Email</div>
+    <div class="flex flex-row">
+        <form [formGroup]="formGroup" >
+            <input formControlName="email" pInputText class="mr-2" id="email"/>
+
+        </form>
+        <button (click)="updateEmail()" *ngIf="firstEmail != formGroup.value['email']" [disabled]="formGroup.invalid" pButton>Изменить почту</button>
+    </div>
+    <div *ngIf="formGroup.invalid" class="text-red-500">неверный формат</div>
+
+    
+</div>

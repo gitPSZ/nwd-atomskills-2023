@@ -19,7 +19,14 @@ export class PersonService extends BaseApiService{
     
   }
 
-  
+  async getActualCurrentUser(): Promise<Person> {
+    var observable = this.http.get<Person>(this.APIUrl + '/persons/actualCurrent')
+    .pipe(catchError(this.errorService.errorHandlerSingleObject));
+
+    var retValue = await lastValueFrom(observable);
+    
+    return retValue;
+  }
   async getUsers(): Promise<Person[]> {
     var observable = this.http.get<Person[]>(this.APIUrl + '/admin/all')
     .pipe(catchError(this.errorService.errorHandlerList));
@@ -38,6 +45,15 @@ export class PersonService extends BaseApiService{
   }
   async changeRole(personId: number , roleId : number): Promise<boolean> {
     var observable = this.http.post<boolean>(this.APIUrl + '/admin/changeRole/' + personId, roleId)
+    .pipe(catchError(this.errorService.errorHandlerBoolean));
+
+    var retValue = await lastValueFrom(observable);
+    
+    return retValue;
+  }
+  async changeEmail(email:string): Promise<boolean> {
+    console.log("email", email)
+    var observable = this.http.post<boolean>(this.APIUrl + '/persons/email', {email:email})
     .pipe(catchError(this.errorService.errorHandlerBoolean));
 
     var retValue = await lastValueFrom(observable);

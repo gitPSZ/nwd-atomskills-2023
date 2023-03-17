@@ -75,9 +75,9 @@ namespace AtomSkillsTemplate.Services
                 await conn.QueryAsync(sqlStringContractors, contractorParams);
             }
 
-            var parameters = new DynamicParameters();
-            parameters.Add("@IDs", activeIDs);
-            await conn.QueryAsync($"update {DBHelper.Schema}.{DBHelper.Machines} set is_active = '0' where id in @IDs = false", parameters);
+            //var parameters = new DynamicParameters();
+            //parameters.Add("@IDs", activeIDs);
+            //await conn.QueryAsync($"update {DBHelper.Schema}.{DBHelper.Machines} set is_active = '0' where id in @IDs = false", parameters);
 
         }
         private async Task CheckRequests()

@@ -46,6 +46,7 @@ export class AppComponent extends BaseComponent {
 	async ngOnInit() {
 		this.trySendToAPI();
 	}
+    
 	setupSubscriptions(){
 		var subscription = this.messageService.observableMainDesignVisibility.subscribe((isVisible) => {
 			this.isToolbarAndMenuVisible = isVisible;

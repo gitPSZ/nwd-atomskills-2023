@@ -4,6 +4,7 @@ using System.ComponentModel.Design;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Threading.Tasks;
+using AtomSkillsTemplate.Connection;
 using AtomSkillsTemplate.Connection.Interface;
 using AtomSkillsTemplate.Helpers;
 using AtomSkillsTemplate.Models;
@@ -41,7 +42,11 @@ namespace AtomSkillsTemplate.Repositories
                 {
                     try
                     {
-                        person.RoleName = roles.FirstOrDefault(o => o.ID == person.RoleId).RoleName;
+                        if(roles.FirstOrDefault(o=>o.ID == person.RoleId) != null)
+                        {
+                            person.RoleName = roles.FirstOrDefault(o => o.ID == person.RoleId).RoleName;
+
+                        }
                     }
                     catch (Exception e)
                     {
@@ -78,7 +83,16 @@ namespace AtomSkillsTemplate.Repositories
 
             }
         }
+        public async Task<bool> UpdateEmail(PersonDTO person, string email)
+        {
 
+            using (var connection = connectionFactory.GetConnection())
+            {
+                await connection.QueryAsync($"update {DBHelper.Schema}.{DBHelper.People} set email = :email where id = :id", new { email = email, id = person.ID });
+                return true;
+
+            }
+        }
         public async Task<PersonDTO> GetPersonInfo(PersonDTO personInfo)
         {
             using (var connection = connectionFactory.GetConnection())
