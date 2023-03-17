@@ -3,13 +3,14 @@ using System.Threading.Tasks;
 using AtomSkillsTemplate.Models;
 using AtomSkillsTemplate.Models.ClaimsForTable;
 using AtomSkillsTemplate.Models.DTOs;
+using AtomSkillsTemplate.NewModels;
 using Microsoft.AspNetCore.Http;
 
 namespace AtomSkillsTemplate.Repositories.Contracts
 {
     public interface IRequestRepository
     {
-        public Task<IEnumerable<RequestDTO>> GetRequest();
+        public Task<IEnumerable<Request>> GetRequest();
         public Task<IEnumerable<ClaimsForTableModel>> GetRequestForTable(PersonDTO roleUser);
         public Task<RequestDTO> SaveRequest(RequestDTO personInfo);
         public Task<ClaimsForTableModel> SaveExecutor(ClaimsForTableModel personInfo);
