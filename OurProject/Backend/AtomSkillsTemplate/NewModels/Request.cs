@@ -12,6 +12,7 @@ namespace AtomSkillsTemplate.NewModels
         public long IdContractor { get; set; }
         public string StateCode { get; set; }
         public string StateCaption { get; set; }
+        public string ContractorName { get; set; }
 
 
     }

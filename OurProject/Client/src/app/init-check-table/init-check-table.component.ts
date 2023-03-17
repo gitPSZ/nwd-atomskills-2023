@@ -11,6 +11,7 @@ import { ToastService } from '../services/ToastService/toast.service';
 import { BaseComponent } from '../base-component/base.component';
 import * as FileSaver from 'file-saver';
 import { timer } from 'rxjs';
+import { RequestModel } from '../models/RequestModel';
 
 
 
@@ -24,7 +25,7 @@ export class InitCheckTableComponent  extends BaseComponent implements OnInit {
   executorsList: Person[] = [];
   selectedProduct1 : ClaimModel = {};
   selectedExecutor: Person = {};
-  customers: ClaimModel[] = [];
+  customers: RequestModel[] = [];
   executorSaveModel: ClaimModel | undefined;
   roleUser: number | undefined
   claim: any = {};
@@ -44,16 +45,15 @@ export class InitCheckTableComponent  extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.roleid = this.simplemesService.observableUser.value.roleId;
-    let person = this.simplemesService.observableUser.value;
-    let req =  this.requestService.getRequest();
-    console.log(req);
-    console.debug("role", this.roleUser);
+    //this.roleid = this.simplemesService.observableUser.value.roleId;
+    //let person = this.simplemesService.observableUser.value;
+   
+ 
     var userSubscription = this.simplemesService.observableUser.subscribe(async (user) => {
       if(user.id == null){
         return;
       }
-     //this.customers = await this.requestService.getClaimsWithAllAttributes();
+    this.customers = await this.requestService.getRequest();
     })
     this.subscriptions.push(userSubscription);
     this.primengConfig.ripple = true;
@@ -109,10 +109,8 @@ else
   }
 
   async refeshBtn(){
-    this.roleid = this.simplemesService.observableUser.value.roleId;
-    let person = this.simplemesService.observableUser.value;
-    console.debug("role", this.roleUser);
-   // this.customers = await this.requestService.getClaimsWithAllAttributes();
+    this.customers = await this.requestService.getRequest();
+    console.log(this.customers);
     
   }
   async commandExecutorSave() {
