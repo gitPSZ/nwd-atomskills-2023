@@ -6,7 +6,7 @@ namespace AtomSkillsTemplate.NewModels
     {
         public long Id { get; set; }
         public string Number { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime CreateDate { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string Description { get;set; }
         public long IdContractor { get; set; }
