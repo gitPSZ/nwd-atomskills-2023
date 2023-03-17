@@ -1,0 +1,113 @@
+<div class="host h-screen">
+
+  <!-- Toolbar -->
+  <section *ngIf="isToolbarAndMenuVisible" class="toolbar z-20 bg-white  col-span-2 fixed w-full
+                                          flex flex-row ">
+    <div class="  w-64 flex flex-row justify-around shad ">
+
+      <button (click)="changeMenuState()" pButton class="w-8 h-8 ml-2 mr-2 border-none mt-auto mb-auto p-0">
+        <i class="m-auto pi pi-bars"></i>
+      </button>
+
+      <div class="logo flex-1 w-32 grid m-auto text-3xl font-bold text-blue-900 cursor-pointer"
+        (click)="router.navigateByUrl('navigationCards')">
+        TechLife
+      </div>
+
+    </div>
+    <div class="flex-1 grid   ">
+      <i class="m-auto text-xl">{{messageService.observableTitle | async}}</i>
+    </div>
+  </section>
+  <div id="toolbar-substitute" *ngIf="isToolbarAndMenuVisible" class="z-10 toolbar  col-span-2 
+    flex flex-row ">
+
+  </div>
+  
+
+  <!-- NavigationMenu -->
+  <section *ngIf="isToolbarAndMenuVisible" id="navigationMenu" class="navigationMenu bg-white z-20
+   col-start-1 row-start-2 duration-300 transition-all fixed
+    flex flex-col justify-between border-spacing-0" [ngClass]="{
+      openStyle:isOpen,
+      minimizedStyle:!isOpen
+    }">
+
+    <div class="flex flex-col">
+      <button *ngFor="let button of this.messageService.observableNavigationButtons.value"
+        class="secondary border-none w-auto m-2 h-8 p-2" (click)="redirect(button)" pButton>
+        <div class="w-4 p-0 mr-4">
+          <span class="{{button.iconClass}}"></span>
+        </div>
+        <span class="duration-300 transition-all whitespace-nowrap " [ngClass]="{
+              menuItemTextVisible:isOpen,
+              menuItemTextHidden:!isOpen
+            }">{{button.caption}}
+        </span>
+      </button>
+      <!-- <button class="secondary border-none w-auto m-2 h-8 p-2" (click)="redirectToStatistic()" pButton >
+        <span class="w-4 pi pi-check p-0 mr-4"></span>
+        <span     
+          class="duration-300 transition-all whitespace-nowrap "  
+          [ngClass]="{
+              menuItemTextVisible:isOpen,
+              menuItemTextHidden:!isOpen
+            }">Просмотр данных 
+        </span>
+      </button>
+      <button class="secondary border-none w-auto m-2 h-8 p-2"  (click)="redirectToStatistic()" pButton>
+        <span class="w-4 pi pi-check p-0 mr-4"></span>
+        <span     
+          class="duration-300 transition-all whitespace-nowrap "  
+          [ngClass]="{
+              menuItemTextVisible:isOpen,
+              menuItemTextHidden:!isOpen
+            }">Просмотр аналитики
+        </span>
+      </button> -->
+    </div>
+
+
+    <button *ngIf="(messageService.observableUser | async)?.id == null" class="border-none w-auto m-2 h-8 p-2" pButton
+      (click)="signIn()">
+      <span class="w-4 pi pi-sign-in p-0 mr-4"></span>
+      <span class="duration-300 transition-all whitespace-nowrap " [ngClass]="{
+            menuItemTextVisible:isOpen,
+            menuItemTextHidden:!isOpen
+          }">Войти в систему
+      </span>
+    </button>
+    <div class="p-2" *ngIf="(messageService.observableUser | async)?.id != null">
+      <div class="duration-300 transition-all whitespace-nowrap" [ngClass]="isOpen 
+      ? 'menuItemTextVisible duration-500'
+      : 'menuItemTextHidden duration-75'">
+
+        {{(messageService.observableShortClientName | async)}} ({{(messageService.observableUser | async)?.roleName}})
+      </div>
+      <button class="border-none w-auto m-2 h-8 p-2" class="border-none h-8 p-2 w-full" pButton (click)="logOut()">
+        <span class="w-4 pi pi-sign-in p-0 mr-4"></span>
+        <span class="transition-all whitespace-nowrap " [ngClass]="isOpen 
+                        ? 'menuItemVisible'
+                        : 'menuItemHidden' ">Выйти из системы
+        </span>
+      </button>
+    </div>
+
+  </section>
+
+  <div
+    id="navigationMenuSubstitute" *ngIf="isToolbarAndMenuVisible" class="
+    col-start-1 row-start-2 duration-300 transition-all
+     flex flex-col justify-between border-spacing-0" [ngClass]="{
+       openStyle:isOpen,
+       minimizedStyle:!isOpen
+     }">
+
+  </div>
+
+  <div class="col-start-2 row-start-2 p-6 bg-slate-200 shadow" [ngClass]="isToolbarAndMenuVisible ? 'rounded-tl-3xl' : 'rounded-none'">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>
+<p-toast key="globalToast" position="bottom-right"></p-toast>

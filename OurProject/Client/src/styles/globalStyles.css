@@ -1,0 +1,6 @@
+
+.p-column-filter-buttonbar :nth-child(2) {
+    -webkit-appearance: button;
+    background-color:#007ad9 ;
+    background-image: none;
+}

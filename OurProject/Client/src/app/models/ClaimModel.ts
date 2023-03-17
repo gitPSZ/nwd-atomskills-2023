@@ -1,0 +1,20 @@
+export interface ClaimModel
+{
+    id?:number;
+    createDate?:Date;
+    idClaim?:number;
+    typeClaim?:string;
+    text?:string;
+    idPriority?:string;
+    priorities?:string;
+    timeAccordingSla?:number;
+    idState?:number;
+    state?:string;
+    placeOfService?:string;
+    dateTimeEditState?:Date;
+    dateTimeCloseClaim?:Date;
+    author?:string;
+    executor?:string;
+    comment?:string;
+    idExecutor?:number;
+}

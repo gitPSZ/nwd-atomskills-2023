@@ -1,0 +1,49 @@
+.host{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+}
+.d1{
+    vertical-align: auto;    
+}
+.navigationMenu{
+    height: 95vh;
+    margin-top: 5vh;
+}
+.toolbar{
+    height: 5vh;
+}
+.openStyle{
+    @apply w-64
+}
+.minimizedStyle{
+    @apply w-12
+}
+.menuItemTextVisible{
+    @apply opacity-100
+}
+.menuItemTextHidden{
+    @apply opacity-0
+}
+:host ::ng-deep .p-inputtext.ng-dirty.ng-invalid{
+    border-color: rgb(255, 0, 0);
+}
+:host ::ng-deep .p-inputtext.ng-dirty.ng-invalid:enabled:focus{
+    box-shadow: 0 0 0 0.2rem rgb(255, 151, 151);
+}
+
+
+.shadow {
+    --tw-shadow: 0 0 0 0 rgb(0 0 0 / 0.50);
+    box-shadow: inset 10px 10px 10px 0 rgb(0,0,0, 0.1) ;
+}
+
+:host{
+    --custom-border-radius: 1rem
+}
+:host ::ng-deep .p-datatable-header{
+    border-radius: var(--custom-border-radius) var(--custom-border-radius) 0 0 ;
+}
+:host ::ng-deep .p-paginator{
+    border-radius:  0 0 var(--custom-border-radius) var(--custom-border-radius);
+}
