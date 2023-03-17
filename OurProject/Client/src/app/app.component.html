@@ -78,13 +78,18 @@
       </span>
     </button>
     <div class="p-2" *ngIf="(messageService.observableUser | async)?.id != null">
-      <div class="duration-300 transition-all whitespace-nowrap" [ngClass]="isOpen 
-      ? 'menuItemTextVisible duration-500'
-      : 'menuItemTextHidden duration-75'">
+      <button
+        (click)="router.navigateByUrl('profile')"
+        class="duration-300 transition-all whitespace-nowrap border-4 mb-2 w-full border-none h-8 p-2" pButton >
 
-        {{(messageService.observableShortClientName | async)}} ({{(messageService.observableUser | async)?.roleName}})
-      </div>
-      <button class="border-none w-auto m-2 h-8 p-2" class="border-none h-8 p-2 w-full" pButton (click)="logOut()">
+        <span class="w-4 pi pi-user p-0 mr-4"></span>
+        <span class="transition-all whitespace-nowrap " [ngClass]="isOpen 
+                        ? 'menuItemVisible'
+                        : 'menuItemHidden' ">Войти в профиль
+        </span>
+        
+      </button>
+      <button  class="border-none h-8 p-2 w-full" pButton (click)="logOut()">
         <span class="w-4 pi pi-sign-in p-0 mr-4"></span>
         <span class="transition-all whitespace-nowrap " [ngClass]="isOpen 
                         ? 'menuItemVisible'

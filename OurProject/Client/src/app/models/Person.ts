@@ -8,6 +8,7 @@ export interface Person
     roleName?: string;
     roleId?:number;
     password?:string;
+    email?:string;
     login?:string;
 
     initialRole?:Role

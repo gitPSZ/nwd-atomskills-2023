@@ -15,5 +15,6 @@ namespace AtomSkillsTemplate.Repositories.Contracts
         public Task<bool> PersonGetReply(PersonDTO personInfo);
         public Task<IEnumerable<Role>> GetRoles();
         public Task<bool> UpdateRole(long personID, long roleID);
+        public Task<bool> UpdateEmail(PersonDTO person, string email);
     }
 }

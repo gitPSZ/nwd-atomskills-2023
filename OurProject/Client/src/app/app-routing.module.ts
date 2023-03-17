@@ -6,10 +6,12 @@ import { InitCheckTableComponent } from './init-check-table/init-check-table.com
 import { RequestComponent } from './request/request/request.component';
 import { AuthorisationComponent } from './starting-components/authorisation/authorisation.component'; 
 import { NavigationCardsComponent } from './starting-components/NavigationCardsComponent/navigation-cards/navigation-cards.component';
+import { ProfileComponent } from './starting-components/ProfileComponent/profile/profile.component';
 import { StatisticComponent } from './statistic/statistic.component';
 
 const routes: Routes = [
   {path:'navigationCards' , component:NavigationCardsComponent},
+  {path:'profile' , component:ProfileComponent},
   {path:'auth' , component:AuthorisationComponent},
   {path:'request' , component:RequestComponent},
   {path:'statistic', component:StatisticComponent},

@@ -20,7 +20,7 @@ namespace AtomSkillsTemplate.Controllers
 {
     [ApiController]
     [Route("api/persons")]
-    [AuthorizationHelper.CustomAuthorizationAttribute("Начальник;Администратор;Инициатор;Оператор первой линии;Исполнитель;Сервис-Менеджер")]
+    [AuthorizationHelper.CustomAuthorizationAttribute("Начальник")]
     public class PersonController : Controller
     {
         private IPersonRepository personRepository { get; set; }
@@ -52,7 +52,13 @@ namespace AtomSkillsTemplate.Controllers
             }
             return Ok(personDTOs.OrderBy(o=>o.NameClient));
         }
-
+        [HttpGet("actualCurrent")]
+        public async Task<PersonDTO> GetUser()
+        {
+            var personDTOs = await personRepository.GetPersonDTOs();
+            
+            return personDTOs.FirstOrDefault(i=>i.ID == UserHelper.GetUserFromRequest(Request).ID);
+        }
         [HttpGet("getexecutors")]
         public async Task<ActionResult<PersonDTO>> GetExecutors()
         {
@@ -147,6 +153,14 @@ namespace AtomSkillsTemplate.Controllers
         {
             var person = UserHelper.GetUserFromRequest(Request);
             return (await personRepository.GetRoles()).FirstOrDefault(o => o.ID == person.RoleId);
+        }
+        [HttpPost("email")]
+
+        public async Task<bool> UpdateEmail(PersonDTO personWithEmail)
+        {
+            var person = UserHelper.GetUserFromRequest(Request);
+            return await personRepository.UpdateEmail(person, personWithEmail.Email);
+            
         }
         [HttpGet("current")]
 
