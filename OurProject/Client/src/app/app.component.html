@@ -18,6 +18,10 @@
     <div class="flex-1 grid   ">
       <i class="m-auto text-xl">{{messageService.observableTitle | async}}</i>
     </div>
+
+    <div class="flex-4 grid   ">
+      <button pButton type="button" icon="pi pi-bell" class="p-button-rounded p-button-warning mt-1 mr-1" ></button>
+    </div>
   </section>
   <div id="toolbar-substitute" *ngIf="isToolbarAndMenuVisible" class="z-10 toolbar  col-span-2 
     flex flex-row ">

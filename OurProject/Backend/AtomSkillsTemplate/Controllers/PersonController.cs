@@ -88,13 +88,9 @@ namespace AtomSkillsTemplate.Controllers
         [HttpGet("sendmail")]
 
         public async Task<ActionResult<PersonDTO>> SendMail()
-        {
-
-           
+        {         
                 EmailService emailService = new EmailService();
-                await emailService.SendEmailAsync("AtomSkills2023@mail.ru", "Тема письма", "Тест письма: тест!");
-                return RedirectToAction("Index");
-                    
+                await emailService.SendEmailAsync("te5se@yandex.ru", "Тема письма", "Тест письма: тест!");                   
             return Ok("ok");
         }
         [AllowAnonymous]

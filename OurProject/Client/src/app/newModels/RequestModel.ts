@@ -10,5 +10,6 @@ Description?: string;
 IdContractor?: number;
 StateCode?: string;
 StateCaption?:string;
+ContractorName?:string
 
 }

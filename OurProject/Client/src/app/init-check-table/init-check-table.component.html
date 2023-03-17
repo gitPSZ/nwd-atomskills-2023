@@ -5,7 +5,7 @@
         <div   class="grid   col-start-2 row-start-2">
 
             <span class="p-float-label mb-6">
-                <input id="float-input-name" readonly="true"  [(ngModel)]="claim.author"  pInputText class="w-full shadow-md"> 
+                <input id="float-input-name" readonly="true"  [(ngModel)]="claim.contractorName"  pInputText class="w-full shadow-md"> 
                 <label for="float-input-name" >Инициатор</label>
             </span>
 
@@ -52,7 +52,7 @@
             </span>
 
             <span class="p-float-label mb-6">
-                <input id="float-input-name"  readonly="true" [(ngModel)]="claim.placeOfService"  pInputText class="w-full shadow-md"> 
+                <input id="float-input-name"  readonly="true" [(ngModel)]="claim.state_code"  pInputText class="w-full shadow-md"> 
                 <label for="float-input-name" >Рабочее место</label>
             </span>
     
@@ -62,7 +62,7 @@
             </span>
     
             <span class="p-float-label mb-6">
-                <input id="float-input-password" readonly="true" [(ngModel)]="claim.typeClaim"   pInputText class="w-full shadow-md"> 
+                <input id="float-input-password" readonly="true" [(ngModel)]="claim.number"   pInputText class="w-full shadow-md"> 
                 <label for="float-dropdown">Тип заявки</label>
             </span>
 
@@ -91,7 +91,7 @@
             [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading"
             [(selection)]="selectedProduct1"
             [paginator]="true" currentPageReportTemplate="Показ с {first} по {last} из {totalRecords} страниц"
-            [filterDelay]="0" [globalFilterFields]="['id', 'typeClaim','text', 'priorities', 'placeOfService', 'author', 'executor','state']">
+            [filterDelay]="0" [globalFilterFields]="['id', 'number','text', 'description', 'state_code', 'contractorName', 'create_date','state']">
             <ng-template pTemplate="caption">
                 <div class="table-header grid grid-cols-3">
                     <div class="flex flex-row">
@@ -131,55 +131,34 @@
                         </div>
                      
                     </th>
-                    <th pSortableColumn="typeClaim" style="min-width:100px">
+                    <th pSortableColumn="number" style="min-width:100px">
                         <div class="flex justify-content-center align-items-center">
-                            Тип заявки
-                            <p-columnFilter type="text" field="typeClaim" display="menu"></p-columnFilter>
-                            <p-sortIcon field="typeClaim"></p-sortIcon>
+                            Номер заявки
+                            <p-columnFilter type="text" field="number" display="menu"></p-columnFilter>
+                            <p-sortIcon field="number"></p-sortIcon>
                         </div>
                      
                     </th>
-                    <th pSortableColumn="text" style="min-width:100px">
+                 
+                    <th pSortableColumn="contractorName" style="min-width:100px"> 
                         <div class="flex justify-content-center align-items-center">
-                            Текст обращения
-                            <p-columnFilter type="text" field="text" display="menu"></p-columnFilter>
-                            <p-sortIcon field="text"></p-sortIcon>
-                        </div>
-                      
-                    </th>
-                    <th pSortableColumn="priorities" style="min-width:100px">
-                        <div class="flex justify-content-center align-items-center">
-                            Приоритет 
-                            <p-columnFilter type="text" field="priorities" display="menu"></p-columnFilter>
-                            <p-sortIcon field="priorities"></p-sortIcon>
+                            Контрагент 
+                            <p-columnFilter type="text" field="contractorName" display="menu"></p-columnFilter>
+                            <p-sortIcon field="contractorName"></p-sortIcon>
                         </div>
                     </th>
-                    <th pSortableColumn="placeOfService" style="min-width:100px"> 
+                    <th pSortableColumn="releaseDate" style="min-width:100px">
                         <div class="flex justify-content-center align-items-center">
-                            Место 
-                            <p-columnFilter type="text" field="placeOfService" display="menu"></p-columnFilter>
-                            <p-sortIcon field="placeOfService"></p-sortIcon>
+                            Дата создания 
+                            <p-columnFilter type="text" field="releaseDate" display="menu"></p-columnFilter>
+                            <p-sortIcon field="releaseDate"></p-sortIcon>
                         </div>
                     </th>
-                    <th pSortableColumn="author" style="min-width:100px"> 
-                        <div class="flex justify-content-center align-items-center">
-                            Инициатор 
-                            <p-columnFilter type="text" field="author" display="menu"></p-columnFilter>
-                            <p-sortIcon field="author"></p-sortIcon>
-                        </div>
-                    </th>
-                    <th pSortableColumn="executor" style="min-width:100px">
-                        <div class="flex justify-content-center align-items-center">
-                            Выполняющий 
-                            <p-columnFilter type="text" field="executor" display="menu"></p-columnFilter>
-                            <p-sortIcon field="executor"></p-sortIcon>
-                        </div>
-                    </th>
-                    <th pSortableColumn="state" style="min-width:100px"> 
+                    <th pSortableColumn="stateCaption" style="min-width:100px"> 
                         <div class="flex justify-content-center align-items-center">
                             Статус 
-                            <p-columnFilter type="text" field="state" display="menu"></p-columnFilter>
-                            <p-sortIcon field="state"></p-sortIcon>
+                            <p-columnFilter type="text" field="stateCaption" display="menu"></p-columnFilter>
+                            <p-sortIcon field="stateCaption"></p-sortIcon>
                         </div>
                     </th>
 
@@ -196,35 +175,26 @@
                         {{customer.id}}
                     </td>
                     <td>
-                        <span class="p-column-title">Тип заявки</span>
-                        <span class="image-text">{{customer.typeClaim}}</span>
+                        <span class="p-column-title">Номер заявки</span>
+                        <span class="image-text">{{customer.number}}</span>
                     </td>
 
-                    <td>
-                        <span class="p-column-title">Текст</span>
-                        <span class="image-text">{{customer.text}}</span>
-                    </td>
-                    <td>
-                        <span class="p-column-title">Приоритет</span>
-                        <span class="image-text">{{customer.priorities}}</span>
-                    </td>
-                    <td>
-                        <span class="p-column-title">Место</span>
-                        {{customer.placeOfService}}
-                    </td>
+    
+                    
+                
                     <td>
                         <span class="p-column-title">Инициатор</span>
-                        <span [class]="'customer-badge status-' + customer.status">{{customer.author}}</span>
+                        <span [class]="'customer-badge status-' + customer.status">{{customer.contractorName}}</span>
                     </td>
 
                     <td>
-                        <span class="p-column-title">Выполняющий</span>
-                        {{customer.executor}}
+                        <span class="p-column-title">Дата создания</span>
+                        {{customer.releaseDate}}
                     </td>
                     <td>
                         <span class="p-column-title" >Статус</span>
-                        <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.state==null"  tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>
-                        <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.state!=null" tooltipPosition="bottom" pTooltip="{{customer.comment}}" ></p-chip>
+                        <p-chip label="{{customer.stateCaption}}" icon="pi pi-cog" *ngIf="customer.stateCaption==null"  tooltipPosition="bottom" pTooltip="{{customer.stateCaption}}" ></p-chip>
+                        <p-chip label="{{customer.stateCaption}}" icon="pi pi-cog" *ngIf="customer.stateCaption!=null" tooltipPosition="bottom" pTooltip="{{customer.stateCaption}}" ></p-chip>
                         
                     </td>
 

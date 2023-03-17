@@ -9,7 +9,7 @@ using AtomSkillsTemplate.Models.ClaimsForTable;
 using AtomSkillsTemplate.Models.DTOs;
 using AtomSkillsTemplate.NewModels;
 using AtomSkillsTemplate.Repositories.Contracts;
-
+using AtomSkillsTemplate.Connection;
 using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
@@ -32,7 +32,7 @@ namespace AtomSkillsTemplate.Repositories
         {
             using (var connection = connectionFactory.GetConnection())
             {
-                var request = await connection.QueryAsync<Request>($"select * from {schemaName}.{tableName}");
+                var request = await connection.QueryAsync<Request>($"select r.*, c.caption as ContractorName   from {DBHelper.Schema}.{DBHelper.Requests} r left join {DBHelper.Schema}.{DBHelper.Contractors} c on c.id= r.id_contractor");
                 return request;
 
             }
