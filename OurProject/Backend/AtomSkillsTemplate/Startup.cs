@@ -42,6 +42,7 @@ namespace AtomSkillsTemplate
             services.AddScoped<IRequestRepository, RequestRepository>();
             services.AddSingleton<IConnectionFactory, ConnectionFactory>();
             services.AddSingleton<IReloadRequestsService, ReloadRequestsService>();
+            services.AddSingleton<IMachineRepository, NewMachineRepository>();
             services.AddScoped<INewRequestRepository, NewRequestRepository>();
             services.AddControllers();
             
