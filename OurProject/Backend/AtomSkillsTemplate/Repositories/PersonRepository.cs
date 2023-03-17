@@ -21,7 +21,7 @@ namespace AtomSkillsTemplate.Repositories
     {
         private IConnectionFactory connectionFactory { get; set; }
 
-        private string schemaName = "\"as2023\"";
+        private string schemaName = "\"atom\"";
         private string tableName = "\"person\"";
 
         public PersonRepository(IConnectionFactory factory)

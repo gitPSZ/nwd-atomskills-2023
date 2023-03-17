@@ -17,7 +17,7 @@ namespace AtomSkillsTemplate.Controllers
     public class AgileInterfaceController: Controller
 
     {
-        private string schemaName = "\"as2023\"";
+        private string schemaName = "\"atom\"";
 
         private IConnectionFactory connectionFactory;
         public AgileInterfaceController(IConnectionFactory connectionFactory)
