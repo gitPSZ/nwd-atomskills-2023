@@ -24,7 +24,8 @@ export class AppComponent extends BaseComponent {
 	isOpen = true;
 	isToolbarAndMenuVisible = true;
 	ru: any;
-
+	messageCount: number = 8;
+	isWarning=true;
 	constructor(public messageService: SimpleMessageService,
 		public router: Router, public configService: ConfigService, private statusService: StatusService, private config: PrimeNGConfig,
 		toastService: ToastService, private cookieService: CookieService, private authenticationService: AuthenticationService, private agileInterfaceService : AgileInterfaceService) {
@@ -115,5 +116,11 @@ export class AppComponent extends BaseComponent {
 	}
 	async logOut(){
 		this.authenticationService.logOut()
+	}
+	async checkMessage()
+	{
+		this.messageCount = 0;
+		this.isWarning = false;
+		console.log("Проверили");
 	}
 }

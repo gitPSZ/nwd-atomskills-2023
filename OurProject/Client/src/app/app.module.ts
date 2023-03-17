@@ -44,6 +44,8 @@ import * as FileSaver from 'file-saver';
 import { ChipModule } from 'primeng/chip';
 import { DictionaryComponent } from './dictionary/dictionary.component';
 import { ProfileComponent } from './starting-components/ProfileComponent/profile/profile.component';
+import {BadgeModule} from 'primeng/badge';
+import {OverlayPanelModule} from 'primeng/overlaypanel';
 
 @NgModule({
   declarations: [
@@ -83,7 +85,9 @@ import { ProfileComponent } from './starting-components/ProfileComponent/profile
     InputTextareaModule,
     ContextMenuModule,
     MultiSelectModule,
-    ChipModule
+    ChipModule,
+    BadgeModule,
+    OverlayPanelModule
   ],
   providers: [ErrorService, StatusService, ConfigService, MessageService, AuthenticationService, CookieService, SimpleMessageService, AuthenticationService,
     {

@@ -20,14 +20,30 @@
     </div>
 
     <div class="flex-4 grid   ">
-      <button pButton type="button" icon="pi pi-bell" class="p-button-rounded p-button-warning mt-1 mr-1" ></button>
+      <p-overlayPanel #op [style]="{width: '450px'}">
+        <ng-template pTemplate>
+          Content
+        </ng-template>
+      </p-overlayPanel>
+
+      <!-- <div class="absolute z-40">
+        <p-badge  [value]="messageCount" class=""></p-badge>
+
+      </div>-->
+      <i *ngIf="this.messageCount==0" (click)="op.toggle($event);checkMessage();" class="transition-all pi pi-bell  p-2 rounded-3xl cursor-pointer mt-4 mr-4 "
+        [ngClass]="isWarning ? 'bg-red-600' : 'bg-orange-400 hover:bg-orange-500 active:bg-orange-600'"
+          style="font-size: 2rem" ></i>
+
+        <i  *ngIf="this.messageCount!=0"  (click)="op.toggle($event);checkMessage();" class="transition-all pi pi-bell  p-2 rounded-3xl cursor-pointer mt-4 mr-4 "
+        [ngClass]="isWarning ? 'bg-red-600' : 'bg-orange-400 hover:bg-orange-500 active:bg-orange-600'"
+        pBadge  style="font-size: 2rem" [value]="messageCount.toString()"></i>
     </div>
   </section>
   <div id="toolbar-substitute" *ngIf="isToolbarAndMenuVisible" class="z-10 toolbar  col-span-2 
     flex flex-row ">
 
   </div>
-  
+
 
   <!-- NavigationMenu -->
   <section *ngIf="isToolbarAndMenuVisible" id="navigationMenu" class="navigationMenu bg-white z-20
@@ -82,18 +98,18 @@
       </span>
     </button>
     <div class="p-2" *ngIf="(messageService.observableUser | async)?.id != null">
-      <button
-        (click)="router.navigateByUrl('profile')"
-        class="duration-300 transition-all whitespace-nowrap border-4 mb-2 w-full border-none h-8 p-2 p-button-secondary" pButton >
+      <button (click)="router.navigateByUrl('profile')"
+        class="duration-300 transition-all whitespace-nowrap border-4 mb-2 w-full border-none h-8 p-2 p-button-secondary"
+        pButton>
 
         <span class="w-4 pi pi-user p-0 mr-4"></span>
         <span class="transition-all whitespace-nowrap " [ngClass]="isOpen 
                         ? 'menuItemVisible'
                         : 'menuItemHidden' ">Личный кабинет
         </span>
-        
+
       </button>
-      <button  class="border-none h-8 p-2 w-full" pButton (click)="logOut()">
+      <button class="border-none h-8 p-2 w-full" pButton (click)="logOut()">
         <span class="w-4 pi pi-sign-in p-0 mr-4"></span>
         <span class="transition-all whitespace-nowrap " [ngClass]="isOpen 
                         ? 'menuItemVisible'
@@ -104,8 +120,7 @@
 
   </section>
 
-  <div
-    id="navigationMenuSubstitute" *ngIf="isToolbarAndMenuVisible" class="
+  <div id="navigationMenuSubstitute" *ngIf="isToolbarAndMenuVisible" class="
     col-start-1 row-start-2 duration-300 transition-all
      flex flex-col justify-between border-spacing-0" [ngClass]="{
        openStyle:isOpen,
@@ -114,7 +129,8 @@
 
   </div>
 
-  <div class="col-start-2 row-start-2 p-6 bg-slate-200 shadow" [ngClass]="isToolbarAndMenuVisible ? 'rounded-tl-3xl' : 'rounded-none'">
+  <div class="col-start-2 row-start-2 p-6 bg-slate-200 shadow"
+    [ngClass]="isToolbarAndMenuVisible ? 'rounded-tl-3xl' : 'rounded-none'">
     <router-outlet></router-outlet>
   </div>
 
