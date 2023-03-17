@@ -15,6 +15,8 @@ import { IfStmt } from '@angular/compiler';
 import { NavigationButton } from './models/NavigationButton';
 import { AgileInterfaceService } from './services/AgileInterfaceService/agile-interface.service';
 import { RequestService } from './request/request/request.service';
+import { RequestModel } from './newModels/RequestModel';
+
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
@@ -31,6 +33,7 @@ export class AppComponent extends BaseComponent {
 	saveMessageCount: number = 0;
 	visibleCount:number = 0;
 	isWarning=true;
+	cardsRequest: RequestModel[] = [];
 	constructor(public messageService: SimpleMessageService, private requestService : RequestService, 
 		public router: Router, public configService: ConfigService, private statusService: StatusService, private config: PrimeNGConfig,
 		toastService: ToastService, private cookieService: CookieService, private authenticationService: AuthenticationService, private agileInterfaceService : AgileInterfaceService) {
@@ -52,6 +55,7 @@ export class AppComponent extends BaseComponent {
 	async ngOnInit() {
 		this.trySendToAPI();
 		this.startTimer();
+		
 	}
     async startTimer() {
 		this.interval = setInterval(async () => {
@@ -136,9 +140,10 @@ export class AppComponent extends BaseComponent {
 	}
 	async checkMessage()
 	{
+		this.cardsRequest = await this.requestService.getLastRequests(this.visibleCount);
 		this.saveMessageCount = this.messageCount;
 		this.isWarning = false;
-
+console.log(this.cardsRequest);
 
 	}
 }

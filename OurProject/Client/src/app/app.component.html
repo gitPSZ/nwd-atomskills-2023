@@ -19,11 +19,15 @@
       <i class="m-auto text-xl">{{messageService.observableTitle | async}}</i>
     </div>
 
-    <div class="flex-4 grid   ">
-      <p-overlayPanel #op [style]="{width: '450px'}">
-        <ng-template pTemplate>
-          Content
-        </ng-template>
+    <div class="flex-4 grid   " >
+      <p-overlayPanel #op  [style]="{width: '450px'}" >
+        <p-card *ngFor="let card of cardsRequest"  styleClass="bg-orange-400 hover:bg-orange-500 active:bg-orange-600 "
+         header="Поступила новая заявка №{{card.ContractorName}}" footer="f" [style]="{'width': '25rem', 'margin-bottom': '2em'}">
+          <p> {{card.ContractorName}} На вашем предприятии была создана новая заявка, ознакомьтесь с ней!</p>
+              <ng-template pTemplate="footer">
+                Дата создания: {{card.Date}}
+            </ng-template>
+      </p-card>
       </p-overlayPanel>
 
       <!-- <div class="absolute z-40">
@@ -31,7 +35,7 @@
 
       </div>-->
       <i  (click)="op.toggle($event);checkMessage();" class="transition-all pi pi-bell  p-2 rounded-3xl cursor-pointer mt-4 mr-4 "
-        [ngClass]="isWarning ? 'bg-red-600' : 'bg-orange-400 hover:bg-orange-500 active:bg-orange-600'"
+        [ngClass]="isWarning ? 'bg-red-400  hover:bg-red-500 active:bg-red-600'  : 'bg-orange-400 hover:bg-orange-500 active:bg-orange-600'"
         pBadge   style="font-size: 2rem" [value]="visibleCount.toString()"></i>
 
       <!-- <i *ngIf="this.messageCount==0" (click)="op.toggle($event);checkMessage();" class="transition-all pi pi-bell  p-2 rounded-3xl cursor-pointer mt-4 mr-4 "

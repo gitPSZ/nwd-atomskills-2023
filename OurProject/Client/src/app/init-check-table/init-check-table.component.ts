@@ -11,7 +11,7 @@ import { ToastService } from '../services/ToastService/toast.service';
 import { BaseComponent } from '../base-component/base.component';
 import * as FileSaver from 'file-saver';
 import { timer } from 'rxjs';
-import { RequestModel } from '../models/RequestModel';
+import { RequestModel } from '../newModels/RequestModel';
 
 
 

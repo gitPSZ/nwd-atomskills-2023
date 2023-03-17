@@ -1,23 +1,77 @@
-<div class="main-grid">
-    <p-listbox [options]="requests" [(ngModel)]="selectedRequest" [multiple]="false" optionLabel="name" filterBy="label" [listStyle]="{'height':'100%'}">
-        <ng-template pTemplate="header" >
-            <div class="font-bold">
-                Необработанные заявки
-            </div>
-        </ng-template>
-        <ng-template pTemplate="filter" let-options="options">
-            <div class="p-inputgroup">
-                <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
-                <input type="text" pInputText placeholder="Filter" [(ngModel)]="filterValue" (keyup)="options.filter($event)">
-            </div>
-            <button pButton icon="pi pi-times" class="ml-3" (click)="myResetFunction(options)"></button>
-        </ng-template>
-        <ng-template let-request pTemplate="item">
-            <div class="country-item">
-                <div>Заявка</div>
-                <div>{{request.id}}</div>
-            </div>
-        </ng-template>
-        
-    </p-listbox>
+<div class="grid grid-rows-2 grid-flow-col gap-4">
+    <div class="row-span-1 col-span-2">
+        <p-listbox [options]="requests"    [filter]="true"  [(ngModel)]="selectedRequest" [multiple]="false" optionLabel="name" filterBy="label"  [listStyle]="{'max-height':'22rem'}" (onChange)="onChangeRequest($event)">
+            <ng-template pTemplate="header" >
+                <div class="font-bold">
+                    Необработанные заявки
+                </div>
+            </ng-template>
+            <ng-template pTemplate="filter" let-options="options">
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+                    <input type="text" pInputText placeholder="Filter" [(ngModel)]="filterValue" (keyup)="options.filter($event)">
+                </div>
+                <button pButton icon="pi pi-times" class="ml-3" (click)="myResetFunction(options)"></button>
+            </ng-template>
+            <ng-template let-request pTemplate="item">
+                <div class="country-item">
+                    <div>Заявка</div>
+                    <div>{{request.id}}</div>
+                </div>
+            </ng-template>     
+        </p-listbox>
+    </div>
+    <div class="row-span-2 col-span-2">
+        <p-listbox [options]="products"  [(ngModel)]="selectedProduct" [multiple]="false" optionLabel="caption" filterBy="label"  [listStyle]="{'max-height':'20rem'}">
+            <ng-template pTemplate="header" >
+                <div class="font-bold">
+                    Позиция станка
+                </div>
+            </ng-template>
+            <ng-template pTemplate="filter" let-options="options">
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+                    <input type="text" pInputText placeholder="Filter" [(ngModel)]="filterValue" (keyup)="options.filter($event)">
+                </div>
+                <button pButton icon="pi pi-times" class="ml-3" (click)="myResetFunction(options)"></button>
+            </ng-template>
+            <ng-template let-product pTemplate="item">
+                <div class="country-item">
+                    <div>Наименование</div>
+                    <div>{{product.caption}}</div>
+                    <div>Код</div>
+                    <div>{{product.code}}</div>
+                    <div>Кол-во</div>
+                    <div>{{product.quantity}}</div>
+                </div>
+            </ng-template>     
+        </p-listbox>
+    </div>
+    <div class="row-span-3 col-span-1">
+        <p-listbox [options]="machine"  [multiple]="false" optionLabel="Id" filterBy="label"  [listStyle]="{'max-height':'42rem'}">
+            <ng-template pTemplate="header" >
+                <div class="font-bold">
+                    Станки
+                </div>
+            </ng-template>
+            <ng-template pTemplate="filter" let-options="options">
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+                    <input type="text" pInputText placeholder="Filter" [(ngModel)]="filterValue" (keyup)="options.filter($event)">
+                </div>
+                <button pButton icon="pi pi-times" class="ml-3" ></button>
+            </ng-template>
+            <ng-template let-machin pTemplate="item">
+                <div class="country-item">
+                    <div>№</div>
+                    <div>{{machin.id}}</div>
+                    <div>Тип</div>
+                    <div>{{machin.machineType}}</div>
+                    <div>Состояние</div>
+                    <div>{{machin.state}}</div>
+                </div>
+            </ng-template>     
+        </p-listbox>
+    </div>
+
 </div>

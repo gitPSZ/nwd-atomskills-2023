@@ -48,7 +48,7 @@ import { ProfileComponent } from './starting-components/ProfileComponent/profile
 import {BadgeModule} from 'primeng/badge';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import { PlanningComponent } from './planning/planning/planning.component';
-
+import {CardModule} from 'primeng/card';
 @NgModule({
   declarations: [
     AppComponent,
@@ -91,7 +91,8 @@ import { PlanningComponent } from './planning/planning/planning.component';
     ChipModule,
     BadgeModule,
     OverlayPanelModule,
-    ListboxModule
+    ListboxModule,
+    CardModule
   ],
   providers: [ErrorService, StatusService, ConfigService, MessageService, AuthenticationService, CookieService, SimpleMessageService, AuthenticationService,
     {
