@@ -30,18 +30,19 @@
         <p-badge  [value]="messageCount" class=""></p-badge>
 
       </div>-->
-      <i *ngIf="this.messageCount==0" (click)="op.toggle($event);checkMessage();" class="transition-all pi pi-bell  p-2 rounded-3xl cursor-pointer mt-4 mr-4 "
+      <i  (click)="op.toggle($event);checkMessage();" class="transition-all pi pi-bell  p-2 rounded-3xl cursor-pointer mt-4 mr-4 "
         [ngClass]="isWarning ? 'bg-red-600' : 'bg-orange-400 hover:bg-orange-500 active:bg-orange-600'"
-          style="font-size: 2rem" ></i>
+        pBadge   style="font-size: 2rem" [value]="visibleCount.toString()"></i>
 
-        <i  *ngIf="this.messageCount!=0"  (click)="op.toggle($event);checkMessage();" class="transition-all pi pi-bell  p-2 rounded-3xl cursor-pointer mt-4 mr-4 "
+      <!-- <i *ngIf="this.messageCount==0" (click)="op.toggle($event);checkMessage();" class="transition-all pi pi-bell  p-2 rounded-3xl cursor-pointer mt-4 mr-4 "
         [ngClass]="isWarning ? 'bg-red-600' : 'bg-orange-400 hover:bg-orange-500 active:bg-orange-600'"
-        pBadge  style="font-size: 2rem" [value]="messageCount.toString()"></i>
+          style="font-size: 2rem" ></i> -->
+
+  
     </div>
   </section>
   <div id="toolbar-substitute" *ngIf="isToolbarAndMenuVisible" class="z-10 toolbar  col-span-2 
     flex flex-row ">
-
   </div>
 
 

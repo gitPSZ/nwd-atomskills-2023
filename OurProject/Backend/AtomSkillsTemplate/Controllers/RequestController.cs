@@ -76,6 +76,18 @@ namespace AtomSkillsTemplate.Controllers
         }
 
 
+        [HttpGet("countRequest")]
+
+        public async Task<ActionResult<long>> GetCountRequest()
+        {
+            var count = await requestRepository.GetCountRequest();
+            if (count == null)
+            {
+                return NotFound();
+            }
+            return Ok(count);
+        }
+
 
 
         [HttpPost("saveExecutor")]

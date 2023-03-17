@@ -46,7 +46,19 @@ namespace AtomSkillsTemplate.Repositories
 
             }
         }
-		public async Task<IEnumerable<State>> GetStates()
+
+        public async Task<long> GetCountRequest()
+        {
+            using (var connection = connectionFactory.GetConnection())
+            {
+                var count = await connection.QueryFirstAsync<long>($"select count(*) from {schemaName}.request");
+                return count;
+
+            }
+        }
+        
+
+        public async Task<IEnumerable<State>> GetStates()
         {
             using (var connection = connectionFactory.GetConnection())
             {

@@ -20,6 +20,8 @@ namespace AtomSkillsTemplate.Repositories.Contracts
         public Task<RequestDTO> CancelClaim(RequestDTO claim);
         public Task<IEnumerable<Priority>> GetPriorities();
         public Task<IEnumerable<State>> GetStates();
+        public Task<long> GetCountRequest();
+        
 
     }
 }

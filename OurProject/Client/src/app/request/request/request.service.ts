@@ -26,7 +26,13 @@ export class RequestService extends BaseApiService {
       .pipe(catchError(this.errorService.errorHandlerList)));
     return retValue;
   }
+  getCountRequest(): Promise<number> {
 
+    var retValue = lastValueFrom(this.http.get<number>(this.APIUrl + '/request/countRequest')
+      .pipe(catchError(this.errorService.errorHandlerNumber)));
+    return retValue;
+  }
+  
   getExecutors(): Promise<Person[]> {
 
     var retValue = lastValueFrom(this.http.get<Person[]>(this.APIUrl + '/persons/getexecutors')
