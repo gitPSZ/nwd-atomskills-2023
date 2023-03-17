@@ -29,6 +29,7 @@ namespace AtomSkillsTemplate.Controllers
             this.personRepository = personRepository;
             this.configuration = configuration;
         }
+        [AllowAnonymous]
         [HttpGet("all")]
         public async Task<ActionResult<PersonDTO>> GetUsers()
         {

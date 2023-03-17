@@ -1,28 +1,7 @@
 
 -----------------------------------------------------------------
-  pg_upgrade run on Fri Mar 17 10:38:47 2023
+  pg_upgrade run on Fri Mar 17 10:47:41 2023
 -----------------------------------------------------------------
 
-You must identify the directory where the old cluster binaries reside.
-Please use the -b command-line option or the PGBINOLD environment variable.
-
------------------------------------------------------------------
-  pg_upgrade run on Fri Mar 17 10:39:17 2023
------------------------------------------------------------------
-
-You must identify the directory where the new cluster binaries reside.
-Please use the -B command-line option or the PGBINNEW environment variable.
-
------------------------------------------------------------------
-  pg_upgrade run on Fri Mar 17 10:39:25 2023
------------------------------------------------------------------
-
-You must identify the directory where the old cluster binaries reside.
-Please use the -b command-line option or the PGBINOLD environment variable.
-
------------------------------------------------------------------
-  pg_upgrade run on Fri Mar 17 10:39:48 2023
------------------------------------------------------------------
-
-You must identify the directory where the old cluster binaries reside.
-Please use the -b command-line option or the PGBINOLD environment variable.
+Вы должны указать каталог, где находится расположение исполняемых файлов старого кластера.
+Воспользуйтесь для этого ключом командной строки -b или переменной окружения PGBINOLD.
