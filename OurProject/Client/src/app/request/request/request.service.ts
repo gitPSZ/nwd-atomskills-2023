@@ -77,6 +77,14 @@ export class RequestService extends BaseApiService {
       .pipe(catchError(this.errorService.errorHandlerList)));
     return retValue;
   }
+
+  getRequest(): Promise<RequestModel[]> {
+
+    var retValue = lastValueFrom(this.http.get<RequestModel[]>(this.APIUrl + '/request')
+      .pipe(catchError(this.errorService.errorHandlerList)));
+    return retValue;
+  }
+
   putRequest(newRequest: RequestModel) {
     var retValue = lastValueFrom(this.http.put(this.APIUrl + '/request/save', newRequest)
       .pipe(catchError(this.errorService.errorHandlerList)));

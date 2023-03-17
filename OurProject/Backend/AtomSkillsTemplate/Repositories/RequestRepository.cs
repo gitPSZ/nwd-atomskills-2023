@@ -7,6 +7,7 @@ using AtomSkillsTemplate.Helpers;
 using AtomSkillsTemplate.Models;
 using AtomSkillsTemplate.Models.ClaimsForTable;
 using AtomSkillsTemplate.Models.DTOs;
+using AtomSkillsTemplate.NewModels;
 using AtomSkillsTemplate.Repositories.Contracts;
 
 using Dapper;
@@ -19,19 +20,19 @@ namespace AtomSkillsTemplate.Repositories
     {
         private IConnectionFactory connectionFactory { get; set; }
 
-        private string schemaName = "\"as2023\"";
-        private string tableName = "\"claim\"";
+        private string schemaName = "\"atom\"";
+        private string tableName = "\"request\"";
 
         public RequestRepository(IConnectionFactory factory)
         {
             connectionFactory = factory;
         }
 
-        public async Task<IEnumerable<RequestDTO>> GetRequest()
+        public async Task<IEnumerable<Request>> GetRequest()
         {
             using (var connection = connectionFactory.GetConnection())
             {
-                var request = await connection.QueryAsync<RequestDTO>($"select * from {schemaName}.{tableName}");
+                var request = await connection.QueryAsync<Request>($"select * from {schemaName}.{tableName}");
                 return request;
 
             }

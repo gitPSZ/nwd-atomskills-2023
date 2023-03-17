@@ -46,12 +46,14 @@ export class InitCheckTableComponent  extends BaseComponent implements OnInit {
   ngOnInit() {
     this.roleid = this.simplemesService.observableUser.value.roleId;
     let person = this.simplemesService.observableUser.value;
+    let req =  this.requestService.getRequest();
+    console.log(req);
     console.debug("role", this.roleUser);
     var userSubscription = this.simplemesService.observableUser.subscribe(async (user) => {
       if(user.id == null){
         return;
       }
-      this.customers = await this.requestService.getClaimsWithAllAttributes();
+     //this.customers = await this.requestService.getClaimsWithAllAttributes();
     })
     this.subscriptions.push(userSubscription);
     this.primengConfig.ripple = true;
@@ -110,7 +112,7 @@ else
     this.roleid = this.simplemesService.observableUser.value.roleId;
     let person = this.simplemesService.observableUser.value;
     console.debug("role", this.roleUser);
-    this.customers = await this.requestService.getClaimsWithAllAttributes();
+   // this.customers = await this.requestService.getClaimsWithAllAttributes();
     
   }
   async commandExecutorSave() {
@@ -122,7 +124,7 @@ else
     this.visibleSelectExecutor = false;
     let person = this.simplemesService.observableUser.value;
     console.debug("role", this.roleUser);
-    this.customers = await this.requestService.getClaimsWithAllAttributes();
+  //  this.customers = await this.requestService.getClaimsWithAllAttributes();
 
 
   }
@@ -150,34 +152,7 @@ else
   }
 
 
-  exportPdf() {
-    // import("jspdf").then(jsPDF => {
-    //     import("jspdf-autotable").then(x => {
-    //         const doc = new jsPDF.default(0,0);
-    //         doc.autoTable(this.exportColumns, this.products);
-    //         doc.save('products.pdf');
-    //     })
-    // })
-}
 
-exportExcel() {
-  // import("jspdf").then(jsPDF => {
-  //   import("jspdf-autotable").then(x => {
-  //       const doc = new jsPDF.default(0,0);
-  //       doc.autoTable(this.exportColumns, this.products);
-  //       doc.save('products.pdf');
-  //   })
-//})
-}
-
-saveAsExcelFile(buffer: any, fileName: string): void {
-//     let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-//     let EXCEL_EXTENSION = '.xlsx';
-//     const data: Blob = new Blob([buffer], {
-//         type: EXCEL_TYPE
-//     });
-//     FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
- }
 }
 
 export enum ToastType {

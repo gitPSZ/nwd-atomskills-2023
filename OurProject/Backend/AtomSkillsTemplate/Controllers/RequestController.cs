@@ -11,12 +11,13 @@ using Newtonsoft.Json;
 using System.Security.Cryptography;
 using AtomSkillsTemplate.Helpers;
 using AtomSkillsTemplate.Models.ClaimsForTable;
+using AtomSkillsTemplate.NewModels;
 
 namespace AtomSkillsTemplate.Controllers
 {
     [ApiController]
     [Route("api/request")]
-    [AuthorizationHelper.CustomAuthorizationAttribute("Администратор;Инициатор;Оператор первой линии;Исполнитель;Сервис-Менеджер")]
+    [AuthorizationHelper.CustomAuthorizationAttribute("Начальник;Администратор")]
     public class RequestController : Controller
     {
         private IRequestRepository requestRepository { get; set; }
@@ -27,15 +28,16 @@ namespace AtomSkillsTemplate.Controllers
 
         [HttpGet]
 
-        public async Task<ActionResult<RequestDTO>> GetRequests()
+        public async Task<ActionResult<Request>> GetRequests()
         {
-            var personDTOs = await requestRepository.GetRequest();
-            if (personDTOs == null)
+            var reqeustDto = await requestRepository.GetRequest();
+            if (reqeustDto == null)
             {
                 return NotFound();
             }
-            return Ok(personDTOs);
+            return Ok(reqeustDto);
         }
+
         [HttpGet("priorities")]
 
         public async Task<ActionResult<List<Priority>>> GetPriorities()
