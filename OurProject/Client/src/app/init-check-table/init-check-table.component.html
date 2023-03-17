@@ -150,7 +150,7 @@
                     <th pSortableColumn="releaseDate" style="min-width:100px">
                         <div class="flex justify-content-center align-items-center">
                             Дата создания 
-                            <p-columnFilter type="text" field="releaseDate" display="menu"></p-columnFilter>
+                            <p-columnFilter type="text" field="releaseDate | date: 'dd/MM/yyyy'" display="menu"></p-columnFilter>
                             <p-sortIcon field="releaseDate"></p-sortIcon>
                         </div>
                     </th>
@@ -189,7 +189,7 @@
 
                     <td>
                         <span class="p-column-title">Дата создания</span>
-                        {{customer.releaseDate}}
+                        {{customer.releaseDate | date: 'dd.MM.yyyy'}}
                     </td>
                     <td>
                         <span class="p-column-title" >Статус</span>
