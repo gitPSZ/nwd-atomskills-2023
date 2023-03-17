@@ -44,6 +44,7 @@ import * as FileSaver from 'file-saver';
 import { ChipModule } from 'primeng/chip';
 import { DictionaryComponent } from './dictionary/dictionary.component';
 import { ProfileComponent } from './starting-components/ProfileComponent/profile/profile.component';
+import { PlanningComponent } from './planning/planning/planning.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { ProfileComponent } from './starting-components/ProfileComponent/profile
     NavigationCardsComponent,
     DictionaryComponent,
     ProfileComponent,
+    PlanningComponent,
   ],
   imports: [
     HttpClientModule,
