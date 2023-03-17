@@ -42,6 +42,7 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
 import {saveAs} from 'file-saver';
 import * as FileSaver from 'file-saver';
 import { ChipModule } from 'primeng/chip';
+import { DictionaryComponent } from './dictionary/dictionary.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { ChipModule } from 'primeng/chip';
     InitCheckTableComponent,
     UserListComponent,
     NavigationCardsComponent,
+    DictionaryComponent,
   ],
   imports: [
     HttpClientModule,
