@@ -25,6 +25,15 @@ namespace AtomSkillsTemplate.Services
             this.connectionFactory = connectionFactory;
             _ = Task.Run(async () =>
             {
+                try
+                {
+                    await LoadMachines();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Ошибка при загрузке списка оборудований: " + e.ToString());          
+                }
+                
                 while (true)
                 {
                     try
@@ -38,6 +47,38 @@ namespace AtomSkillsTemplate.Services
                     await Task.Delay(interval);
                 }
             });
+        }
+        private async Task LoadMachines()
+        {
+            using var conn = connectionFactory.GetConnection();
+            var client = new HttpClient();
+            var result = await client.GetAsync("http://localhost:1040/mnf/machines");
+            var jsonString = await result.Content.ReadAsStringAsync();
+            var machines = JsonConvert.DeserializeObject<MachineDTO>(jsonString);
+
+            List<string> activeIDs = new List<string>();
+            activeIDs.AddRange(machines.Milling.Select(o => o.Key));
+            activeIDs.AddRange(machines.Lathe.Select(o => o.Key));
+            foreach (var millingMachine in machines.Milling)
+            {
+                var sqlStringContractors = $"insert into {DBHelper.Schema}.{DBHelper.Machines}(id, machine_type, port) values(:id, :machine_type, :port) " +
+                   $" on conflict(id) do update set machine_type=:machine_type, port=:port";
+                var contractorParams = new { id = millingMachine.Key, machine_type = "milling", port = millingMachine.Value};
+                await conn.QueryAsync(sqlStringContractors, contractorParams);
+            }
+
+            foreach (var latheMachine in machines.Lathe)
+            {
+                var sqlStringContractors = $"insert into {DBHelper.Schema}.{DBHelper.Machines}(id, machine_type, port) values(:id, :machine_type, :port) " +
+                   $" on conflict(id) do update set machine_type=:machine_type, port=:port";
+                var contractorParams = new { id = latheMachine.Key, machine_type = "milling", port = latheMachine.Value };
+                await conn.QueryAsync(sqlStringContractors, contractorParams);
+            }
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@IDs", activeIDs);
+            await conn.QueryAsync($"update {DBHelper.Schema}.{DBHelper.Machines} set is_active = '0' where id in @IDs = false", parameters);
+
         }
         private async Task CheckRequests()
         {
@@ -141,6 +182,11 @@ namespace AtomSkillsTemplate.Services
             
 
         }
+    }
+    public class MachineDTO
+    {
+        public Dictionary<string, int> Milling{ get; set; }
+        public Dictionary<string, int> Lathe { get; set; }
     }
     public class RequestDTO
     {
