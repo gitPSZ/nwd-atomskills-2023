@@ -14,12 +14,13 @@ using AtomSkillsTemplate.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Shared.authorization;
+using AtomSkillsTemplate.Services;
 
 namespace AtomSkillsTemplate.Controllers
 {
     [ApiController]
     [Route("api/persons")]
-    [AuthorizationHelper.CustomAuthorizationAttribute("Администратор;Инициатор;Оператор первой линии;Исполнитель;Сервис-Менеджер")]
+    [AuthorizationHelper.CustomAuthorizationAttribute("Начальник;Администратор;Инициатор;Оператор первой линии;Исполнитель;Сервис-Менеджер")]
     public class PersonController : Controller
     {
         private IPersonRepository personRepository { get; set; }
@@ -75,6 +76,20 @@ namespace AtomSkillsTemplate.Controllers
                 return NotFound();
             }
             return Ok(personDTOs);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("sendmail")]
+
+        public async Task<ActionResult<PersonDTO>> SendMail()
+        {
+
+           
+                EmailService emailService = new EmailService();
+                await emailService.SendEmailAsync("AtomSkills2023@mail.ru", "Тема письма", "Тест письма: тест!");
+                return RedirectToAction("Index");
+                    
+            return Ok("ok");
         }
         [AllowAnonymous]
         [HttpPut("registration")]
