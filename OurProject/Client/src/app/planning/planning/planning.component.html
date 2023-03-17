@@ -1,1 +1,23 @@
-<p>planning works!</p>
+<div class="main-grid">
+    <p-listbox [options]="requests" [(ngModel)]="selectedRequest" [multiple]="false" optionLabel="name" filterBy="label" [listStyle]="{'height':'100%'}">
+        <ng-template pTemplate="header" >
+            <div class="font-bold">
+                Необработанные заявки
+            </div>
+        </ng-template>
+        <ng-template pTemplate="filter" let-options="options">
+            <div class="p-inputgroup">
+                <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+                <input type="text" pInputText placeholder="Filter" [(ngModel)]="filterValue" (keyup)="options.filter($event)">
+            </div>
+            <button pButton icon="pi pi-times" class="ml-3" (click)="myResetFunction(options)"></button>
+        </ng-template>
+        <ng-template let-request pTemplate="item">
+            <div class="country-item">
+                <div>Заявка</div>
+                <div>{{request.id}}</div>
+            </div>
+        </ng-template>
+        
+    </p-listbox>
+</div>

@@ -24,6 +24,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
+import { Listbox, ListboxModule} from 'primeng/listbox';
 import { AuthenticationService } from './services/AuthenticationService/authentication.service';
 import { TokenInterceptorService } from './services/Interceptors/token-interceptor.service';
 import { PasswordModule } from 'primeng/password';
@@ -85,7 +86,8 @@ import { PlanningComponent } from './planning/planning/planning.component';
     InputTextareaModule,
     ContextMenuModule,
     MultiSelectModule,
-    ChipModule
+    ChipModule,
+    ListboxModule
   ],
   providers: [ErrorService, StatusService, ConfigService, MessageService, AuthenticationService, CookieService, SimpleMessageService, AuthenticationService,
     {

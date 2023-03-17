@@ -17,6 +17,7 @@ using AtomSkillsTemplate.Repositories;
 using AtomSkillsTemplate.Repositories.Contracts;
 using AtomSkillsTemplate.Services.Interfaces;
 using AtomSkillsTemplate.Services;
+using System.Net;
 
 namespace AtomSkillsTemplate
 {
@@ -40,6 +41,7 @@ namespace AtomSkillsTemplate
             services.AddScoped<IPersonRepository, PersonRepository>();
             services.AddScoped<ITypeRequestRepository, TypeRequestRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
+            services.AddSingleton<IEmailService, EmailService>();
             services.AddSingleton<IConnectionFactory, ConnectionFactory>();
             services.AddSingleton<IReloadRequestsService, ReloadRequestsService>();
             services.AddSingleton<IMachineRepository, NewMachineRepository>();
@@ -55,6 +57,11 @@ namespace AtomSkillsTemplate
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IReloadRequestsService connection)
         {
+            ServicePointManager.ServerCertificateValidationCallback +=
+                (se, cert, chain, sslerror) =>
+                {
+                    return true;
+                };
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

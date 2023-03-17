@@ -1,19 +1,25 @@
-<div class="main-grid h-screen">
+<div class="h-screen main-grid">
     <!-- content -->
-    <div class="grid w-64 sm:w-96 col-start-2 row-start-2" (keydown)="onKeyDown($event)">
-        <span class="p-float-label mb-6">
-            <input id="float-input-name" [(ngModel)]="person.login" pInputText class="w-full shadow-md">
-            <label for="float-input-name">Имя пользователя</label>
-        </span>
-        <span class="p-float-label mb-6">
-           
-            <input id="" [(ngModel)]="person.password" type="password" pInputText class="w-full shadow-md">
-            <label for="float-input">Пароль</label>
-        </span>
-        <button label="Войти" [loading]="isLoading" (click)="authoriseClick()" pButton class="shadow-md"></button>
-
-        <div (click)="showRegisterWindow()" class="flex justify-end pt-1 cursor-pointer">Регистрация</div>
-
+    <div class="flex  col-start-1 row-start-2">
+        <div class="grid w-64 sm:w-96  mx-auto" (keydown)="onKeyDown($event)">
+            <span class="p-float-label mb-6">
+                <input id="float-input-name" [(ngModel)]="person.login" pInputText class="w-full shadow-md">
+                <label for="float-input-name">Имя пользователя</label>
+            </span>
+            <span class="p-float-label mb-6">
+               
+                <input id="" [(ngModel)]="person.password" type="password" pInputText class="w-full shadow-md">
+                <label for="float-input">Пароль</label>
+            </span>
+            <button label="Войти" [loading]="isLoading" (click)="authoriseClick()" pButton class="shadow-md"></button>
+    
+            <div (click)="showRegisterWindow()" class="flex justify-end pt-1 cursor-pointer">Регистрация</div>
+            
+        </div>
+    </div>
+    
+    <div class=" bg-red-400 col-start-2 row-span-3  h-screen">
+        <img src="https://controleng.ru/wp-content/uploads/01_70_01.jpg" class="h-screen"/>
     </div>
 </div>
 
