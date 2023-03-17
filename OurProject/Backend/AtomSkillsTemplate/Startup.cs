@@ -15,6 +15,8 @@ using AstomSkillsTemplate.Connection;
 using AtomSkillsTemplate.Connection.Interface;
 using AtomSkillsTemplate.Repositories;
 using AtomSkillsTemplate.Repositories.Contracts;
+using AtomSkillsTemplate.Services.Interfaces;
+using AtomSkillsTemplate.Services;
 
 namespace AtomSkillsTemplate
 {
@@ -38,7 +40,9 @@ namespace AtomSkillsTemplate
             services.AddScoped<IPersonRepository, PersonRepository>();
             services.AddScoped<ITypeRequestRepository, TypeRequestRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
-            services.AddScoped<IConnectionFactory, ConnectionFactory>();
+            services.AddSingleton<IConnectionFactory, ConnectionFactory>();
+            services.AddSingleton<IReloadRequestsService, ReloadRequestsService>();
+            services.AddScoped<INewRequestRepository, NewRequestRepository>();
             services.AddControllers();
             
             services.AddSwaggerGen(c =>
@@ -48,7 +52,7 @@ namespace AtomSkillsTemplate
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IReloadRequestsService connection)
         {
             if (env.IsDevelopment())
             {
