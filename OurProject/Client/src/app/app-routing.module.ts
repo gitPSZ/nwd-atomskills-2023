@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { UserListComponent } from './admin/user-list/user-list.component';
+import { DictionaryComponent } from './dictionary/dictionary.component';
 import { InitCheckTableComponent } from './init-check-table/init-check-table.component';
 import { RequestComponent } from './request/request/request.component';
 import { AuthorisationComponent } from './starting-components/authorisation/authorisation.component'; 
@@ -13,6 +14,7 @@ const routes: Routes = [
   {path:'request' , component:RequestComponent},
   {path:'statistic', component:StatisticComponent},
   {path:'initCheckTable', component:InitCheckTableComponent},
+  {path:'dictionary', component:DictionaryComponent},
   {path:'admin/userList', component:UserListComponent},
   {path:'', redirectTo: 'navigationCards', pathMatch: 'full'}
 
