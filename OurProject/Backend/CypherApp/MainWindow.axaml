@@ -1,0 +1,79 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="CypherApp.MainWindow"
+        Title="CypherApp">
+	<TabControl>
+		<TabItem
+			Header="Cypher">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="*" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
+
+				<TextBlock Grid.Row="0" Margin="4">Шифруемый пароль:</TextBlock>
+				<TextBox
+					x:Name="TextBoxPassword"
+					Grid.Row="1"
+					Margin="4" />
+				<TextBlock Grid.Row="2" Margin="4">Зашифрованный пароль:</TextBlock>
+				<TextBox
+					x:Name="TextBoxCipher"
+					Grid.Row="3"
+					Margin="4" />
+				<TextBlock Grid.Row="4" Margin="4">Соль</TextBlock>
+				<TextBox
+					x:Name="TextBoxSalt"
+					Grid.Row="5"
+					Margin="4" />
+				<Button
+					Grid.Row="7"
+					Margin="4"
+					Click="Button_Click">
+					Зашифровать
+				</Button>
+
+			</Grid>
+		</TabItem>
+		<TabItem
+			IsSelected="True"
+			Header="SendQuery">
+
+			<Grid 
+				Margin="0,0,0,4"
+				RowDefinitions="auto,auto,auto,auto,*,auto">
+
+				<TextBox
+					Name="TXB_Token"
+					Text="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lX3VzZXIiOiJVc2VyMSIsIm5hbWVfdGVhbSI6IlRlYW0xIiwicGVybWlzc2lvbl9sZXZlbHMiOjEsImlhdCI6MTY3ODQyOTE2N30.L_2A4uz0IBOLfIatQSb3Qj6Ihnhv14bWHUAoRVa9DCU"
+					Watermark="token">					
+				</TextBox>
+				<TextBlock
+					Grid.Row="1"
+					Text="Result"
+					Name="TXBL_Result">
+				</TextBlock>
+				<Button
+					Name="BTN_SendQuery"
+					Click="ButtonSend_Click"
+					Grid.Row="5">
+					Send query
+				</Button>
+				
+				
+			</Grid>
+			
+		</TabItem>
+
+	</TabControl>
+	
+</Window>

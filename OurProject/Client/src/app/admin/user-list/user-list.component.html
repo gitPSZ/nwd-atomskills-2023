@@ -1,0 +1,77 @@
+<div class="card">
+    <p-table #dt1 [value]="people" dataKey="id"
+        [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10]" [loading]="loading"
+        [paginator]="true" currentPageReportTemplate="Показаны с {first} по {last} из {totalRecords} записей "
+        [globalFilterFields]="['nameClient','login','role.roleCaption']"        
+        [(selection)]="selectedPerson">
+        <ng-template pTemplate="caption">
+            <div class="flex">
+                <button pButton label="Очистить" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear()"></button>
+                <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" [(ngModel)]="filterValue" (input)="filter()" placeholder="Поиск" />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="min-width:15rem" pSortableColumn="login" p-sortIcon  >
+                    <div class="flex justify-content-center align-items-center">
+                        Логин
+                        <p-columnFilter type="text" field="login" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width:15rem" pSortableColumn="nameClient" p-sortIcon>
+                    <div class="flex justify-content-center align-items-center">
+                        ФИО
+                        <p-columnFilter type="text" field="nameClient" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="min-width:15rem" >
+                    <div class="flex justify-content-center align-items-center">
+                        Роль
+                        <p-columnFilter type="text" field="role" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                
+                
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-person>
+            <tr>
+                <td>
+                    {{person.login}}
+                </td>
+                <td>
+                    {{person.nameClient}}
+                </td>
+                <td>
+                    <div class="flex flex-row w-full">
+                        <button *ngIf="person.role?.id != person.roleId" class="mr-4" pButton (click)="changeRole(person)">
+                            <i class="pi pi-save m-auto"></i>
+                        </button>
+
+                        <p-dropdown [options]="roles" [(ngModel)]="person.role" class="w-full" [style]="{'width':'100%'}">
+                            <ng-template pTemplate="selectedItem">
+                                <div>{{person.role?.roleCaption}}</div>
+                            </ng-template>
+                            <ng-template let-role pTemplate="item" >
+                                <div class="country-item flex flex-row"  >
+                                    {{role.roleCaption}}
+                                </div>
+                            </ng-template>
+                        </p-dropdown>
+                    </div>
+                    
+                </td>
+                
+                
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">Пользователи не найдены</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

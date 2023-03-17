@@ -1,0 +1,141 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="300"
+        x:Class="SetupApp.MainWindow"
+        Title="Установка">
+
+	<!--<Window.Styles>
+		<Style Selector="Border">
+			<Setter></Setter>
+		</Style>
+	</Window.Styles>-->
+	
+	<Grid 
+		Margin="4"
+		RowDefinitions="auto,auto,auto,auto,auto,auto,auto,*,auto,auto,auto"	>
+
+		<Grid 
+			ColumnDefinitions="auto,auto">
+			<TextBlock
+				Text="Фронтенд URL (пример: 172.168.12.158)">
+			</TextBlock>
+			<TextBlock
+				Name="TXBL_ERROR_FRONTEND"
+				Grid.Column="1"
+				Foreground="Red"
+				Text="">
+			</TextBlock>
+		</Grid>
+
+
+		<TextBox
+			Grid.Row="1"
+			Name="TXB_FRONTEND_URL">
+		</TextBox>
+
+		<Grid
+			Grid.Row="2"
+			ColumnDefinitions="auto,auto">
+			<TextBlock
+				Text="Бэкенд URL (пример: 172.168.12.158)">
+			</TextBlock>
+			<TextBlock
+				Name="TXBL_ERROR_BACKEND"
+				Grid.Column="1"
+				Foreground="Red"
+				Text="">
+			</TextBlock>
+		</Grid>
+
+
+		<TextBox
+			Grid.Row="3"
+			Name="TXB_BACKEND_URL">
+		</TextBox>
+
+		<TextBlock 
+			Name="TXBL_GREEN_CONNECTIONSTRING"
+			Foreground="Green"
+			Grid.Row="8">
+		</TextBlock>
+		<Grid
+			Margin="0,4,0,0"
+			Grid.Row="9"
+			ColumnDefinitions="auto,*,auto,*,auto,*,auto,*,auto,*"
+			RowDefinitions="auto,auto">
+			
+			<TextBlock
+				VerticalAlignment="Center"
+				Text="Server=">
+			</TextBlock>
+			<TextBox
+				Name="TXB_Server"
+				Grid.Column="1"
+				Text="">
+			</TextBox>
+
+			<TextBlock
+				Grid.Column="2"
+				VerticalAlignment="Center"
+				Text="Port=">
+			</TextBlock>
+			<TextBox
+				Name="TXB_Port"
+				Grid.Column="3"
+				Text="">
+			</TextBox>
+
+			<TextBlock
+				Grid.Column="4"
+				VerticalAlignment="Center"
+				Text="User Id=">
+			</TextBlock>
+			<TextBox
+				Name="TXB_UserID"
+				Grid.Column="5"
+				Text="">
+			</TextBox>
+			
+			<TextBlock
+				Grid.Column="6"
+				VerticalAlignment="Center"
+				Text="Password=">
+			</TextBlock>
+			<TextBox
+				Name="TXB_Password"
+				Grid.Column="7"
+				Text="">
+			</TextBox>
+
+			<TextBlock
+				Grid.Column="8"
+				VerticalAlignment="Center"
+				Text="Database=">
+			</TextBlock>
+			<TextBox
+				Name="TXB_Database"
+				Grid.Column="9"
+				Text="">
+			</TextBox>
+			
+		</Grid>
+
+		<Button
+			Name="BTN_APPLY_CONNNECTION_STRING"
+			Margin="0,4,0,0"
+			Grid.Row="10">
+			Применить строку подключения к БД
+		</Button>
+
+		<Button
+			Name="BTN_APPLY"
+			Margin="0,4,0,0"
+			Grid.Row="5">
+			Применить ссылки
+		</Button>
+		
+	</Grid>
+	
+</Window>

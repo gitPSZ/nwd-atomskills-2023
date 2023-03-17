@@ -1,0 +1,10 @@
+<div style="height: 90vh;">
+    <div class="mb-4 flex">
+        <p-radioButton name="groupname" value="byState" label="По состоянию" [(ngModel)]="selectedState" class="mr-5" />
+        <p-radioButton name="groupname" value="byExecutor" label="По исполнителю" [(ngModel)]="selectedState" class="mr-5"/>
+    </div>
+    <div class="card bg-white rounded-lg">
+        <p-chart type="bar" [data]="stateData" *ngIf="selectedState == 'byState'"></p-chart>
+        <p-chart type="bar" [data]="executorData" *ngIf="selectedState == 'byExecutor'"></p-chart>
+    </div>
+</div>

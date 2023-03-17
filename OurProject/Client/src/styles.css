@@ -1,0 +1,30 @@
+
+
+@import './styles/globalStyles.css';
+
+@import '../node_modules/primeng/resources/themes/nova/theme.css'; 
+@import '../node_modules/primeng/resources/primeng.min.css';
+@import '../node_modules/primeicons/primeicons.css'; 
+
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+/* You can add global styles to this file, and also import other style files */
+/* @import '../node_modules/primeflex/primeflex.css'; 
+@import '../node_modules/quill/dist/quill.snow.css';  */ 
+
+::-webkit-scrollbar-track {
+    background-color: #ccc; /*Цвет скролла*/
+} 
+::-webkit-scrollbar-thumb { 
+    border-radius: 5px; /*Закругление ползунка*/
+    background-color: #555; /*Цвет ползунка*/
+} 
+::-webkit-scrollbar { 
+    width: 8px;  /*Толщина скролла*/
+}
+* {
+    scrollbar-color: #555 #fff; /*Цвет скролла, цвет ползунка*/
+    scrollbar-width: thin; /*Толщина скролла thin, auto*/
+}
