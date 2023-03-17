@@ -1,5 +1,6 @@
 ﻿using AtomSkillsTemplate.Connection;
 using AtomSkillsTemplate.Connection.Interface;
+using AtomSkillsTemplate.Models.DTOs;
 using AtomSkillsTemplate.NewModels;
 using AtomSkillsTemplate.Services.Interfaces;
 using Dapper;
@@ -20,8 +21,11 @@ namespace AtomSkillsTemplate.Services
     {
         int interval = 10000;
         public IConnectionFactory connectionFactory;
-        public ReloadRequestsService(IConnectionFactory connectionFactory)
+        public IEmailService mailService;
+        public List<Request> cachedRequests = new List<Request>();
+        public ReloadRequestsService(IConnectionFactory connectionFactory, IEmailService mailService)
         {
+            this.mailService = mailService;
             this.connectionFactory = connectionFactory;
             _ = Task.Run(async () =>
             {
@@ -39,6 +43,9 @@ namespace AtomSkillsTemplate.Services
                     try
                     {
                         await CheckRequests();
+                        await CheckNewRequests();
+                        
+                        await LoadMachineStatus();
                     }
                     catch (System.Exception e )
                     {
@@ -47,6 +54,69 @@ namespace AtomSkillsTemplate.Services
                     await Task.Delay(interval);
                 }
             });
+        }
+        private async Task CheckNewRequests()
+        {
+            using var conn = connectionFactory.GetConnection();
+            var requests = (await conn.QueryAsync<Request>($"select * from {DBHelper.Schema}.{DBHelper.Requests}")).ToList();
+
+            if (cachedRequests.Count() == 0)
+            {
+                cachedRequests = requests.ToList();
+                return;
+            }
+//#if DEBUG
+//            requests.Add(new Request 
+//            {
+//                ContractorName = "contractor",
+//                Description = "description",
+//                Id = 123
+//            });
+//#endif
+            if (requests.Count() <= cachedRequests.Count())
+            {
+                cachedRequests = requests.ToList();
+                return;
+            }
+            var cachedIDs = cachedRequests.Select(o => o.Id);
+            var newRequests = requests.Where(o => cachedIDs.Contains(o.Id) == false).ToList();
+
+            var textToSend = "Поступили новые заявки: \n";
+
+            foreach(var newRequest in newRequests)
+            {
+                textToSend += $"ID: {newRequest.Id}, описание: {newRequest.Description}, контрагент: {newRequest.ContractorName}";
+            }
+            var peopleToSend = await conn.QueryAsync<PersonDTO>($"select * from {DBHelper.Schema}.{DBHelper.People} where role_id = 1");
+            foreach(var person in peopleToSend)
+            {
+                try
+                {
+                    await mailService.SendEmailAsync(person.Email, "Поступление заявок", textToSend);
+                    Console.WriteLine("Почтовое уведомление успешно отправлено");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Возникла ошибка при отправлении уведомлений о поступлении новых сообщений");
+                }
+            }
+        }
+        private async Task LoadMachineStatus()
+        {
+            using var conn = connectionFactory.GetConnection();
+            var ports = await conn.QueryAsync<long>($"select port from {DBHelper.Schema}.{DBHelper.Machines}");
+            var states = await conn.QueryAsync<MachineState>($"select * from {DBHelper.Schema}.{DBHelper.MachineState}");
+
+            var client = new HttpClient();
+            foreach(var port in ports)
+            {
+                var result = await client.GetAsync($"http://localhost:{port}/status");
+                var jsonString = await result.Content.ReadAsStringAsync();
+                var status = JsonConvert.DeserializeObject<MachineStatus>(jsonString);
+
+                await conn.QueryAsync($"update {DBHelper.Schema}.{DBHelper.Machines} set id_state= :idStatus where port = :port",
+                    new { idStatus = states.FirstOrDefault(o => o.Code == status.State.Code.ToLower()).Id, port = port }); ;
+            }
         }
         private async Task LoadMachines()
         {
@@ -75,6 +145,7 @@ namespace AtomSkillsTemplate.Services
                 await conn.QueryAsync(sqlStringContractors, contractorParams);
             }
 
+            
             //var parameters = new DynamicParameters();
             //parameters.Add("@IDs", activeIDs);
             //await conn.QueryAsync($"update {DBHelper.Schema}.{DBHelper.Machines} set is_active = '0' where id in @IDs = false", parameters);
@@ -187,6 +258,20 @@ namespace AtomSkillsTemplate.Services
     {
         public Dictionary<string, int> Milling{ get; set; }
         public Dictionary<string, int> Lathe { get; set; }
+    }
+    public class MachineStatus
+    {
+        public long Id { get; set; }
+        public string Code { get; set; }
+        public MachineStatus State { get; set; }
+        public DateTime BeginDateTime { get; set; }
+        public DateTime? EndDateTime { get; set; }
+    }
+    public class MachineState
+    {
+        public long Id{ get; set; }
+        public string Code { get; set; }
+        public string Caption { get; set; }
     }
     public class RequestDTO
     {

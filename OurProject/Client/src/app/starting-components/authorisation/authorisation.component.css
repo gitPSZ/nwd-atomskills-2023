@@ -1,6 +1,7 @@
 .main-grid{
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    height: 90vh;
+    grid-template-columns: 10fr 15fr;
     grid-template-rows: 1fr auto 1fr;
 }
 :host ::ng-deep .p-password-input{

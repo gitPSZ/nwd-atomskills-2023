@@ -84,7 +84,7 @@ export class RequestService extends BaseApiService {
     return retValue;
   }
 
-  getRequest(): Promise<RequestModel[]> {
+  getRequests(): Promise<RequestModel[]> {
 
     var retValue = lastValueFrom(this.http.get<RequestModel[]>(this.APIUrl + '/request')
       .pipe(catchError(this.errorService.errorHandlerList)));
