@@ -87,12 +87,7 @@ namespace AtomSkillsTemplate.Controllers
             }
             return Ok(products);
         }
-        [AllowAnonymous]
-        [HttpGet("ordered/{machineID}")]
-        public async Task<IEnumerable<Request>> GetRequestsOrdered(string machineID)
-        {
-            return await monitoringService.GetRequestOrderedForMachine(machineID);
-        }
+        
 
 
         [HttpGet("priorities")]
