@@ -18,6 +18,7 @@ export class PlanningComponent extends BaseComponent{
     selectedRequest: RequestModel = {}
     selectedProduct: ProductsForPosition = {};
     machine: MachineModel[] = [];
+    selectedMachine: MachineModel[] = [];
     filterValue : string = '';
     constructor(private requestService : RequestService, private dictionaryService : dictionaryService){
         super();
@@ -27,6 +28,7 @@ export class PlanningComponent extends BaseComponent{
         this.selectedRequest = this.requests[0];
         this.products = await this.requestService.getProductsForPosition(this.selectedRequest);
         this.machine = await this.dictionaryService.getDictionary();
+
         console.log(this.machine);
     }
     myResetFunction(options:any){
