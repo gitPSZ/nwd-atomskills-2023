@@ -7,6 +7,7 @@
         public static string Contractors = "\"contractor\"";
         public static string Machines = "\"machine\"";
         public static string MachineState = "\"machine_state\"";
+        public static string MachineRequest= "\"machine_request\"";
         public static string Products = "\"product\"";
         public static string RequestPositions = "\"request_position\"";
         public static string People = "\"person\"";
