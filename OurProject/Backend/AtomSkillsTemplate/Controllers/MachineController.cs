@@ -65,6 +65,17 @@ namespace AtomSkillsTemplate.Controllers
             return Ok(machineDTOs);
         }
 
+        [HttpPost("getRequestOrders")]
+        public async Task<ActionResult<Request>> GetRequestOrders(Machine machine)
+        {
+            var request = await monitoring.GetRequestOrderedForMachine(machine.Id);
+            if (request == null)
+            {
+                return NotFound();
+            }
+            return Ok(request);
+        }
+
 
     }
 }

@@ -22,10 +22,12 @@ import { DictionaryService } from './dictionary.service';
 })
 export class DictionaryComponent  extends BaseComponent implements OnInit{
   interval: any;
+  requests: RequestModel[] = [];
   loading: boolean = false;
   selectedProduct1 : MachineModel = {};
   visible:boolean = false;
   globalText = '';
+  visibleShowDialog = false;
   dialogInfo:MachineModel = {};
   customers: MachineModel[] = [];
   @ViewChild("dt") dataGrid : Table | undefined;
@@ -39,9 +41,16 @@ export class DictionaryComponent  extends BaseComponent implements OnInit{
     console.log(this.customers);
   }
 
-  filterGlobal() {
-    this.dataGrid?.filterGlobal(this.globalText, 'contains');
+ 
+
+  async openDialogView(machine: MachineModel) {
+
+    this.visibleShowDialog = true;
+    this.requests = await this.dictionaryService.getRequestOrders(machine);
+    console.log("request",this.requests);
+  
   }
+
  async repairBtnDialog(info:MachineModel){
     this.dialogInfo = {};
     this.dialogInfo = info;
@@ -68,5 +77,8 @@ async repairBtnClick(){
     
     console.log(this.customers);
     
+  }
+  filterGlobal() {
+    this.dataGrid!.filterGlobal(this.globalText, 'contains');
   }
 }

@@ -55,7 +55,15 @@
                 </div>
             </ng-template>     
         </p-listbox>
-        <p class="font-bold">Время фрезерования:{{timeFrez}}c. Время точения:{{timeTokerov}}c.</p>
+        <div>
+            <p class="font-bold">Время фрезерования: {{timeFrez}} секунд </p>
+        </div>
+        <div>
+            <p class="font-bold">Время точения:{{timeTokerov}} секунд</p>
+        </div>
+        <div>
+            <p class="font-bold">Итог:{{timeAll}} секунд</p>
+        </div>
     </div>
 
     <div class="row-span-3 col-span-1" style=" max-height: 75vh;">
