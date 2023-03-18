@@ -16,7 +16,7 @@ export class SimpleMessageService {
   observableUser:BehaviorSubject<Person> = new BehaviorSubject<Person>({});
   observableNavigationButtons:BehaviorSubject<NavigationButton[]> = new BehaviorSubject<NavigationButton[]>([]);
   observableShortClientName:BehaviorSubject<string> = new BehaviorSubject<string>('');
-  observableTitle:BehaviorSubject<string> = new BehaviorSubject<string>('Управление IT услугами');
+  observableTitle:BehaviorSubject<string> = new BehaviorSubject<string>('MES');
 
   constructor(private cookieService : CookieService) {
     this.observableToken.next(this.cookieService.getCookie(environment.tokenKey));

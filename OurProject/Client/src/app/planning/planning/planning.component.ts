@@ -4,9 +4,11 @@ import { MachineModel } from 'src/app/newModels/MachineModel';
 import { ProductsForPosition } from 'src/app/newModels/ProductsForPosition';
 import { RequestSharedModel } from 'src/app/newModels/RequestSharedModel';
 import { RequestModel } from 'src/app/newModels/RequestModel';
+import { MachineRequestModel } from 'src/app/newModels/MachineRequestModel';
 import { RequestService } from 'src/app/request/request/request.service';
 import { dictionaryService } from '../../dictionary/dictionary.service';
 import { Listbox } from 'primeng/listbox';
+import { ToastService, ToastType } from 'src/app/services/ToastService/toast.service';
 
 @Component({
   selector: 'app-planning',
@@ -31,7 +33,7 @@ export class PlanningComponent extends BaseComponent{
     selectedProduct: ProductsForPosition = {};
     
     filterValue : string = '';
-    constructor(private requestService : RequestService, private dictionaryService : dictionaryService){
+    constructor(private requestService : RequestService, private dictionaryService : dictionaryService, private toastService : ToastService){
         super();
     }
     async ngOnInit(){
@@ -42,7 +44,6 @@ export class PlanningComponent extends BaseComponent{
       });
       
       let requestsSharedLocal : RequestSharedModel[] = []
-console.log(this.machine);
       this.requests.forEach(xx=>{ 
         if (xx.stateCode=="DRAFT")
         {
@@ -66,5 +67,37 @@ console.log(this.machine);
     async onChangeRequest(event: any) {
         this.products = await this.requestService.getProductsForPosition(this.selectedRequest.request);
 
+    }
+    async acceptClick(){
+let frezCount = 0;
+let tokarnCount = 0;
+        this.selectedRequest.machines.forEach(x=>{
+            if (x.machineTypeCaption == "токарный станок")
+            {
+                tokarnCount++;
+            }
+            if (x.machineTypeCaption == "фрезеровальный станок")
+            {
+                frezCount++;
+            }
+        })
+        if (frezCount<1&&tokarnCount<1)
+        {
+            this.toastService.show("Должен быть назначен хотя бы один токарный или фрезерный станок", "", ToastType.warn);
+            return;
+        }
+
+		if (this.selectedRequest.selectedMachines != null) {
+		
+            this.selectedRequest.machines.forEach(x=>
+                {
+                      this.requestService.SaveMachineRequest(x.id,this.selectedRequest.request?.id)
+                })
+                this.toastService.show("Заявки распределены", "", ToastType.success)
+		}
+
+
+
+ 
     }
 }

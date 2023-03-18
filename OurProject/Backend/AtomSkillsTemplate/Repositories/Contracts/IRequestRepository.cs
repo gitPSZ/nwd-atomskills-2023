@@ -12,6 +12,8 @@ namespace AtomSkillsTemplate.Repositories.Contracts
     {
         public Task<IEnumerable<Request>> GetRequest();
         public Task<IEnumerable<Request>> GetLastRequest(long count);
+
+        public Task<MachineRequestDto> SaveMachineRequest(MachineRequestDto MachineRequest);
         public Task<IEnumerable<ProductForPosition>> GetProductsRequest(Request request);
         
         public Task<IEnumerable<ClaimsForTableModel>> GetRequestForTable(PersonDTO roleUser);
