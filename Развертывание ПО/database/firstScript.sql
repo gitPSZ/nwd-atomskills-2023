@@ -84,7 +84,7 @@ CREATE TABLE atom.machine (
 	machine_type varchar NULL,
 	port int4 NULL,
 	is_deleted varchar NULL DEFAULT 1,
-	id_state int4 NULL,
+	id_state int4 NULL DEFAULT 5,
 	machine_type_caption varchar NULL,
 	CONSTRAINT machines_pk PRIMARY KEY (id),
 	CONSTRAINT machine_fk FOREIGN KEY (id_state) REFERENCES atom.machine_state(id)
