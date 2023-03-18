@@ -38,6 +38,8 @@ namespace AtomSkillsTemplate.Controllers
             return Ok(reqeustDto);
         }
 
+
+
         
         [HttpPost("last")]
 
@@ -50,6 +52,19 @@ namespace AtomSkillsTemplate.Controllers
             }
             return Ok(reqeustDto);
         }
+
+        [HttpPost("saveMachineRequest")]
+
+        public async Task<ActionResult<MachineRequestDto>> SaveMachineRequest(MachineRequestDto MachineRequest)
+        {
+            var machineRequest = await requestRepository.SaveMachineRequest(MachineRequest);
+            if (machineRequest == null)
+            {
+                return NotFound();
+            }
+            return Ok(machineRequest);
+        }
+
 
         [HttpPost("productsForPosition")]
 

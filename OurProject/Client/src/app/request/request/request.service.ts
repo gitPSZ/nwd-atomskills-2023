@@ -11,6 +11,7 @@ import { BaseApiService } from 'src/app/services/BaseAPIService/base-api.service
 import { ErrorService } from 'src/app/services/ErrorService/error.service';
 import { SimpleMessageService } from 'src/app/services/SimpleMessageService/simple-message.service';
 import { ProductsForPosition } from 'src/app/newModels/ProductsForPosition';
+import { MachineRequestModel } from 'src/app/newModels/MachineRequestModel';
 
 @Injectable({
   providedIn: 'root'
@@ -49,6 +50,12 @@ export class RequestService extends BaseApiService {
     return retValue;
   }
   
+  SaveMachineRequest(idMachine?:string, idRequest?: number): Promise<MachineRequestModel[]> {
+   let b = { IdMachine: idMachine, IdRequest: idRequest }
+    var retValue = lastValueFrom(this.http.post<MachineRequestModel[]>(this.APIUrl + '/request/saveMachineRequest',b)
+      .pipe(catchError(this.errorService.errorHandlerList)));
+    return retValue;
+  }
 
   getLastRequests(count:number): Promise<RequestModel[]> {
 

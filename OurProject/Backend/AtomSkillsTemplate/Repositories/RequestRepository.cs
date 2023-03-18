@@ -48,6 +48,29 @@ namespace AtomSkillsTemplate.Repositories
             }
         }
 
+        public async Task<MachineRequestDto> SaveMachineRequest(MachineRequestDto machineRequest)
+        {
+            using (var connection = connectionFactory.GetConnection())
+            {
+                var machineRequestResult = await connection.QueryFirstOrDefaultAsync<long?>(
+                  $@"insert into {schemaName}.{DBHelper.MachineRequest}(id_machine, id_request) 
+                    values (:id_machine, :id_request) returning id_request", new
+                  {
+                      id_machine = machineRequest.IdMachine,
+                      id_request = machineRequest.IdRequest
+
+                  });
+                if (machineRequestResult == null)
+                {
+                    return default(MachineRequestDto);
+                }
+
+                machineRequest.IdRequest = Convert.ToInt32(machineRequestResult);
+                return machineRequest;
+            }
+        }
+        
+
         public async Task<IEnumerable<ProductForPosition>> GetProductsRequest(Request request)
         {
             using (var connection = connectionFactory.GetConnection())

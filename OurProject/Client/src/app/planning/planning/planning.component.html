@@ -1,3 +1,7 @@
+<div>
+    <p-button   label="Утвердить заявку №{{selectedRequest.request?.number}}" (onClick)="acceptClick()" styleClass="p-button-warning p-button-rounded mb-4" icon="pi pi-pencil" ></p-button>
+
+</div>
 <div class="main-grid gap-4">
     <div >
         <p-listbox #requestListBox [options]="requestsShared"    [filter]="false"  [(ngModel)]="selectedRequest" [multiple]="false" optionLabel="name" filterBy="label"  [listStyle]="{'max-height':'36vh'}" (onChange)="onChangeRequest($event)">
@@ -15,7 +19,7 @@
             </ng-template>
             <ng-template let-request pTemplate="item">
                 <div class="country-item">
-                    <div>Заявка #{{request.request.id}}</div>
+                    <div>Заявка id#{{request.request.id}}#{{request.request.number}}</div>
                 </div>
             </ng-template>     
         </p-listbox>
@@ -98,5 +102,4 @@
             </ng-template>     
         </p-listbox>
     </div> -->
-
 </div>
