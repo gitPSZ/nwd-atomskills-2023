@@ -3,7 +3,7 @@
 </div>
 <div class="main-grid gap-4">
     <div >
-        <p-listbox #requestListBox [options]="requestsShared"    [filter]="false"  [(ngModel)]="selectedRequest" [multiple]="false" optionLabel="name" filterBy="label"  [listStyle]="{'max-height':'36vh'}" (onChange)="onChangeRequest($event)">
+        <p-listbox #requestListBox [options]="requestsShared"    [filter]="false"  [(ngModel)]="selectedRequest" [multiple]="false" optionLabel="name" filterBy="label"  [listStyle]="{'max-height':'30vh'}" (onChange)="onChangeRequest($event)">
             <ng-template pTemplate="header" >
                 <div class="font-bold">
                     Необработанные заявки
@@ -25,7 +25,7 @@
         </p-listbox>
     </div>
     <div class="row-start-2">
-        <p-listbox [options]="products"  [(ngModel)]="selectedProduct" [multiple]="false" optionLabel="caption" filterBy="label"  [listStyle]="{'max-height':'37vh'}">
+        <p-listbox [options]="products"  [(ngModel)]="selectedProduct" [multiple]="false" optionLabel="caption" filterBy="label"  [listStyle]="{'max-height':'30vh'}">
             <ng-template pTemplate="header" >
                 <div class="font-bold">
                     Состав заказа
@@ -58,10 +58,10 @@
         <p class="font-bold">Время фрезерования:{{timeFrez}}c. Время точения:{{timeTokerov}}c.</p>
     </div>
 
-    <div class="row-span-3 col-span-1" style=" max-height: 80vh;">
+    <div class="row-span-3 col-span-1" style=" max-height: 75vh;">
         
         <p-pickList  [dragdrop]="true"
-            [style]="{'max-height':'85vh'}"
+            [style]="{'max-height':'80vh'}"
             sourceHeader="Назначенные станки"  targetHeader="Все станки" [source]="selectedRequest.selectedMachines" [target]="selectedRequest.machines">
             <ng-template let-machin pTemplate="item">
                 <div class="product-item flex flex-row">

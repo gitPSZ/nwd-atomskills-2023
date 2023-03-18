@@ -37,5 +37,5 @@
     line-height: 1;
 }
 :host ::ng-deep .p-picklist-list{
-    height: 80vh;
+    height: 70vh;
 }
