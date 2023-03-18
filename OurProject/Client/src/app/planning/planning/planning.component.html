@@ -1,6 +1,6 @@
 <div class="main-grid gap-4">
     <div >
-        <p-listbox [options]="requests"    [filter]="false"  [(ngModel)]="selectedRequest" [multiple]="false" optionLabel="name" filterBy="label"  [listStyle]="{'max-height':'36vh'}" (onChange)="onChangeRequest($event)">
+        <p-listbox #requestListBox [options]="requestsShared"    [filter]="false"  [(ngModel)]="selectedRequest" [multiple]="false" optionLabel="name" filterBy="label"  [listStyle]="{'max-height':'36vh'}" (onChange)="onChangeRequest($event)">
             <ng-template pTemplate="header" >
                 <div class="font-bold">
                     Необработанные заявки
@@ -15,8 +15,7 @@
             </ng-template>
             <ng-template let-request pTemplate="item">
                 <div class="country-item">
-                    <div>Заявка</div>
-                    <div>{{request.id}}</div>
+                    <div>Заявка #{{request.request.id}}</div>
                 </div>
             </ng-template>     
         </p-listbox>
@@ -56,15 +55,18 @@
         </p-listbox>
     </div>
 
-    <div class="row-span-3 col-span-1">
-        <p-pickList sourceHeader="Назначенные/не назначенные станки" targetHeader="Все станки" [source]="selectedMachine" [target]="machine">
+    <div class="row-span-3 col-span-1" style=" max-height: 80vh;">
+        
+        <p-pickList 
+            [style]="{'max-height':'85vh'}"
+            sourceHeader="Назначенные станки"  targetHeader="Все станки" [source]="selectedRequest.selectedMachines" [target]="selectedRequest.machines">
             <ng-template let-machin pTemplate="item">
-                <div class="product-item">
+                <div class="product-item flex flex-row">
                     <!-- <img class="pi pi-user" style="display:inline-block;margin:2px 0 2px 2px" width="48"> -->
-                    <i class="pi pi-window-maximize mr-4" *ngIf="machin.machineTypeCaption=='токарный станок'"  width="48"></i>
-                    <i class="pi pi-window-minimize mr-4" *ngIf="machin.machineTypeCaption=='фрезеровальный станок'"  width="48"></i>
-                    <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{machin.id}}</div>
-                    <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{machin.machineTypeCaption}}</div>
+                    <i class="pi pi-window-maximize mr-4" *ngIf="machin.machineTypeCaption=='токарный станок'" ></i>
+                    <i class="pi pi-window-minimize mr-4" *ngIf="machin.machineTypeCaption=='фрезеровальный станок'" ></i>
+                    <div style="font-size:14px;float:right;" class="w-16" >{{machin.id}}</div>
+                    <div style="font-size:14px;float:right;">{{machin.machineTypeCaption}}</div>
                 </div>
             </ng-template>
         </p-pickList>

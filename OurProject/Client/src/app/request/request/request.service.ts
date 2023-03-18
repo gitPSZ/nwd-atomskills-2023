@@ -42,7 +42,7 @@ export class RequestService extends BaseApiService {
     return retValue;
   }
 
-  getProductsForPosition(request: RequestModel): Promise<ProductsForPosition[]> {
+  getProductsForPosition(request: RequestModel | null | undefined): Promise<ProductsForPosition[]> {
 
     var retValue = lastValueFrom(this.http.post<ProductsForPosition[]>(this.APIUrl + '/request/productsForPosition', request)
       .pipe(catchError(this.errorService.errorHandlerList)));
