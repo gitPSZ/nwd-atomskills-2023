@@ -39,6 +39,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { UserListComponent } from './admin/user-list/user-list.component';
 import { NavigationCardsComponent } from './starting-components/NavigationCardsComponent/navigation-cards/navigation-cards.component';
 import {TooltipModule} from 'primeng/tooltip';
+import {ScrollPanelModule} from 'primeng/scrollpanel';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {saveAs} from 'file-saver';
 import * as FileSaver from 'file-saver';
@@ -92,7 +93,8 @@ import {CardModule} from 'primeng/card';
     BadgeModule,
     OverlayPanelModule,
     ListboxModule,
-    CardModule
+    CardModule,
+    ScrollPanelModule
   ],
   providers: [ErrorService, StatusService, ConfigService, MessageService, AuthenticationService, CookieService, SimpleMessageService, AuthenticationService,
     {

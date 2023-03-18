@@ -1,6 +1,6 @@
-<div class="grid grid-rows-2 grid-flow-col gap-4">
-    <div class="row-span-1 col-span-2">
-        <p-listbox [options]="requests"    [filter]="true"  [(ngModel)]="selectedRequest" [multiple]="false" optionLabel="name" filterBy="label"  [listStyle]="{'max-height':'22rem'}" (onChange)="onChangeRequest($event)">
+<div class="main-grid gap-4">
+    <div >
+        <p-listbox [options]="requests"    [filter]="false"  [(ngModel)]="selectedRequest" [multiple]="false" optionLabel="name" filterBy="label"  [listStyle]="{'max-height':'36vh'}" (onChange)="onChangeRequest($event)">
             <ng-template pTemplate="header" >
                 <div class="font-bold">
                     Необработанные заявки
@@ -21,11 +21,11 @@
             </ng-template>     
         </p-listbox>
     </div>
-    <div class="row-span-2 col-span-2">
-        <p-listbox [options]="products"  [(ngModel)]="selectedProduct" [multiple]="false" optionLabel="caption" filterBy="label"  [listStyle]="{'max-height':'20rem'}">
+    <div class="row-start-2">
+        <p-listbox [options]="products"  [(ngModel)]="selectedProduct" [multiple]="false" optionLabel="caption" filterBy="label"  [listStyle]="{'max-height':'37vh'}">
             <ng-template pTemplate="header" >
                 <div class="font-bold">
-                    Позиция станка
+                    Состав заявки
                 </div>
             </ng-template>
             <ng-template pTemplate="filter" let-options="options">
@@ -37,18 +37,26 @@
             </ng-template>
             <ng-template let-product pTemplate="item">
                 <div class="country-item">
-                    <div>Наименование</div>
-                    <div>{{product.caption}}</div>
-                    <div>Код</div>
-                    <div>{{product.code}}</div>
-                    <div>Кол-во</div>
-                    <div>{{product.quantity}}</div>
+                    <div class="flex flex-row">
+                        <div class="w-36">Наименование</div>
+                        <div>{{product.caption}}</div>
+                    </div>
+                    <div class="flex flex-row">
+                        <div class="w-36">Кол-во деталей</div>
+                        <div>{{product.quantity}}</div>
+                    </div>
+                    <div class="flex flex-row">
+                        <div class="w-36">Код</div>
+                        <div>{{product.code}}</div>>
+                    </div>
+                    
+                    
                 </div>
             </ng-template>     
         </p-listbox>
     </div>
     <div class="row-span-3 col-span-1">
-        <p-listbox [options]="machine"  [multiple]="false" optionLabel="Id" filterBy="label"  [listStyle]="{'max-height':'42rem'}">
+        <p-listbox [options]="machine"  [multiple]="false" optionLabel="Id" filterBy="label"  [listStyle]="{'max-height':'80vh'}">
             <ng-template pTemplate="header" >
                 <div class="font-bold">
                     Станки

@@ -100,6 +100,7 @@ namespace AtomSkillsTemplate.Services
                     Console.WriteLine("Возникла ошибка при отправлении уведомлений о поступлении новых сообщений");
                 }
             }
+            cachedRequests = requests;
         }
         private async Task LoadMachineStatus()
         {
