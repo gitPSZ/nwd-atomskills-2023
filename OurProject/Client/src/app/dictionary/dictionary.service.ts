@@ -15,7 +15,7 @@ import { MachineModel } from '../newModels/MachineModel';
 @Injectable({
   providedIn: 'root'
 })
-export class dictionaryService extends BaseApiService {
+export class DictionaryService extends BaseApiService {
 
   constructor(private errorService: ErrorService, private http: HttpClient, private messageService : SimpleMessageService) {
     super();
@@ -25,6 +25,14 @@ export class dictionaryService extends BaseApiService {
   getDictionary(): Promise<MachineModel[]> {
 
     var retValue = lastValueFrom(this.http.get<MachineModel[]>(this.APIUrl + '/machine/all')
+      .pipe(catchError(this.errorService.errorHandlerList)));
+    return retValue;
+  }
+
+  
+  setRepair(machine:MachineModel): Promise<any> {
+
+    var retValue = lastValueFrom(this.http.post<MachineModel>(this.APIUrl + '/machine/repair', machine)
       .pipe(catchError(this.errorService.errorHandlerList)));
     return retValue;
   }

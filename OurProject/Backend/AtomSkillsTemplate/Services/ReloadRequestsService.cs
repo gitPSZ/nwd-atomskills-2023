@@ -22,11 +22,13 @@ namespace AtomSkillsTemplate.Services
         int interval = 10000;
         public IConnectionFactory connectionFactory;
         public IEmailService mailService;
+        public IMonitoringService monitoringService;
         public List<Request> cachedRequests = new List<Request>();
-        public ReloadRequestsService(IConnectionFactory connectionFactory, IEmailService mailService)
+        public ReloadRequestsService(IConnectionFactory connectionFactory, IEmailService mailService, IMonitoringService monitoringService)
         {
             this.mailService = mailService;
             this.connectionFactory = connectionFactory;
+            this.monitoringService = monitoringService;
             _ = Task.Run(async () =>
             {
                 try
@@ -37,7 +39,11 @@ namespace AtomSkillsTemplate.Services
                 {
                     Console.WriteLine("Ошибка при загрузке списка оборудований: " + e.ToString());          
                 }
-                
+                Task.Run(async () =>
+                {
+                    await Task.Delay(4000);
+                    monitoringService.SetupEnvironment();
+                });
                 while (true)
                 {
                     try
@@ -154,17 +160,17 @@ namespace AtomSkillsTemplate.Services
             activeIDs.AddRange(machines.Lathe.Select(o => o.Key));
             foreach (var millingMachine in machines.Milling)
             {
-                var sqlStringContractors = $"insert into {DBHelper.Schema}.{DBHelper.Machines}(id, machine_type, port) values(:id, :machine_type, :port) " +
-                   $" on conflict(id) do update set machine_type=:machine_type, port=:port";
-                var contractorParams = new { id = millingMachine.Key, machine_type = "milling", port = millingMachine.Value};
+                var sqlStringContractors = $"insert into {DBHelper.Schema}.{DBHelper.Machines}(id, machine_type, port,machine_type_caption) values(:id, :machine_type, :port, :machine_type_caption) " +
+                   $" on conflict(id) do update set machine_type=:machine_type, port=:port, machine_type_caption = :machine_type_caption";
+                var contractorParams = new { id = millingMachine.Key, machine_type = "milling", port = millingMachine.Value, machine_type_caption = "фрезерный станок"};
                 await conn.QueryAsync(sqlStringContractors, contractorParams);
             }
 
             foreach (var latheMachine in machines.Lathe)
             {
-                var sqlStringContractors = $"insert into {DBHelper.Schema}.{DBHelper.Machines}(id, machine_type, port) values(:id, :machine_type, :port) " +
-                   $" on conflict(id) do update set machine_type=:machine_type, port=:port";
-                var contractorParams = new { id = latheMachine.Key, machine_type = "lathe", port = latheMachine.Value };
+                var sqlStringContractors = $"insert into {DBHelper.Schema}.{DBHelper.Machines}(id, machine_type, port,machine_type_caption) values(:id, :machine_type, :port, :machine_type_caption) " +
+                   $" on conflict(id) do update set machine_type=:machine_type, port=:port, machine_type_caption = :machine_type_caption";
+                var contractorParams = new { id = latheMachine.Key, machine_type = "lathe", port = latheMachine.Value, machine_type_caption = "токарный станок" };
                 await conn.QueryAsync(sqlStringContractors, contractorParams);
             }
 

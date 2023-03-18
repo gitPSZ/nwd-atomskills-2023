@@ -8,7 +8,7 @@ import { SimpleMessageService } from './services/SimpleMessageService/simple-mes
 import { PrimeNGConfig } from 'primeng/api';
 import { ConfigService } from './services/ConfigService/config.service';
 import { StatusService } from './services/StatusService/status.service';
-import { ToastService } from './services/ToastService/toast.service';
+import { ToastService, ToastType } from './services/ToastService/toast.service';
 import { CookieService } from './services/CookieService/cookie.service';
 import { AuthenticationService } from './services/AuthenticationService/authentication.service';
 import { IfStmt } from '@angular/compiler';
@@ -18,6 +18,8 @@ import { RequestService } from './request/request/request.service';
 import { RequestModel } from './newModels/RequestModel';
 import { NotificationModel } from './newModels/NotificationModel';
 import { OverlayPanel } from 'primeng/overlaypanel';
+import { MachineModel } from './newModels/MachineModel';
+import { DictionaryService } from './dictionary/dictionary.service';
 
 @Component({
 	selector: 'app-root',
@@ -37,12 +39,13 @@ export class AppComponent extends BaseComponent {
 	visibleCount:number = 0;
 	isWarning=true;
 	cardsRequestAll: RequestModel[] = [];
+	allEquipment: MachineModel[] = [];
 	cardsRequestNotified: RequestModel[] = [];
 	notifications: NotificationModel[] = [];
     showNotifications = false;
 	constructor(public messageService: SimpleMessageService, private requestService : RequestService, 
 		public router: Router, public configService: ConfigService, private statusService: StatusService, private config: PrimeNGConfig,
-		private toastService: ToastService, private cookieService: CookieService, private authenticationService: AuthenticationService, private agileInterfaceService : AgileInterfaceService) {
+		private toastService: ToastService, private dictionaryService : DictionaryService, private cookieService: CookieService, private authenticationService: AuthenticationService, private agileInterfaceService : AgileInterfaceService) {
 		super();
         
 		this.config.setTranslation({
@@ -70,7 +73,7 @@ export class AppComponent extends BaseComponent {
     async startTimer() {
 		this.interval = setInterval(async () => {
 		    await this.checkMessage();
-
+            await this.checkEquipment()
 		},2000)
 	  }
 	
@@ -184,6 +187,27 @@ export class AppComponent extends BaseComponent {
 	async logOut(){
 		this.authenticationService.logOut()
 	}
+    async checkEquipment(){
+        if(this.allEquipment.length == 0){
+            this.allEquipment = await this.dictionaryService.getDictionary();
+            return;
+        }
+        var equipmentActual = await this.dictionaryService.getDictionary();
+        this.allEquipment.forEach((equipment)=>{
+            var singleEquipmentActial = equipmentActual.find(value => value.id == equipment.id);
+            if(equipment.idState != 3 && singleEquipmentActial?.idState == 3){
+                this.messageService.observableNotificationMessage.next({
+                    header : 'Возникла поломка оборудования ' + equipment.id,
+                    isRead: false,
+                    notificationDate : new Date(),
+                    text : `Оборудование ${equipment.id} перешло в состояние поломки`
+                })
+                this.toastService.show('Возникла поломка оборудования ' + equipment.id,
+                `Оборудование ${equipment.id} перешло в состояние поломки`,ToastType.error);
+            }
+        })
+
+    }
 	async checkMessage()
 	{
 		this.cardsRequestAll = await this.requestService.getRequests();

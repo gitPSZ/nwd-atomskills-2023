@@ -30,7 +30,7 @@ export class RequestService extends BaseApiService {
   }
   startMonitoringRequest(request : RequestModel): Promise<boolean> {
 
-    var retValue = lastValueFrom(this.http.post<boolean>(this.APIUrl + '/startMonitoringRequest', request)
+    var retValue = lastValueFrom(this.http.post<boolean>(this.APIUrl + '/request/startMonitoringRequest', request)
       .pipe(catchError(this.errorService.errorHandlerBoolean)));
     return retValue;
   }
@@ -49,15 +49,15 @@ export class RequestService extends BaseApiService {
     return retValue;
   }
 
-  getProductsForPosition(request: RequestModel | null | undefined): Promise<ProductsForPosition[]> {
+  async getProductsForPosition(request: RequestModel | null | undefined): Promise<ProductsForPosition[]> {
 
     var retValue = lastValueFrom(this.http.post<ProductsForPosition[]>(this.APIUrl + '/request/productsForPosition', request)
       .pipe(catchError(this.errorService.errorHandlerList)));
     return retValue;
   }
   
-  SaveMachineRequest(idMachine?:string, idRequest?: number): Promise<MachineRequestModel[]> {
-   let b = { IdMachine: idMachine, IdRequest: idRequest }
+  SaveMachineRequest(idMachine?:string, idRequest?: number, idPriority?:number): Promise<MachineRequestModel[]> {
+   let b = { IdMachine: idMachine, IdRequest: idRequest, idPriority }
     var retValue = lastValueFrom(this.http.post<MachineRequestModel[]>(this.APIUrl + '/request/saveMachineRequest',b)
       .pipe(catchError(this.errorService.errorHandlerList)));
     return retValue;

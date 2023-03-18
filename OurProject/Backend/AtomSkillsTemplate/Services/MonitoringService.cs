@@ -63,7 +63,7 @@ namespace AtomSkillsTemplate.Services
         public async void SetupEnvironment()
         {
             using var connection = connectionFactory.GetConnection();
-            var requests = await connection.QueryAsync<RequestForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.Requests} where state_code = 'PRODUCTION'");
+            var requests = await connection.QueryAsync<RequestForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.Requests} where state_code = 'IN_PRODUCTION'");
             var requestPositions = await connection.QueryAsync<RequestPositionForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.RequestPositions}");
             requestRepository = new List<RequestForMonitoring>();
 
@@ -119,12 +119,24 @@ namespace AtomSkillsTemplate.Services
                 machineWrappers.Add(wrapper);
             }
         }
+        public long GetRequestIDThatMachineWorksOn(string machineID)
+        {
+            return machineWrappers.FirstOrDefault(p => p.Machine.Id == machineID).RequestID;
+        }
+        public async Task<IEnumerable<Request>> GetRequestOrderedForMachine(string machineID)
+        {
+            var connection = connectionFactory.GetConnection();
+            var requests = await connection.QueryAsync<Request>
+                ($"select * from {DBHelper.Schema}.{DBHelper.Requests} where id in " +
+                $" (select id_request from {DBHelper.Schema}.{DBHelper.MachineRequest} where id_machine = :id_machine) order by priority desc, create_date desc", new { id_machine = machineID });
+            return requests;
+        }
         public async Task ProcessEquipment(Machine machine)
         {
             Console.WriteLine("Начался опрос оборудования с ID = " + machine.Id);
 
 #if DEBUG
-            if(machine.Port == 1045)
+            if(machine.Port == 1054)
             {
                 return;
             }
@@ -172,18 +184,22 @@ namespace AtomSkillsTemplate.Services
                         await Task.Delay(10000);
                         continue;
                     }
-
+                    
                     if (machine.MachineType == "lathe")
                     {
                         RequestPositionForMonitoring positionToProcess = null;
                         lock (requestRepository)
                         {
-                            var orderToProcess = requestRepository.OrderBy(o => o.Priority).FirstOrDefault();
-                             positionToProcess = orderToProcess.RequestPositions.FirstOrDefault(p => p.Quantity != p.QuantityLatheInProgress);
+                            var requestsWithLowest = requestRepository.Where(o => o.Priority == requestRepository.Min(o => o.Priority)).OrderBy(o => o.CreateDate).ToList();
+                            var requestToProcess = requestsWithLowest.FirstOrDefault();
+                            positionToProcess = requestToProcess.RequestPositions.FirstOrDefault(p => p.Quantity != p.QuantityLatheInProgress);
                                 
                         }
                         if(positionToProcess != null)
                         {
+                            var currentMachine = machineWrappers.FirstOrDefault(o => o.Machine.Id == machine.Id);
+                            currentMachine.RequestID = positionToProcess.ProductId;
+
                             var client = new HttpClient();
                             if (machine.IdState != 2)
                             {
@@ -228,15 +244,18 @@ namespace AtomSkillsTemplate.Services
                         RequestPositionForMonitoring positionToProcess = null;
                         lock (requestRepository)
                         {
-                            var orderToProcess = requestRepository.OrderBy(o => o.Priority).FirstOrDefault();
-                            positionToProcess = orderToProcess.RequestPositions.FirstOrDefault(p => p.QuantityLathe > p.QuantityMillingInProgress);
+                            var requestsWithLowest = requestRepository.Where(o => o.Priority == requestRepository.Min(o => o.Priority)).OrderBy(o => o.CreateDate).ToList();
+                            var requestToProcess = requestsWithLowest.FirstOrDefault();
+                            positionToProcess = requestToProcess.RequestPositions.FirstOrDefault(p => p.Quantity != p.QuantityLatheInProgress);
 
-                            
                         }
                         if (positionToProcess != null)
                         {
                             Console.WriteLine("Взята в работу позиция " + positionToProcess.Id + " машиной " + machine.Id);
                             positionToProcess.QuantityMillingInProgress++;
+
+                            var currentMachine = machineWrappers.FirstOrDefault(o => o.Machine.Id == machine.Id);
+                            currentMachine.RequestID = positionToProcess.ProductId;
 
                             var client = new HttpClient();
                             if (machine.IdState !=2)
@@ -305,6 +324,7 @@ namespace AtomSkillsTemplate.Services
     {
         public Machine Machine { get; set; }
 
+        public long RequestID { get; set; }
         public bool ShouldStop { get; set; }
         public Task MonitoringTask { get; set; }
     }

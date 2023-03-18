@@ -50,6 +50,7 @@ import { PlanningComponent } from './planning/planning/planning.component';
 import {CardModule} from 'primeng/card';
 import {PickListModule} from 'primeng/picklist';
 import {DragDropModule} from 'primeng/dragdrop';
+import { DictionaryService } from './dictionary/dictionary.service';
 
 
 @NgModule({
@@ -101,7 +102,7 @@ import {DragDropModule} from 'primeng/dragdrop';
     PickListModule,
     DragDropModule
   ],
-  providers: [ErrorService, StatusService, ConfigService, MessageService, AuthenticationService, CookieService, SimpleMessageService, AuthenticationService,
+  providers: [ErrorService, StatusService, ConfigService, MessageService, AuthenticationService, CookieService, SimpleMessageService, AuthenticationService, DictionaryService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptorService,

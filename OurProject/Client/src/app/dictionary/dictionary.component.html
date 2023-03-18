@@ -1,3 +1,26 @@
+<p-dialog header="Подача заявки на ремонт станка" [(visible)]="visible" >
+    <div class="grid w-64 sm:w-96 col-start-2 row-start-2">
+        <span class="p-float-label mb-3">
+            <a>№</a>
+            <input readonly  [value]="dialogInfo.id" pInputText class="w-full shadow-md" >
+        </span>
+
+        <span class="p-float-label mb-3">
+            <a>Тип</a>
+            <input readonly [value]="dialogInfo.machineTypeCaption" pInputText class="w-full shadow-md" >
+        </span>
+
+        <span class="p-float-label mb-3">
+            <a>Статус</a>
+            <input readonly [value]="dialogInfo.state" pInputText class="w-full shadow-md" >
+        </span>
+
+        <button label="Подать заявку"
+            (click)="repairBtnClick()" pButton class="shadow-md mt-4"></button>
+    </div>
+
+</p-dialog>
+
 <p-table #dt  [metaKeySelection]="true"
     selectionMode="single" 
             [value]="customers" dataKey="id" styleClass="p-datatable-customers"  [rowHover]="true"
@@ -9,7 +32,7 @@
                 <div class="table-header grid grid-cols-3">
                     <div class="flex flex-row">
                         <div class="my-auto mr-4">
-                            Список заявок 
+                            Список станков
                         </div>
                         
                     </div>
@@ -50,13 +73,7 @@
                             <p-sortIcon field="port"></p-sortIcon>
                         </div>
                     </th>
-                    <th pSortableColumn="isDeleted" style="min-width:100px">
-                        <div class="flex justify-content-center align-items-center">
-                            Состояние
-                            <p-columnFilter type="text" field="isDeleted" display="menu"></p-columnFilter>
-                            <p-sortIcon field="isDeleted"></p-sortIcon>
-                        </div>
-                    </th>
+      
                     <th pSortableColumn="state" style="min-width:100px"> 
                         <div class="flex justify-content-center align-items-center">
                             Статус 
@@ -86,14 +103,20 @@
                         {{customer.port}}
                     </td>
 
-                    <td>
-                        <span class="p-column-title">Состояние</span>
-                        {{customer.isDeleted}}
-                    </td>
-                    <td>
-                        <span class="p-column-title" >Статус</span>
-                        <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.state==null"  tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>
-                        <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.state!=null" tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                      
+                    <td >
+                        <span class="p-column-title" >Статус</span>    
+                   
+                        <div class="flex justify-around w-full">
+                            <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.idState!=1&&customer.idState!=2&&customer.idState!=3&&customer.idState!=4"   tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                                     
+                            <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.idState==4"  [styleClass]="'bg-blue-300'"  tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                      
+                            <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.idState==3"  [styleClass]="'bg-red-300'"  tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                      
+                            <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.idState==2"  [styleClass]="'bg-green-300'" tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                      
+                            <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.idState==1"  [styleClass]="'bg-orange-300'"  tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                      
+                   
+                        </div>
+                        <div class="flex justify-around w-full mt-2">
+                        <button pButton type="button" (click)="repairBtnDialog(customer)" *ngIf="customer.idState==3"  label="Заявка на ремонт" class="p-button-info p-button-rounded"></button>
+                        </div>
                     </td>
 
                     

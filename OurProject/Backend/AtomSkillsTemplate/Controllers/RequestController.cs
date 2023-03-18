@@ -13,6 +13,7 @@ using AtomSkillsTemplate.Helpers;
 using AtomSkillsTemplate.Models.ClaimsForTable;
 using AtomSkillsTemplate.NewModels;
 using AtomSkillsTemplate.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AtomSkillsTemplate.Controllers
 {
@@ -66,7 +67,6 @@ namespace AtomSkillsTemplate.Controllers
                 return NotFound();
             }
 
-            await monitoringService.AddRequest(machineRequest.IdRequest);
             return Ok(machineRequest);
         }
         [HttpPost("startMonitoringRequest")]
@@ -87,7 +87,12 @@ namespace AtomSkillsTemplate.Controllers
             }
             return Ok(products);
         }
-
+        [AllowAnonymous]
+        [HttpGet("ordered/{machineID}")]
+        public async Task<IEnumerable<Request>> GetRequestsOrdered(string machineID)
+        {
+            return await monitoringService.GetRequestOrderedForMachine(machineID);
+        }
 
 
         [HttpGet("priorities")]

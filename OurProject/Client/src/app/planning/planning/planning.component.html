@@ -1,6 +1,5 @@
 <div>
     <p-button   label="Утвердить заявку №{{selectedRequest.request?.number}}" (onClick)="acceptClick()" styleClass="p-button-warning p-button-rounded mb-4" icon="pi pi-pencil" ></p-button>
-
 </div>
 <div class="main-grid gap-4">
     <div >
@@ -8,6 +7,7 @@
             <ng-template pTemplate="header" >
                 <div class="font-bold">
                     Необработанные заявки
+                    <p-dropdown [options]="priorities" pTooltip="Приоритет"  [(ngModel)]="selectedPriorities" placeholder="Приоритет"   class="mb-4" optionLabel="name" ></p-dropdown>
                 </div>
             </ng-template>
             <ng-template pTemplate="filter" let-options="options">
@@ -19,7 +19,7 @@
             </ng-template>
             <ng-template let-request pTemplate="item">
                 <div class="country-item">
-                    <div>Заявка id#{{request.request.id}}#{{request.request.number}}</div>
+                    <div>Заказ №{{request.request.number}}</div>
                 </div>
             </ng-template>     
         </p-listbox>
@@ -28,7 +28,7 @@
         <p-listbox [options]="products"  [(ngModel)]="selectedProduct" [multiple]="false" optionLabel="caption" filterBy="label"  [listStyle]="{'max-height':'37vh'}">
             <ng-template pTemplate="header" >
                 <div class="font-bold">
-                    Состав заявки
+                    Состав заказа
                 </div>
             </ng-template>
             <ng-template pTemplate="filter" let-options="options">
@@ -51,24 +51,23 @@
                     <div class="flex flex-row">
                         <div class="w-36">Код</div>
                         <div>{{product.code}}</div>>
-                    </div>
-                    
-                    
+                    </div>                                  
                 </div>
             </ng-template>     
         </p-listbox>
+        <p class="font-bold">Время фрезерования:{{timeFrez}}c. Время точения:{{timeTokerov}}c.</p>
     </div>
 
     <div class="row-span-3 col-span-1" style=" max-height: 80vh;">
         
-        <p-pickList 
+        <p-pickList  [dragdrop]="true"
             [style]="{'max-height':'85vh'}"
             sourceHeader="Назначенные станки"  targetHeader="Все станки" [source]="selectedRequest.selectedMachines" [target]="selectedRequest.machines">
             <ng-template let-machin pTemplate="item">
                 <div class="product-item flex flex-row">
                     <!-- <img class="pi pi-user" style="display:inline-block;margin:2px 0 2px 2px" width="48"> -->
                     <i class="pi pi-window-maximize mr-4" *ngIf="machin.machineTypeCaption=='токарный станок'" ></i>
-                    <i class="pi pi-window-minimize mr-4" *ngIf="machin.machineTypeCaption=='фрезеровальный станок'" ></i>
+                    <i class="pi pi-window-minimize mr-4" *ngIf="machin.machineTypeCaption=='фрезерный станок'" ></i>
                     <div style="font-size:14px;float:right;" class="w-16" >{{machin.id}}</div>
                     <div style="font-size:14px;float:right;">{{machin.machineTypeCaption}}</div>
                 </div>

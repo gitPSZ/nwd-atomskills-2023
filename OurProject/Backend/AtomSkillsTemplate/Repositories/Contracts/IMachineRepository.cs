@@ -11,6 +11,6 @@ namespace AtomSkillsTemplate.Repositories.Contracts
     public interface IMachineRepository
     {
         public Task<IEnumerable<Machine>> GetMachineDTOs();
-
+        public Task<Machine> SetRepair(Machine machine);
     }
 }

@@ -6,6 +6,7 @@ namespace AtomSkillsTemplate.NewModels
     {
         public long Id { get; set; }
         public string Number { get; set; }
+        public int? Priority { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string Description { get;set; }

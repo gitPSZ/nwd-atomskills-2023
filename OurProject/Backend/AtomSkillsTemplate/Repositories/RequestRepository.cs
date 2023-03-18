@@ -51,7 +51,7 @@ namespace AtomSkillsTemplate.Repositories
 
             }
         }
-
+        
         public async Task<MachineRequestDto> SaveMachineRequest(MachineRequestDto machineRequest)
         {
             using (var connection = connectionFactory.GetConnection())
@@ -64,6 +64,14 @@ namespace AtomSkillsTemplate.Repositories
                       id_request = machineRequest.IdRequest
 
                   });
+                //обновляем приоритет заявки
+                var priorityIdRequest = await connection.QueryFirstOrDefaultAsync<long?>(
+                   $@"update {schemaName}.{tableName} set priority=:priority where id=:id returning id", new
+                   {
+                       priority = machineRequest.IdPriority,
+                       id = machineRequest.IdRequest,
+
+                   });
                 //обновляем статус заявки
                 var client = new HttpClient();
                 var result = await client.PostAsync($@"http://localhost:1040/crm/requests/{machineRequest.IdRequest}/set-state/in-production",null);
