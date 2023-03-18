@@ -71,7 +71,7 @@ export class PlanningComponent extends BaseComponent{
     async acceptClick(){
 let frezCount = 0;
 let tokarnCount = 0;
-        this.selectedRequest.machines.forEach(x=>{
+        this.selectedRequest.selectedMachines.forEach(x=>{
             if (x.machineTypeCaption == "токарный станок")
             {
                 tokarnCount++;
@@ -81,7 +81,8 @@ let tokarnCount = 0;
                 frezCount++;
             }
         })
-        if (frezCount<1&&tokarnCount<1)
+        console.log(frezCount, tokarnCount);
+        if (frezCount<1||tokarnCount<1)
         {
             this.toastService.show("Должен быть назначен хотя бы один токарный или фрезерный станок", "", ToastType.warn);
             return;
@@ -89,7 +90,7 @@ let tokarnCount = 0;
 
 		if (this.selectedRequest.selectedMachines != null) {
 		
-            this.selectedRequest.machines.forEach(x=>
+            this.selectedRequest.selectedMachines.forEach(x=>
                 {
                       this.requestService.SaveMachineRequest(x.id,this.selectedRequest.request?.id)
                 })
