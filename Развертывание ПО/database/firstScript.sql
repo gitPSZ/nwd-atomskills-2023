@@ -130,7 +130,7 @@ CREATE TABLE atom.request_position (
 CREATE TABLE atom.machine_request (
 	id_machine varchar NOT NULL,
 	id_request int4 NOT NULL,
-	id int4 NOT NULL,
+	id serial NOT NULL,
 	CONSTRAINT machine_request_pk PRIMARY KEY (id),
 	CONSTRAINT newtable_fk FOREIGN KEY (id_machine) REFERENCES atom.machine(id),
 	CONSTRAINT newtable_fk_1 FOREIGN KEY (id_request) REFERENCES atom.request(id)
