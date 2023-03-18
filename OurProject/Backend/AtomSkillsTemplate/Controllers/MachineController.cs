@@ -43,6 +43,17 @@ namespace AtomSkillsTemplate.Controllers
             return Ok(machineDTOs.OrderBy(o => o.MachineType));
         }
 
+        [HttpPost("repair")]
+        public async Task<ActionResult<Machine>> SetRepair(Machine machine)
+        {
+            var machineDTOs = await machineRepository.SetRepair(machine);
+            if (machineDTOs == null)
+            {
+                return NotFound();
+            }
+            return Ok(machineDTOs);
+        }
+
 
     }
 }

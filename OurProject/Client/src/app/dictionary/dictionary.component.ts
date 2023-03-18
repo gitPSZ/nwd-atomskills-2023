@@ -21,9 +21,12 @@ import { dictionaryService } from './dictionary.service';
   styleUrls: ['./dictionary.component.css']
 })
 export class DictionaryComponent  extends BaseComponent implements OnInit{
+  interval: any;
   loading: boolean = false;
   selectedProduct1 : MachineModel = {};
+  visible:boolean = false;
   globalText = '';
+  dialogInfo:MachineModel = {};
   customers: MachineModel[] = [];
   @ViewChild("dt") dataGrid : Table | undefined;
   constructor(private primengConfig: PrimeNGConfig,private dictionaryService : dictionaryService,  private http: HttpClient, private simplemesService: SimpleMessageService, private requestService : RequestService, private toastService: ToastService,) {
@@ -32,14 +35,36 @@ export class DictionaryComponent  extends BaseComponent implements OnInit{
   async ngOnInit() {
     this.customers = await this.dictionaryService.getDictionary();
     console.log(this.customers);
+    this.startTimer();
   }
 
   filterGlobal() {
     this.dataGrid?.filterGlobal(this.globalText, 'contains');
   }
+ async repairBtnDialog(info:MachineModel){
+    this.dialogInfo = {};
+    this.dialogInfo = info;
 
+this.visible = true;
+}
+async startTimer() {
+  this.interval = setInterval(async () => {
+      await this.refeshBtn();
+
+  },7000)
+  }
+
+
+async repairBtnClick(){
+  let repair = await this.dictionaryService.setRepair(this.dialogInfo).finally(()=>{
+  });
+  this.customers = await this.dictionaryService.getDictionary();
+  this.visible = false;
+  this.refeshBtn();
+}
   async refeshBtn(){
     this.customers = await this.dictionaryService.getDictionary();
+    
     console.log(this.customers);
     
   }

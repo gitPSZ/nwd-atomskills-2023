@@ -29,6 +29,14 @@ export class dictionaryService extends BaseApiService {
     return retValue;
   }
 
+  
+  setRepair(machine:MachineModel): Promise<any> {
+
+    var retValue = lastValueFrom(this.http.post<MachineModel>(this.APIUrl + '/machine/repair', machine)
+      .pipe(catchError(this.errorService.errorHandlerList)));
+    return retValue;
+  }
+
 
  
 }

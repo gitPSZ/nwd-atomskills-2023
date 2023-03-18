@@ -75,7 +75,7 @@ export class PlanningComponent extends BaseComponent{
             this.timeTokerov = this.timeTokerov + x.quantity*x.latheTime;
         }
     })
-    if ((this.timeFrez+this.timeTokerov)>86400)
+    if ((this.timeFrez+this.timeTokerov)>172800)
     {
         this.selectedPriorities = {id:2,name:"средний"};
     }
