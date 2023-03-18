@@ -3,6 +3,7 @@ using AtomSkillsTemplate.Connection.Interface;
 using AtomSkillsTemplate.NewModels;
 using AtomSkillsTemplate.Services.Interfaces;
 using Dapper;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,49 @@ namespace AtomSkillsTemplate.Services
         {
             this.connectionFactory = connectionFactory;
         }
+        public async Task AddRequest(long requestID)
+        {
+            using var connection = connectionFactory.GetConnection();
+            var request = await connection.QueryFirstOrDefaultAsync<RequestForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.Requests} where id = " + requestID);
+            var requestPositions = await connection.QueryAsync<RequestPositionForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.RequestPositions}");
+
+            foreach (var requestPosition in requestPositions)
+            {
+                requestPosition.QuantityLathe = requestPosition.QuantityExec;
+                requestPosition.QuantityLatheInProgress = requestPosition.QuantityExec;
+                requestPosition.QuantityMilling = requestPosition.QuantityExec;
+                requestPosition.QuantityMillingInProgress = requestPosition.QuantityExec;
+            }
+
+            
+            try
+            {
+                var machinesThatCanProcess = await connection.QueryAsync<Machine>(
+                    $"select * from {DBHelper.Schema}.{DBHelper.Machines} where id in (select id_machine from " +
+                    $" {DBHelper.Schema}.{DBHelper.MachineRequest} where id_request = :idRequest)", new { idRequest = request.Id });
+
+                request.MachinesThatCanProcessThisGoddamnThing = new List<Machine>();
+
+                if (machinesThatCanProcess != null && machinesThatCanProcess.Any())
+                {
+                    request.MachinesThatCanProcessThisGoddamnThing = machinesThatCanProcess.ToList();
+                }
+
+                request.RequestPositions = new List<RequestPositionForMonitoring>();
+                var requestPositionsInRequest = requestPositions.Where(o => o.RequestId == request.Id);
+                request.RequestPositions.AddRange(requestPositionsInRequest);
+                requestRepository.Add(request);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Ошибка в списке позиций заказа: " + e.ToString());
+            }
+
+        }
         public async void SetupEnvironment()
         {
             using var connection = connectionFactory.GetConnection();
-            var requests = await connection.QueryAsync<RequestForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.Requests}");
+            var requests = await connection.QueryAsync<RequestForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.Requests} where state_code = 'PRODUCTION'");
             var requestPositions = await connection.QueryAsync<RequestPositionForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.RequestPositions}");
             requestRepository = new List<RequestForMonitoring>();
 
@@ -82,6 +122,22 @@ namespace AtomSkillsTemplate.Services
         public async Task ProcessEquipment(Machine machine)
         {
             Console.WriteLine("Начался опрос оборудования с ID = " + machine.Id);
+
+            if(machine.IdState != 3 && machine.IdState != 4)
+            {
+                try
+                {
+                    var client = new HttpClient();
+                    var result = await client.PostAsync($"http://localhost:{machine.Port}/set/waiting", new StringContent(JsonConvert.SerializeObject(new ProductID())));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Ошибка при выставлени состояния станка в ожидание " + e.ToString());
+                }
+            }
+            
+            
+
             while (true)
             {
 
@@ -121,6 +177,19 @@ namespace AtomSkillsTemplate.Services
                         }
                         if(positionToProcess != null)
                         {
+                            var client = new HttpClient();
+                            if (machine.IdState != 2)
+                            {
+                                machine.IdState = 2;
+                                var result = await client.PostAsync($"http://localhost:{machine.Port}/set/working", new StringContent(JsonConvert.SerializeObject(new ProductID
+                                {
+                                    productId = positionToProcess.ProductId
+                                })));
+                            }
+
+                            
+
+
                             Console.WriteLine("Взята в работу позиция " + positionToProcess.Id + " машиной " + machine.Id);
                             positionToProcess.QuantityLatheInProgress++;
                             var product = await connection.QueryFirstOrDefaultAsync<Product>($"select * from {DBHelper.Schema}.{DBHelper.Products} where id = :id_product",
@@ -161,6 +230,16 @@ namespace AtomSkillsTemplate.Services
                         {
                             Console.WriteLine("Взята в работу позиция " + positionToProcess.Id + " машиной " + machine.Id);
                             positionToProcess.QuantityMillingInProgress++;
+
+                            var client = new HttpClient();
+                            if (machine.IdState !=2)
+                            {
+                                machine.IdState = 2;
+                                var result = await client.PostAsync($"http://localhost:{machine.Port}/set/working", new StringContent(JsonConvert.SerializeObject(new ProductID
+                                {
+                                    productId = positionToProcess.ProductId
+                                })));
+                            }
 
                             var product = await connection.QueryFirstOrDefaultAsync<Product>($"select * from {DBHelper.Schema}.{DBHelper.Products} where id = :id_product",
                             new { id_product = positionToProcess.ProductId });
@@ -210,7 +289,11 @@ namespace AtomSkillsTemplate.Services
             }
         }
     }
-    
+    public class ProductID
+    {
+        public long productId{ get; set; }
+
+    }
     public class MachineWrapper
     {
         public Machine Machine { get; set; }
