@@ -21,13 +21,121 @@
 
 </p-dialog>
 
+
+<!-- Просмотр очереди -->
+<p-dialog header="Просмотр очереди станка" [(visible)]="visibleShowDialog" >
+
+    <div class="main-grid mt-4" style="height: 45vh; width: 95vh;"> 
+        <p-table   [metaKeySelection]="true"
+            [value]="requests" dataKey="id" styleClass="p-datatable-customers"  [rowHover]="true"
+            [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" 
+            [paginator]="true" currentPageReportTemplate="Показ с {first} по {last} из {totalRecords} страниц"
+            [filterDelay]="0" [globalFilterFields]="['id']">
+            <ng-template pTemplate="caption">
+                <div class="table-header grid grid-cols-3">
+                    <div class="flex flex-row">
+                        <div class="my-auto mr-4">
+                            Просмотр очереди станка
+                        </div>                                      
+                    </div>
+                </div>         
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr >
+                    <th pSortableColumn="id" style="min-width:10px">
+                        <div class="flex justify-content-center align-items-center">
+                            №
+                            <p-columnFilter type="text" field="id" display="menu"></p-columnFilter>
+                            <p-sortIcon field="id" ></p-sortIcon>
+                        </div>
+                     
+                    </th>
+                    <th pSortableColumn="number" style="min-width:100px">
+                        <div class="flex justify-content-center align-items-center">
+                            Номер заявки
+                            <p-columnFilter type="text" field="number" display="menu"></p-columnFilter>
+                            <p-sortIcon field="number"></p-sortIcon>
+                        </div>
+                     
+                    </th>
+                 
+                    <th pSortableColumn="contractorName" style="min-width:100px; max-width: 200px;"> 
+                        <div class="flex justify-content-center align-items-center">
+                            Контрагент 
+                            <p-columnFilter type="text" field="contractorName" display="menu"></p-columnFilter>
+                            <p-sortIcon field="contractorName"></p-sortIcon>
+                        </div>
+                    </th>
+                    <th pSortableColumn="releaseDate" style="min-width:100px">
+                        <div class="flex justify-content-center align-items-center">
+                            Дата создания 
+                            <p-columnFilter type="text" field="releaseDate | date: 'dd/MM/yyyy'" display="menu"></p-columnFilter>
+                            <p-sortIcon field="releaseDate"></p-sortIcon>
+                        </div>
+                    </th>
+                    <th pSortableColumn="stateCaption" style="min-width:100px"> 
+                        <div class="flex justify-content-center align-items-center">
+                            Статус 
+                            <p-columnFilter type="text" field="stateCaption" display="menu"></p-columnFilter>
+                            <p-sortIcon field="stateCaption"></p-sortIcon>
+                        </div>
+                    </th>
+                </tr>
+               
+            </ng-template>
+            <ng-template  pTemplate="body" let-customer>
+                <tr [pSelectableRow]="customer" >
+        
+                    <td>
+                        <span class="p-column-title">№</span>
+                        {{customer.id}}
+                    </td>
+                    <td>
+                        <span class="p-column-title">Номер заявки</span>
+                        <span class="image-text">{{customer.number}}</span>
+                    </td>
+
+    
+                    
+                
+                    <td>
+                        <span class="p-column-title">Инициатор</span>
+                        <span [class]="'customer-badge status-' + customer.status">{{customer.contractorName}}</span>
+                    </td>
+
+                    <td>
+                        <span class="p-column-title">Дата создания</span>
+                        {{customer.releaseDate | date: 'dd.MM.yyyy'}}
+                    </td>
+                    <td>
+                        <span class="p-column-title" >Статус</span>
+                        <p-chip label="{{customer.stateCaption}}" icon="pi pi-cog" *ngIf="customer.stateCaption==null"  tooltipPosition="bottom" pTooltip="{{customer.stateCaption}}" ></p-chip>
+                        <p-chip label="{{customer.stateCaption}}" icon="pi pi-cog" *ngIf="customer.stateCaption!=null" tooltipPosition="bottom" pTooltip="{{customer.stateCaption}}" ></p-chip>
+                        
+                    </td>                  
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="8">Заявки не найдены.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+                <!-- <button pButton type="button" label="Отказать"(click)="visibleShowDialog = false; "  class="p-button-info p-button-outlined"></button> -->
+    </div>
+
+</p-dialog>
+
+<!-- Конец просмотра таблицы очереди -->
+
+
 <p-table #dt  [metaKeySelection]="true"
     selectionMode="single" 
             [value]="customers" dataKey="id" styleClass="p-datatable-customers"  [rowHover]="true"
             [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading"
             [(selection)]="selectedProduct1"
             [paginator]="true" currentPageReportTemplate="Показ с {first} по {last} из {totalRecords} страниц"
-            [filterDelay]="0" [globalFilterFields]="['id', 'number','text', 'description', 'state_code', 'contractorName', 'create_date','state']">
+            [filterDelay]="0" [globalFilterFields]="['id', 'machineTypeCaption', 'port', 'state']">
             <ng-template pTemplate="caption">
                 <div class="table-header grid grid-cols-3">
                     <div class="flex flex-row">
@@ -82,7 +190,7 @@
                         </div>
                     </th>
 
-        
+                    <th style="width: 8rem" ></th>
                 </tr>
                
             </ng-template>
@@ -110,22 +218,17 @@
                             <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.idState!=1&&customer.idState!=2&&customer.idState!=3&&customer.idState!=4"   tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                                     
                             <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.idState==4"  [styleClass]="'bg-blue-300'"  tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                      
                             <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.idState==3"  [styleClass]="'bg-red-300'"  tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                      
-                            <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.idState==2"  [styleClass]="'bg-green-300'" tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                      
+                            <p-chip label="{{customer.state}} на заказе № {{customer.idRequest}}" icon="pi pi-cog" *ngIf="customer.idState==2"  [styleClass]="'bg-green-300'" tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                      
                             <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.idState==1"  [styleClass]="'bg-orange-300'"  tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                      
-                   
                         </div>
                         <div class="flex justify-around w-full mt-2">
                         <button pButton type="button" (click)="repairBtnDialog(customer)" *ngIf="customer.idState==3"  label="Заявка на ремонт" class="p-button-info p-button-rounded"></button>
                         </div>
                     </td>
 
-                    
-                    
-                    <!-- <td>
-                        <span class="p-column-title">Activity</span>
-                        <p-progressBar [value]="customer.activity" [showValue]="false"></p-progressBar>
-                    </td> -->
-           
+                    <td style="text-align: center">
+                        <button pButton type="button" tooltipPosition="bottom" pTooltip="Просмотр очереди" (click)="openDialogView(customer)" class="p-button-secondary mr-4" icon="pi pi-cog"></button>
+                     </td>                                              
                     
                 </tr>
             </ng-template>

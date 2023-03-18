@@ -9,4 +9,5 @@ export interface MachineModel
     isDeleted?:string;
     idState?:number;
     state?:string;
+    idRequest?:number;
 }

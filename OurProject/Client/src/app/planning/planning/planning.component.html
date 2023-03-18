@@ -1,5 +1,7 @@
 <div>
-    <p-button   label="Утвердить заявку №{{selectedRequest.request?.number}}" (onClick)="acceptClick()" styleClass="p-button-warning p-button-rounded mb-4" icon="pi pi-pencil" ></p-button>
+    <p-button   label="Утвердить заявку №{{selectedRequest.request?.number}} в ручном режиме" (onClick)="acceptClick()" styleClass="p-button-warning p-button-rounded mb-4 mr-4" icon="pi pi-pencil" ></p-button>
+    <p-button   label="Утвердить заявку №{{selectedRequest.request?.number}} в автоматическом режиме" (onClick)="acceptClick()" styleClass="p-button-warning p-button-rounded mb-4" icon="pi pi-pencil" ></p-button>
+
 </div>
 <div class="main-grid gap-4">
     <div >
@@ -55,7 +57,15 @@
                 </div>
             </ng-template>     
         </p-listbox>
-        <p class="font-bold">Время фрезерования:{{timeFrez}}c. Время точения:{{timeTokerov}}c.</p>
+        <div>
+            <p class="font-bold">Время фрезерования: {{timeFrez}} секунд </p>
+        </div>
+        <div>
+            <p class="font-bold">Время точения:{{timeTokerov}} секунд</p>
+        </div>
+        <div>
+            <p class="font-bold">Итог:{{timeAll}} секунд</p>
+        </div>
     </div>
 
     <div class="row-span-3 col-span-1" style=" max-height: 75vh;">

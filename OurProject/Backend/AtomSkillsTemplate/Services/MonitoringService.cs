@@ -186,8 +186,9 @@ namespace AtomSkillsTemplate.Services
         {
             var connection = connectionFactory.GetConnection();
             var requests = await connection.QueryAsync<Request>
-                ($"select * from {DBHelper.Schema}.{DBHelper.Requests} where id in " +
-                $" (select id_request from {DBHelper.Schema}.{DBHelper.MachineRequest} where id_machine = :id_machine) order by priority desc, create_date desc", new { id_machine = machineID });
+                ($@"select m.caption as ContractorName,  r.* from {DBHelper.Schema}.{DBHelper.Requests} r
+                inner join {DBHelper.Schema}.{DBHelper.Contractors} m on m.id=r.id_contractor
+                where r.id in (select id_request from {DBHelper.Schema}.{DBHelper.MachineRequest} where id_machine = :id_machine) order by priority desc, create_date desc", new { id_machine = machineID });
             return requests;
         }
         public async Task ProcessEquipment(Machine machine)
