@@ -51,6 +51,10 @@ namespace AtomSkillsTemplate.Controllers
             {
                 return NotFound();
             }
+            if(machineDTOs == null)
+            {
+                return null;
+            }
             return Ok(machineDTOs.OrderBy(o => o.MachineType));
         }
 

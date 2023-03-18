@@ -242,7 +242,7 @@ namespace AtomSkillsTemplate.Services
                 {
                     if (wrapper.ShouldStop)
                     {
-                        machineWrappers.Remove(machineWrappers.FirstOrDefault(o => o.Machine.Id == machine.Id));
+                        
                         return;
                     }
                     var requestsAssignedToThisMachine = new List<RequestForMonitoring>();
