@@ -6,6 +6,7 @@ namespace AtomSkillsTemplate.NewModels
     {
         public string Id { get; set; }
         public string MachineType { get; set; }
+        public string MachineTypeCaption { get; set; }
         public long Port { get; set; }
         public string IsDeleted { get; set; }
         public int IdState { get; set; }

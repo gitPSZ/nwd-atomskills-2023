@@ -34,11 +34,11 @@
                         </div>
                      
                     </th>
-                    <th pSortableColumn="machineType" style="min-width:100px">
+                    <th pSortableColumn="machineTypeCaption" style="min-width:100px">
                         <div class="flex justify-content-center align-items-center">
                            Тип станка
-                            <p-columnFilter type="text" field="machineType" display="menu"></p-columnFilter>
-                            <p-sortIcon field="machineType"></p-sortIcon>
+                            <p-columnFilter type="text" field="machineTypeCaption" display="menu"></p-columnFilter>
+                            <p-sortIcon field="machineTypeCaption"></p-sortIcon>
                         </div>
                      
                     </th>
@@ -79,7 +79,7 @@
    
                     <td>
                         <span class="p-column-title">Тип станка</span>
-                        {{customer.machineType}}
+                        {{customer.machineTypeCaption}}
                     </td>
                     <td>
                         <span class="p-column-title">Порт</span>
