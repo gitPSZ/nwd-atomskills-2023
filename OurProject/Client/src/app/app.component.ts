@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Calendar } from 'primeng/calendar';
-import { Subscription, timeInterval } from 'rxjs';
+import { of, Subscription, timeInterval, timer } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
 import { BaseComponent } from './base-component/base.component';
 import { SimpleMessageService } from './services/SimpleMessageService/simple-message.service';
@@ -16,6 +16,8 @@ import { NavigationButton } from './models/NavigationButton';
 import { AgileInterfaceService } from './services/AgileInterfaceService/agile-interface.service';
 import { RequestService } from './request/request/request.service';
 import { RequestModel } from './newModels/RequestModel';
+import { NotificationModel } from './newModels/NotificationModel';
+import { OverlayPanel } from 'primeng/overlaypanel';
 
 @Component({
 	selector: 'app-root',
@@ -23,6 +25,7 @@ import { RequestModel } from './newModels/RequestModel';
 	styleUrls: ['./app.component.css']
 })
 export class AppComponent extends BaseComponent {
+    @ViewChild("op") op : OverlayPanel | undefined;
 	title = 'projectNew';
 	isOpen = true;
 	isToolbarAndMenuVisible = true;
@@ -33,12 +36,14 @@ export class AppComponent extends BaseComponent {
 	saveMessageCount: number = 0;
 	visibleCount:number = 0;
 	isWarning=true;
-	cardsRequest: RequestModel[] = [];
+	cardsRequestAll: RequestModel[] = [];
+	cardsRequestNotified: RequestModel[] = [];
+	notifications: NotificationModel[] = [];
 	constructor(public messageService: SimpleMessageService, private requestService : RequestService, 
 		public router: Router, public configService: ConfigService, private statusService: StatusService, private config: PrimeNGConfig,
 		toastService: ToastService, private cookieService: CookieService, private authenticationService: AuthenticationService, private agileInterfaceService : AgileInterfaceService) {
 		super();
-
+        
 		this.config.setTranslation({
 			accept: 'Accept',
 			reject: 'Cancel',
@@ -57,16 +62,14 @@ export class AppComponent extends BaseComponent {
 		this.startTimer();
 		
 	}
+    getUnreadNotificationNumber() : number{
+        return this.notifications.filter((value)=>value.isRead == false).length;
+    }
     async startTimer() {
 		this.interval = setInterval(async () => {
-		  if(this.timeLeft > 0) {
-			this.timeLeft--;
-			this.messageCount =  await this.requestService.getCountRequest();
-			this.visibleCount = this.messageCount - this.saveMessageCount;
-		  } else {
-			this.timeLeft = 5;
-		  }
-		},1000)
+		    await this.checkMessage();
+
+		},2000)
 	  }
 	
 	setupSubscriptions(){
@@ -107,6 +110,47 @@ export class AppComponent extends BaseComponent {
 			this.messageService.observableNavigationButtons.next(await this.agileInterfaceService.getNavigationButtons());
 		})
 		this.subscriptions.push(navigationButtonsSubscription);		
+
+        var notificationSubscription = this.messageService.observableNotificationMessage.subscribe((messageModel)=>{
+            if(messageModel.text == null){
+                return;
+            }
+
+            this.notifications.push(messageModel);
+            this.notifications = this.notifications.sort(function(a,b){
+                if(a.notificationDate == null || b.notificationDate == null){
+                    return 0;
+                }
+                if(a.notificationDate > b.notificationDate){
+                    return -1
+                }
+                else if(a.notificationDate < b.notificationDate){
+                    return 1;
+                }
+
+                if(a.id == null || b.id == null){
+                    return -1;
+                }
+                if(a.id > b.id){
+                    return -1;
+                }
+                return 1
+            })
+        })
+        this.subscriptions.push(notificationSubscription);
+
+        setTimeout(()=>{
+            var subscriptionOP = this.op?.onHide.subscribe(()=>{
+                this.notifications.forEach((notification)=>{
+                    notification.isRead = true;
+                })
+            });
+    
+            if(subscriptionOP != null){
+                this.subscriptions.push(subscriptionOP)
+            }
+        },0)
+        
 	}
 	async trySendToAPI(){
 		let status = await this.statusService.getServerStatus();
@@ -140,10 +184,27 @@ export class AppComponent extends BaseComponent {
 	}
 	async checkMessage()
 	{
-		this.cardsRequest = await this.requestService.getLastRequests(this.visibleCount);
+		this.cardsRequestAll = await this.requestService.getRequests();
+        this.cardsRequestAll.forEach((request)=>{
+
+            var notifiedRequest = this.cardsRequestNotified.find(p=>p.id == request.id);
+            if(notifiedRequest != null && notifiedRequest.id != null){
+                return;
+            }
+            this.cardsRequestNotified.push(request);
+            this.messageService.observableNotificationMessage.next({
+                id: request.id,
+                header : "Пришла новая заявка № " + request.id,
+                isRead : false,
+                notificationDate : new Date(),
+                text : "От " + request.contractorName
+            })
+        })
 		this.saveMessageCount = this.messageCount;
 		this.isWarning = false;
-console.log(this.cardsRequest);
 
 	}
+    refreshMessageStatus(){
+        this.op
+    }
 }
