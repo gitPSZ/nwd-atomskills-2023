@@ -53,8 +53,17 @@ namespace AtomSkillsTemplate.Services
                     }
                     await Task.Delay(interval);
                 }
+                try
+                {
+
+                }
+                catch (Exception e)
+                {
+
+                }
             });
         }
+
         private async Task CheckNewRequests()
         {
             using var conn = connectionFactory.GetConnection();
