@@ -10,8 +10,8 @@ export interface RequestModel
     idContractor?: number;
     stateCode?: string;
     stateCaption?:string;
-    contractorName?:string
-
+    contractorName?:string;
+    priority?:number;
     notificationDate?:string
 
     

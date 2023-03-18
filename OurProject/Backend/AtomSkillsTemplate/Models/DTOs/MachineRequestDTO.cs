@@ -9,5 +9,6 @@ namespace AtomSkillsTemplate.Models.DTOs
     {
         public string IdMachine { get; set; }
         public long IdRequest { get; set; }
+        public long? IdPriority { get; set; }
     }
 }
