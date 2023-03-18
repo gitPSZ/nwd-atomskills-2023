@@ -37,6 +37,30 @@ namespace AtomSkillsTemplate.Repositories
 
             }
         }
+
+        public async Task<IEnumerable<Request>> GetLastRequest(long count)
+        {
+            using (var connection = connectionFactory.GetConnection())
+            {
+                var request = await connection.QueryAsync<Request>($"select r.*, c.caption as ContractorName   from {DBHelper.Schema}.{DBHelper.Requests} r left join {DBHelper.Schema}.{DBHelper.Contractors} c on c.id= r.id_contractor order by id desc limit :count", new { count = count });
+                return request;
+
+            }
+        }
+
+        public async Task<IEnumerable<ProductForPosition>> GetProductsRequest(Request request)
+        {
+            using (var connection = connectionFactory.GetConnection())
+            {
+                var products = await connection.QueryAsync<ProductForPosition>($@"select r.*, p.code,p.caption, p.milling_time, p.lathe_time  
+                from {DBHelper.Schema}.{DBHelper.RequestPositions} r
+                left join {DBHelper.Schema}.{DBHelper.Products} p on p.id = r.product_id where r.request_id=:requestid", new { requestid = request.Id });
+                return products.OrderBy(x=>x.Caption);
+
+            }
+        }
+
+        
         public async Task<IEnumerable<Priority>> GetPriorities()
         {
             using (var connection = connectionFactory.GetConnection())
@@ -46,7 +70,19 @@ namespace AtomSkillsTemplate.Repositories
 
             }
         }
-		public async Task<IEnumerable<State>> GetStates()
+
+        public async Task<long> GetCountRequest()
+        {
+            using (var connection = connectionFactory.GetConnection())
+            {
+                var count = await connection.QueryFirstAsync<long>($"select count(*) from {schemaName}.request");
+                return count;
+
+            }
+        }
+        
+
+        public async Task<IEnumerable<State>> GetStates()
         {
             using (var connection = connectionFactory.GetConnection())
             {

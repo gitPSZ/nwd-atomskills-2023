@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Calendar } from 'primeng/calendar';
-import { Subscription } from 'rxjs';
+import { Subscription, timeInterval } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
 import { BaseComponent } from './base-component/base.component';
 import { SimpleMessageService } from './services/SimpleMessageService/simple-message.service';
@@ -14,6 +14,9 @@ import { AuthenticationService } from './services/AuthenticationService/authenti
 import { IfStmt } from '@angular/compiler';
 import { NavigationButton } from './models/NavigationButton';
 import { AgileInterfaceService } from './services/AgileInterfaceService/agile-interface.service';
+import { RequestService } from './request/request/request.service';
+import { RequestModel } from './newModels/RequestModel';
+
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
@@ -24,8 +27,14 @@ export class AppComponent extends BaseComponent {
 	isOpen = true;
 	isToolbarAndMenuVisible = true;
 	ru: any;
-
-	constructor(public messageService: SimpleMessageService,
+	timeLeft: number = 5;
+  	interval: any;
+	messageCount: number = 0;
+	saveMessageCount: number = 0;
+	visibleCount:number = 0;
+	isWarning=true;
+	cardsRequest: RequestModel[] = [];
+	constructor(public messageService: SimpleMessageService, private requestService : RequestService, 
 		public router: Router, public configService: ConfigService, private statusService: StatusService, private config: PrimeNGConfig,
 		toastService: ToastService, private cookieService: CookieService, private authenticationService: AuthenticationService, private agileInterfaceService : AgileInterfaceService) {
 		super();
@@ -45,8 +54,21 @@ export class AppComponent extends BaseComponent {
 
 	async ngOnInit() {
 		this.trySendToAPI();
+		this.startTimer();
+		
 	}
-    
+    async startTimer() {
+		this.interval = setInterval(async () => {
+		  if(this.timeLeft > 0) {
+			this.timeLeft--;
+			this.messageCount =  await this.requestService.getCountRequest();
+			this.visibleCount = this.messageCount - this.saveMessageCount;
+		  } else {
+			this.timeLeft = 5;
+		  }
+		},1000)
+	  }
+	
 	setupSubscriptions(){
 		var subscription = this.messageService.observableMainDesignVisibility.subscribe((isVisible) => {
 			this.isToolbarAndMenuVisible = isVisible;
@@ -115,5 +137,13 @@ export class AppComponent extends BaseComponent {
 	}
 	async logOut(){
 		this.authenticationService.logOut()
+	}
+	async checkMessage()
+	{
+		this.cardsRequest = await this.requestService.getLastRequests(this.visibleCount);
+		this.saveMessageCount = this.messageCount;
+		this.isWarning = false;
+console.log(this.cardsRequest);
+
 	}
 }

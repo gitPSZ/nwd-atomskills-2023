@@ -45,8 +45,10 @@ import * as FileSaver from 'file-saver';
 import { ChipModule } from 'primeng/chip';
 import { DictionaryComponent } from './dictionary/dictionary.component';
 import { ProfileComponent } from './starting-components/ProfileComponent/profile/profile.component';
+import {BadgeModule} from 'primeng/badge';
+import {OverlayPanelModule} from 'primeng/overlaypanel';
 import { PlanningComponent } from './planning/planning/planning.component';
-
+import {CardModule} from 'primeng/card';
 @NgModule({
   declarations: [
     AppComponent,
@@ -58,7 +60,7 @@ import { PlanningComponent } from './planning/planning/planning.component';
     NavigationCardsComponent,
     DictionaryComponent,
     ProfileComponent,
-    PlanningComponent,
+    PlanningComponent
   ],
   imports: [
     HttpClientModule,
@@ -87,7 +89,10 @@ import { PlanningComponent } from './planning/planning/planning.component';
     ContextMenuModule,
     MultiSelectModule,
     ChipModule,
-    ListboxModule
+    BadgeModule,
+    OverlayPanelModule,
+    ListboxModule,
+    CardModule
   ],
   providers: [ErrorService, StatusService, ConfigService, MessageService, AuthenticationService, CookieService, SimpleMessageService, AuthenticationService,
     {
