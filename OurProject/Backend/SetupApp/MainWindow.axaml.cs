@@ -190,7 +190,7 @@ namespace SetupApp
                 foreach (var number in urlArray)
                 {
                     var numberInt = Convert.ToInt32(number);
-                    if (numberInt <= 0 || numberInt >= 255)
+                    if (numberInt < 0 || numberInt > 255)
                     {
                         errorFrontend.Text = " аждое число дожно быть больше 0 и меньше 255 (либо равно)";
                         throw new Exception();
@@ -220,7 +220,7 @@ namespace SetupApp
                 foreach (var number in urlArray)
                 {
                     var numberInt = Convert.ToInt32(number);
-                    if (numberInt <= 0 || numberInt >= 255)
+                    if (numberInt < 0 || numberInt > 255)
                     {
                         errorBackend.Text = " аждое число дожно быть больше 0 и меньше 255 (либо равно)";
                         throw new Exception();

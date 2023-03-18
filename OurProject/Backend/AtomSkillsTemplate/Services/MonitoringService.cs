@@ -27,58 +27,58 @@ namespace AtomSkillsTemplate.Services
         }
         public async Task AddRequest(long requestID)
         {
-            //using var connection = connectionFactory.GetConnection();
-            //var request = await connection.QueryFirstOrDefaultAsync<RequestForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.Requests} where id = " + requestID);
-            //var requestPositions = await connection.QueryAsync<RequestPositionForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.RequestPositions}");
+            using var connection = connectionFactory.GetConnection();
+            var request = await connection.QueryFirstOrDefaultAsync<RequestForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.Requests} where id = " + requestID);
+            var requestPositions = await connection.QueryAsync<RequestPositionForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.RequestPositions}");
 
-            //foreach (var requestPosition in requestPositions)
-            //{
-            //    requestPosition.QuantityLathe = requestPosition.QuantityExec;
-            //    requestPosition.QuantityLatheInProgress = requestPosition.QuantityExec;
-            //    requestPosition.QuantityMilling = requestPosition.QuantityExec;
-            //    requestPosition.QuantityMillingInProgress = requestPosition.QuantityExec;
-            //}
+            foreach (var requestPosition in requestPositions)
+            {
+                requestPosition.QuantityLathe = requestPosition.QuantityExec;
+                requestPosition.QuantityLatheInProgress = requestPosition.QuantityExec;
+                requestPosition.QuantityMilling = requestPosition.QuantityExec;
+                requestPosition.QuantityMillingInProgress = requestPosition.QuantityExec;
+            }
 
 
-            //try
-            //{
-            //    var machinesThatCanProcess = await connection.QueryAsync<Machine>(
-            //        $"select * from {DBHelper.Schema}.{DBHelper.Machines} where id in (select id_machine from " +
-            //        $" {DBHelper.Schema}.{DBHelper.MachineRequest} where id_request = :idRequest)", new { idRequest = request.Id });
-
-            //    request.MachinesThatCanProcessThisGoddamnThing = new List<Machine>();
-
-            //    if (machinesThatCanProcess != null && machinesThatCanProcess.Any())
-            //    {
-            //        request.MachinesThatCanProcessThisGoddamnThing = machinesThatCanProcess.ToList();
-            //    }
-
-            //    request.RequestPositions = new List<RequestPositionForMonitoring>();
-            //    var requestPositionsInRequest = requestPositions.Where(o => o.RequestId == request.Id);
-            //    request.RequestPositions.AddRange(requestPositionsInRequest);
-            //    lock (requestRepository)
-            //    {
-            //        requestRepository.Add(request);
-
-            //    }
-            //}
-            //catch (Exception e)
-            //{
-            //    Console.WriteLine("Ошибка в списке позиций заказа: " + e.ToString());
-            //}
             try
             {
-                foreach (var machine in machineWrappers)
+                var machinesThatCanProcess = await connection.QueryAsync<Machine>(
+                    $"select * from {DBHelper.Schema}.{DBHelper.Machines} where id in (select id_machine from " +
+                    $" {DBHelper.Schema}.{DBHelper.MachineRequest} where id_request = :idRequest)", new { idRequest = request.Id });
+
+                request.MachinesThatCanProcessThisGoddamnThing = new List<Machine>();
+
+                if (machinesThatCanProcess != null && machinesThatCanProcess.Any())
                 {
-                    machine.ShouldStop = true;
+                    request.MachinesThatCanProcessThisGoddamnThing = machinesThatCanProcess.ToList();
                 }
-                machineWrappers = new List<MachineWrapper>();
-                SetupEnvironment();
+
+                request.RequestPositions = new List<RequestPositionForMonitoring>();
+                var requestPositionsInRequest = requestPositions.Where(o => o.RequestId == request.Id);
+                request.RequestPositions.AddRange(requestPositionsInRequest);
+                lock (requestRepository)
+                {
+                    requestRepository.Add(request);
+
+                }
             }
             catch (Exception e)
             {
-                Console.WriteLine("fullrestarterror: " + e.ToString());
+                Console.WriteLine("Ошибка в списке позиций заказа: " + e.ToString());
             }
+            //try
+            //{
+            //    foreach (var machine in machineWrappers)
+            //    {
+            //        machine.ShouldStop = true;
+            //    }
+            //    machineWrappers = new List<MachineWrapper>();
+            //    SetupEnvironment();
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine("fullrestarterror: " + e.ToString());
+            //}
         }
         public async void FullRestart()
         {

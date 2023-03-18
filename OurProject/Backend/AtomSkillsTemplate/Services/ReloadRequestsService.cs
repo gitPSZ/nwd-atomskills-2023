@@ -140,7 +140,7 @@ namespace AtomSkillsTemplate.Services
 
                     if(status.State != null)
                     {
-                        var incomingStatus = states.FirstOrDefault(o => o.Code == status.State.Code.ToLower()).Id;
+                        var incomingStatus = states.FirstOrDefault(o => o.Code.ToLower() == status.State.Code.ToLower()).Id;
 
 #if DEBUG
                         if(port == 1042)
@@ -173,7 +173,7 @@ namespace AtomSkillsTemplate.Services
                     if(status.State != null)
                     {
                         await conn.QueryAsync($"update {DBHelper.Schema}.{DBHelper.Machines} set id_state= :idStatus where port = :port",
-                        new { idStatus = states.FirstOrDefault(o => o.Code == status.State.Code.ToLower()).Id, port = port }); ;
+                        new { idStatus = states.FirstOrDefault(o => o.Code.ToLower() == status.State.Code.ToLower()).Id, port = port }); ;
                     }
 
 
