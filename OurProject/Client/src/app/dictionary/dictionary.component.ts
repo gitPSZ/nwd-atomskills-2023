@@ -36,6 +36,7 @@ export class DictionaryComponent  extends BaseComponent implements OnInit{
     this.customers = await this.dictionaryService.getDictionary();
     console.log(this.customers);
     this.startTimer();
+    console.log(this.customers);
   }
 
   filterGlobal() {

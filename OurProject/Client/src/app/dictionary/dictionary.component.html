@@ -110,9 +110,8 @@
                             <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.idState!=1&&customer.idState!=2&&customer.idState!=3&&customer.idState!=4"   tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                                     
                             <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.idState==4"  [styleClass]="'bg-blue-300'"  tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                      
                             <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.idState==3"  [styleClass]="'bg-red-300'"  tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                      
-                            <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.idState==2"  [styleClass]="'bg-green-300'" tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                      
+                            <p-chip label="{{customer.state}} на заявке {{customer.idRequest}}" icon="pi pi-cog" *ngIf="customer.idState==2"  [styleClass]="'bg-green-300'" tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                      
                             <p-chip label="{{customer.state}}" icon="pi pi-cog" *ngIf="customer.idState==1"  [styleClass]="'bg-orange-300'"  tooltipPosition="bottom" pTooltip="{{customer.state}}" ></p-chip>                      
-                   
                         </div>
                         <div class="flex justify-around w-full mt-2">
                         <button pButton type="button" (click)="repairBtnDialog(customer)" *ngIf="customer.idState==3"  label="Заявка на ремонт" class="p-button-info p-button-rounded"></button>
