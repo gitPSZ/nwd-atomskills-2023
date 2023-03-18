@@ -1,38 +1,70 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { BaseComponent } from 'src/app/base-component/base.component';
 import { MachineModel } from 'src/app/newModels/MachineModel';
 import { ProductsForPosition } from 'src/app/newModels/ProductsForPosition';
+import { RequestSharedModel } from 'src/app/newModels/RequestSharedModel';
 import { RequestModel } from 'src/app/newModels/RequestModel';
 import { RequestService } from 'src/app/request/request/request.service';
 import { dictionaryService } from '../../dictionary/dictionary.service';
+import { Listbox } from 'primeng/listbox';
 
 @Component({
   selector: 'app-planning',
   templateUrl: './planning.component.html',
-  styleUrls: ['./planning.component.css']
+  styleUrls: ['./planning.component.css'],
 })
 export class PlanningComponent extends BaseComponent{
 
+    @ViewChild("requestListBox") requestListBox : Listbox | undefined;
     requests : RequestModel[] = [];
+    requestsShared: RequestSharedModel[] = [];
     products: ProductsForPosition[]= [];
-    selectedRequest: RequestModel = {}
-    selectedProduct: ProductsForPosition = {};
     machine: MachineModel[] = [];
+    // selectedRequest: RequestSharedModel = {
+    //     machine: [],
+    //     selectedMachine: []
+    // }
+    selectedRequest: RequestSharedModel = {
+        machines: [],
+        selectedMachines: []
+    };
+    selectedProduct: ProductsForPosition = {};
+    
     filterValue : string = '';
     constructor(private requestService : RequestService, private dictionaryService : dictionaryService){
         super();
     }
     async ngOnInit(){
         this.requests = await this.requestService.getRequests();
-        this.selectedRequest = this.requests[0];
-        this.products = await this.requestService.getProductsForPosition(this.selectedRequest);
-        this.machine = await this.dictionaryService.getDictionary();
-        console.log(this.machine);
+  
+      this.machine = await this.dictionaryService.getDictionary().finally(()=>{
+        
+      });
+      
+      let requestsSharedLocal : RequestSharedModel[] = []
+console.log(this.machine);
+      this.requests.forEach(xx=>{ 
+        if (xx.stateCode=="DRAFT")
+        {
+        requestsSharedLocal.push({
+                 request: xx,
+                 machines: this.machine,
+                 selectedMachines: []
+             })
+          }
+      })
+      this.requestsShared = requestsSharedLocal
+          this.selectedRequest = this.requestsShared[0];
+          
+      //  this.products = await this.requestService.getProductsForPosition(this.selectedRequest.request);
+       
+     
     }
     myResetFunction(options:any){
 
     }
     async onChangeRequest(event: any) {
-        this.products = await this.requestService.getProductsForPosition(this.selectedRequest);
+        this.products = await this.requestService.getProductsForPosition(this.selectedRequest.request);
+
     }
 }
