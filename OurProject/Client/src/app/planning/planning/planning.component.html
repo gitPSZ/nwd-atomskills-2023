@@ -60,7 +60,7 @@
 
     <div class="row-span-3 col-span-1" style=" max-height: 80vh;">
         
-        <p-pickList 
+        <p-pickList  [dragdrop]="true"
             [style]="{'max-height':'85vh'}"
             sourceHeader="Назначенные станки"  targetHeader="Все станки" [source]="selectedRequest.selectedMachines" [target]="selectedRequest.machines">
             <ng-template let-machin pTemplate="item">
