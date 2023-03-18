@@ -17,48 +17,72 @@ namespace AtomSkillsTemplate.Services
         IConnectionFactory connectionFactory;
         List<RequestForMonitoring> requestRepository;
         List<MachineWrapper> machineWrappers;
+        long quantityToAdd = 1;
         public MonitoringService(IConnectionFactory connectionFactory)  
         {
             this.connectionFactory = connectionFactory;
+#if DEBUG
+            quantityToAdd = 40;
+#endif
         }
         public async Task AddRequest(long requestID)
         {
-            using var connection = connectionFactory.GetConnection();
-            var request = await connection.QueryFirstOrDefaultAsync<RequestForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.Requests} where id = " + requestID);
-            var requestPositions = await connection.QueryAsync<RequestPositionForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.RequestPositions}");
+            //using var connection = connectionFactory.GetConnection();
+            //var request = await connection.QueryFirstOrDefaultAsync<RequestForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.Requests} where id = " + requestID);
+            //var requestPositions = await connection.QueryAsync<RequestPositionForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.RequestPositions}");
 
-            foreach (var requestPosition in requestPositions)
-            {
-                requestPosition.QuantityLathe = requestPosition.QuantityExec;
-                requestPosition.QuantityLatheInProgress = requestPosition.QuantityExec;
-                requestPosition.QuantityMilling = requestPosition.QuantityExec;
-                requestPosition.QuantityMillingInProgress = requestPosition.QuantityExec;
-            }
+            //foreach (var requestPosition in requestPositions)
+            //{
+            //    requestPosition.QuantityLathe = requestPosition.QuantityExec;
+            //    requestPosition.QuantityLatheInProgress = requestPosition.QuantityExec;
+            //    requestPosition.QuantityMilling = requestPosition.QuantityExec;
+            //    requestPosition.QuantityMillingInProgress = requestPosition.QuantityExec;
+            //}
 
-            
+
+            //try
+            //{
+            //    var machinesThatCanProcess = await connection.QueryAsync<Machine>(
+            //        $"select * from {DBHelper.Schema}.{DBHelper.Machines} where id in (select id_machine from " +
+            //        $" {DBHelper.Schema}.{DBHelper.MachineRequest} where id_request = :idRequest)", new { idRequest = request.Id });
+
+            //    request.MachinesThatCanProcessThisGoddamnThing = new List<Machine>();
+
+            //    if (machinesThatCanProcess != null && machinesThatCanProcess.Any())
+            //    {
+            //        request.MachinesThatCanProcessThisGoddamnThing = machinesThatCanProcess.ToList();
+            //    }
+
+            //    request.RequestPositions = new List<RequestPositionForMonitoring>();
+            //    var requestPositionsInRequest = requestPositions.Where(o => o.RequestId == request.Id);
+            //    request.RequestPositions.AddRange(requestPositionsInRequest);
+            //    lock (requestRepository)
+            //    {
+            //        requestRepository.Add(request);
+
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine("Ошибка в списке позиций заказа: " + e.ToString());
+            //}
             try
             {
-                var machinesThatCanProcess = await connection.QueryAsync<Machine>(
-                    $"select * from {DBHelper.Schema}.{DBHelper.Machines} where id in (select id_machine from " +
-                    $" {DBHelper.Schema}.{DBHelper.MachineRequest} where id_request = :idRequest)", new { idRequest = request.Id });
-
-                request.MachinesThatCanProcessThisGoddamnThing = new List<Machine>();
-
-                if (machinesThatCanProcess != null && machinesThatCanProcess.Any())
+                foreach (var machine in machineWrappers)
                 {
-                    request.MachinesThatCanProcessThisGoddamnThing = machinesThatCanProcess.ToList();
+                    machine.ShouldStop = true;
                 }
-
-                request.RequestPositions = new List<RequestPositionForMonitoring>();
-                var requestPositionsInRequest = requestPositions.Where(o => o.RequestId == request.Id);
-                request.RequestPositions.AddRange(requestPositionsInRequest);
-                requestRepository.Add(request);
+                machineWrappers = new List<MachineWrapper>();
+                SetupEnvironment();
             }
             catch (Exception e)
             {
-                Console.WriteLine("Ошибка в списке позиций заказа: " + e.ToString());
+                Console.WriteLine("fullrestarterror: " + e.ToString());
             }
-
+        }
+        public async void FullRestart()
+        {
+            
         }
         public async void SetupEnvironment()
         {
@@ -101,7 +125,58 @@ namespace AtomSkillsTemplate.Services
                 }
                 
             }
+            requestRepository = requestRepository.OrderBy(o => o.Id).ToList();
             StartMachines();
+            StartCheckingForFullRequest();
+        }
+        public async void StartCheckingForFullRequest()
+        {
+            _ = Task.Run(async () =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        lock (requestRepository)
+                        {
+                            RequestForMonitoring requestToRemove = null;
+                            foreach (var request in requestRepository)
+                            {
+                                if (request.RequestPositions.FirstOrDefault(o => o.Quantity >= o.QuantityMilling) == null)
+                                {
+                                    var client = new HttpClient();
+                                    foreach(var position in request.RequestPositions)
+                                    {
+                                        var result = client.GetAsync($"http://localhost:1040/crm/requests/{request.Id}/items/{position.Id}").GetAwaiter().GetResult();
+
+                                        var jsonString = result.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                                        var requestPositionDTO = JsonConvert.DeserializeObject<RequestPositionDTO>(jsonString);
+                                        position.QuantityMillingInProgress = requestPositionDTO.QuantityExec;
+                                        position.QuantityLathe = requestPositionDTO.QuantityExec;
+                                        position.QuantityExec = requestPositionDTO.QuantityExec;
+                                        position.QuantityMilling = requestPositionDTO.QuantityExec;
+                                        position.QuantityLatheInProgress = requestPositionDTO.QuantityExec;
+                                        if (request.RequestPositions.FirstOrDefault(o => o.Quantity >= o.QuantityMilling) == null)
+                                        {
+                                            requestToRemove = request;
+                                        }
+                                    }
+
+                                }
+                            }
+                            requestRepository.Remove(requestToRemove);
+                        }
+                        
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Произошла ошибка при проверки выполненных заявок: " + e.ToString());
+                    }
+
+
+                    await Task.Delay(10000);
+                }
+            });
         }
         public async void StartMachines()
         {
@@ -114,8 +189,9 @@ namespace AtomSkillsTemplate.Services
                 {
                     Machine = machine,
                     ShouldStop = false,
-                    MonitoringTask = Task.Run(async () => { await ProcessEquipment(machine); })
                 };
+
+                wrapper.MonitoringTask = Task.Run(async () => { await ProcessEquipment(machine, wrapper); });
                 machineWrappers.Add(wrapper);
             }
         }
@@ -129,10 +205,10 @@ namespace AtomSkillsTemplate.Services
             var requests = await connection.QueryAsync<Request>
                 ($@"select m.caption as ContractorName,  r.* from {DBHelper.Schema}.{DBHelper.Requests} r
                 inner join {DBHelper.Schema}.{DBHelper.Contractors} m on m.id=r.id_contractor
-                where r.id in (select id_request from {DBHelper.Schema}.{DBHelper.MachineRequest} where id_machine = :id_machine) order by priority desc, create_date desc", new { id_machine = machineID });
+                where r.id in (select id_request from {DBHelper.Schema}.{DBHelper.MachineRequest} where id_machine = :id_machine) and state_code = 'IN_PRODUCTION' order by priority, create_date ", new { id_machine = machineID });
             return requests;
         }
-        public async Task ProcessEquipment(Machine machine)
+        public async Task ProcessEquipment(Machine machine, MachineWrapper wrapper)
         {
             Console.WriteLine("Начался опрос оборудования с ID = " + machine.Id);
 
@@ -164,10 +240,10 @@ namespace AtomSkillsTemplate.Services
                 var connection = connectionFactory.GetConnection();
                 try
                 {
-                    if (machineWrappers.FirstOrDefault(o=>o.Machine.Id == machine.Id).ShouldStop)
+                    if (wrapper.ShouldStop)
                     {
                         machineWrappers.Remove(machineWrappers.FirstOrDefault(o => o.Machine.Id == machine.Id));
-                        break;
+                        return;
                     }
                     var requestsAssignedToThisMachine = new List<RequestForMonitoring>();
                     lock (requestRepository)
@@ -181,7 +257,7 @@ namespace AtomSkillsTemplate.Services
 
                     if (requestsAssignedToThisMachine == null || requestsAssignedToThisMachine.Any() == false)
                     {
-                        Console.WriteLine($"У машины {machine.Id} пустая очередь, ожидаем заявок");
+                        //Console.WriteLine($"У машины {machine.Id} пустая очередь, ожидаем заявок");
                         await Task.Delay(10000);
                         continue;
                     }
@@ -191,21 +267,26 @@ namespace AtomSkillsTemplate.Services
                         RequestPositionForMonitoring positionToProcess = null;
                         lock (requestRepository)
                         {
-                            var requestsWithLowest = requestRepository.Where(o => o.Priority == requestRepository.Min(o => o.Priority)).OrderBy(o => o.CreateDate).ToList();
+                            var requestsWithLowest = requestRepository.Where(o => o.Priority == requestRepository.Min(o => o.Priority) && o.MachinesThatCanProcessThisGoddamnThing.FirstOrDefault(o=>o.Id == machine.Id) != null).OrderBy(o => o.CreateDate).ToList();
                             var requestToProcess = requestsWithLowest.FirstOrDefault();
-                            positionToProcess = requestToProcess.RequestPositions.FirstOrDefault(p => p.Quantity != p.QuantityLatheInProgress);
+                            positionToProcess = requestToProcess == null ? null : requestToProcess.RequestPositions.FirstOrDefault(p => p.Quantity >= p.QuantityLatheInProgress);
                                 
+                            if(positionToProcess != null)
+                            {
+                                positionToProcess.QuantityLatheInProgress += quantityToAdd;
+
+                            }
                         }
                         if(positionToProcess != null)
                         {
                             var currentMachine = machineWrappers.FirstOrDefault(o => o.Machine.Id == machine.Id);
-                            currentMachine.RequestID = positionToProcess.ProductId;
+                            currentMachine.RequestID = positionToProcess.RequestId;
 
                             var client = new HttpClient();
                             if (machine.IdState != 2)
                             {
                                 machine.IdState = 2;
-                                var result = await client.PostAsync($"http://localhost:{machine.Port}/set/working", new StringContent(JsonConvert.SerializeObject(new ProductID
+                                _ = client.PostAsync($"http://localhost:{machine.Port}/set/working", new StringContent(JsonConvert.SerializeObject(new ProductID
                                 {
                                     productId = positionToProcess.ProductId
                                 })));
@@ -215,7 +296,6 @@ namespace AtomSkillsTemplate.Services
 
 
                             Console.WriteLine("Взята в работу позиция " + positionToProcess.Id + " машиной " + machine.Id);
-                            positionToProcess.QuantityLatheInProgress++;
                             var product = await connection.QueryFirstOrDefaultAsync<Product>($"select * from {DBHelper.Schema}.{DBHelper.Products} where id = :id_product",
                             new { id_product = positionToProcess.ProductId });
 
@@ -226,7 +306,7 @@ namespace AtomSkillsTemplate.Services
                             await Task.Delay((int)(timeToWait));
                             lock (requestRepository)
                             {
-                                positionToProcess.QuantityLathe++;
+                                positionToProcess.QuantityLathe += quantityToAdd;
 
                                 //var client = new HttpClient();
                                 //_ = client.GetAsync($"http://localhost:1040/crm/requests/{positionToProcess.RequestId}/items/{positionToProcess.Id}/add-execution-qty/1}");
@@ -235,7 +315,7 @@ namespace AtomSkillsTemplate.Services
                         }
                         else
                         {
-                            Console.WriteLine("Нечего производить, ожидаем на машине " + machine.Id); 
+                            //Console.WriteLine("Нечего производить, ожидаем на машине " + machine.Id); 
                             await Task.Delay((int)(10000));
                         }
                         
@@ -245,24 +325,30 @@ namespace AtomSkillsTemplate.Services
                         RequestPositionForMonitoring positionToProcess = null;
                         lock (requestRepository)
                         {
-                            var requestsWithLowest = requestRepository.Where(o => o.Priority == requestRepository.Min(o => o.Priority)).OrderBy(o => o.CreateDate).ToList();
+                            var requestsWithLowest = requestRepository.Where(o => o.Priority == requestRepository.Min(o => o.Priority) && o.MachinesThatCanProcessThisGoddamnThing.FirstOrDefault(o => o.Id == machine.Id) != null).OrderBy(o => o.CreateDate).ToList();
                             var requestToProcess = requestsWithLowest.FirstOrDefault();
-                            positionToProcess = requestToProcess.RequestPositions.FirstOrDefault(p => p.Quantity != p.QuantityLatheInProgress);
+                            positionToProcess = requestToProcess == null ? null : requestToProcess.RequestPositions.FirstOrDefault(p => p.QuantityMillingInProgress < p.QuantityLathe);
+                            if(positionToProcess != null)
+                            {
+                                positionToProcess.QuantityMillingInProgress += quantityToAdd;
+                                var requestsWithLowest1 = requestRepository.Where(o => o.MachinesThatCanProcessThisGoddamnThing.FirstOrDefault(o => o.Id == machine.Id) != null).OrderBy(o => o.CreateDate).ToList();
+                                var requestToProcess1 = requestsWithLowest1.FirstOrDefault();
+                                positionToProcess = requestToProcess1 == null ? null : requestToProcess1.RequestPositions.FirstOrDefault(p => p.QuantityMillingInProgress < p.QuantityLathe);
 
+                            }
                         }
                         if (positionToProcess != null)
                         {
                             Console.WriteLine("Взята в работу позиция " + positionToProcess.Id + " машиной " + machine.Id);
-                            positionToProcess.QuantityMillingInProgress++;
 
                             var currentMachine = machineWrappers.FirstOrDefault(o => o.Machine.Id == machine.Id);
-                            currentMachine.RequestID = positionToProcess.ProductId;
+                            currentMachine.RequestID = positionToProcess.RequestId;
 
                             var client = new HttpClient();
                             if (machine.IdState !=2)
                             {
                                 machine.IdState = 2;
-                                var result = await client.PostAsync($"http://localhost:{machine.Port}/set/working", new StringContent(JsonConvert.SerializeObject(new ProductID
+                                _ = client.PostAsync($"http://localhost:{machine.Port}/set/working", new StringContent(JsonConvert.SerializeObject(new ProductID
                                 {
                                     productId = positionToProcess.ProductId
                                 })));
@@ -278,29 +364,26 @@ namespace AtomSkillsTemplate.Services
                             await Task.Delay((int)(timeToWait));
                             lock (requestRepository)
                             {
-                                positionToProcess.QuantityMilling++;
+                                positionToProcess.QuantityMilling += quantityToAdd;
 
-                                Task.Run(async () =>
+                                
+                                try
                                 {
-                                    try
-                                    {
-                                        var client = new HttpClient();
-                                        var result = await client.PutAsync($"http://localhost:1040/crm/requests/{positionToProcess.RequestId}/items/{positionToProcess.Id}/add-execution-qty/1", null);
-                                        Console.WriteLine("Произведена деталь по позиции " + positionToProcess.Id);
+                                    var result = client.PutAsync($"http://localhost:1040/crm/requests/{positionToProcess.RequestId}/items/{positionToProcess.Id}/add-execution-qty/" + quantityToAdd, null).GetAwaiter().GetResult();
+                                    Console.WriteLine("Произведена деталь по позиции " + positionToProcess.Id + " result: " + result.StatusCode);
 
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        Console.WriteLine("Ошибка при обновлении через API");
-                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine("Ошибка при обновлении через API");
+                                }
 
-                                });
 
                             }
                         }
                         else
                         {
-                            Console.WriteLine("Нечего производить, ожидаем на машине " + machine.Id);
+                            //Console.WriteLine("Нечего производить, ожидаем на машине " + machine.Id);
                             await Task.Delay((int)(10000));
                         }
 
