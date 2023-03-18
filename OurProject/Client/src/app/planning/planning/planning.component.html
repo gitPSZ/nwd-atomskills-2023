@@ -1,5 +1,7 @@
 <div>
-    <p-button   label="Утвердить заявку №{{selectedRequest.request?.number}}" (onClick)="acceptClick()" styleClass="p-button-warning p-button-rounded mb-4" icon="pi pi-pencil" ></p-button>
+    <p-button   label="Утвердить заявку №{{selectedRequest.request?.number}} в ручном режиме" (onClick)="acceptClick()" styleClass="p-button-warning p-button-rounded mb-4 mr-4" icon="pi pi-pencil" ></p-button>
+    <p-button   label="Утвердить заявку №{{selectedRequest.request?.number}} в автоматическом режиме" (onClick)="acceptClick()" styleClass="p-button-warning p-button-rounded mb-4" icon="pi pi-pencil" ></p-button>
+
 </div>
 <div class="main-grid gap-4">
     <div >
