@@ -1,5 +1,6 @@
 ﻿using AtomSkillsTemplate.Connection;
 using AtomSkillsTemplate.Connection.Interface;
+using AtomSkillsTemplate.Models.DTOs;
 using AtomSkillsTemplate.NewModels;
 using AtomSkillsTemplate.Services.Interfaces;
 using Dapper;
@@ -20,8 +21,11 @@ namespace AtomSkillsTemplate.Services
     {
         int interval = 10000;
         public IConnectionFactory connectionFactory;
-        public ReloadRequestsService(IConnectionFactory connectionFactory)
+        public IEmailService mailService;
+        public List<Request> cachedRequests = new List<Request>();
+        public ReloadRequestsService(IConnectionFactory connectionFactory, IEmailService mailService)
         {
+            this.mailService = mailService;
             this.connectionFactory = connectionFactory;
             _ = Task.Run(async () =>
             {
@@ -39,6 +43,7 @@ namespace AtomSkillsTemplate.Services
                     try
                     {
                         await CheckRequests();
+                        await CheckNewRequests();
                         
                         await LoadMachineStatus();
                     }
@@ -48,7 +53,63 @@ namespace AtomSkillsTemplate.Services
                     }
                     await Task.Delay(interval);
                 }
+                try
+                {
+
+                }
+                catch (Exception e)
+                {
+
+                }
             });
+        }
+
+        private async Task CheckNewRequests()
+        {
+            using var conn = connectionFactory.GetConnection();
+            var requests = (await conn.QueryAsync<Request>($"select * from {DBHelper.Schema}.{DBHelper.Requests}")).ToList();
+
+            if (cachedRequests.Count() == 0)
+            {
+                cachedRequests = requests.ToList();
+                return;
+            }
+//#if DEBUG
+//            requests.Add(new Request 
+//            {
+//                ContractorName = "contractor",
+//                Description = "description",
+//                Id = 123
+//            });
+//#endif
+            if (requests.Count() <= cachedRequests.Count())
+            {
+                cachedRequests = requests.ToList();
+                return;
+            }
+            var cachedIDs = cachedRequests.Select(o => o.Id);
+            var newRequests = requests.Where(o => cachedIDs.Contains(o.Id) == false).ToList();
+
+            var textToSend = "Поступили новые заявки: \n";
+
+            foreach(var newRequest in newRequests)
+            {
+                textToSend += $"ID: {newRequest.Id}, описание: {newRequest.Description}, контрагент: {newRequest.ContractorName}";
+            }
+            var peopleToSend = await conn.QueryAsync<PersonDTO>($"select * from {DBHelper.Schema}.{DBHelper.People} where role_id = 1");
+            foreach(var person in peopleToSend)
+            {
+                try
+                {
+                    await mailService.SendEmailAsync(person.Email, "Поступление заявок", textToSend);
+                    Console.WriteLine("Почтовое уведомление успешно отправлено");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Возникла ошибка при отправлении уведомлений о поступлении новых сообщений");
+                }
+            }
+            cachedRequests = requests;
         }
         private async Task LoadMachineStatus()
         {

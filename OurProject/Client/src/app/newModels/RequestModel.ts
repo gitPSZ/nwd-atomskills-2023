@@ -2,14 +2,17 @@ import { Timestamp } from "rxjs";
 
 export interface RequestModel
 {
-Id?:number;
-Number?:number;
-Date?: Date;
-RepleaseDate?: Date;
-Description?: string;
-IdContractor?: number;
-StateCode?: string;
-StateCaption?:string;
-ContractorName?:string
+    id?:number;
+    number?:number;
+    date?: Date;
+    repleaseDate?: Date;
+    description?: string;
+    idContractor?: number;
+    stateCode?: string;
+    stateCaption?:string;
+    contractorName?:string
+
+    notificationDate?:string
+
 
 }

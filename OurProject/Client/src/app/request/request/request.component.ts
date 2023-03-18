@@ -11,7 +11,7 @@ import { BaseComponent } from 'src/app/base-component/base.component';
 import { SimpleMessageService } from 'src/app/services/SimpleMessageService/simple-message.service';
 import { environment } from 'src/environments/environment.prod';
 import { ConfigService } from 'src/app/services/ConfigService/config.service';
-import { RequestModel } from 'src/app/models/RequestModel';
+import { RequestModel } from 'src/app/newModels/RequestModel';
 import { RequestService } from './request.service';
 import { ToastService, ToastType } from 'src/app/services/ToastService/toast.service';
 import { Priority } from 'src/app/models/Priority';
@@ -44,14 +44,14 @@ export class RequestComponent extends BaseComponent {
 		this.priorities = await this.requestService.getPriorities();
 	}
 	async sendClick() {
-		this.newRequest.placeOfService = this.jobPlace;
-		this.newRequest.idPriority = this.selectedPriority.id;
-		this.newRequest.text = this.inputText;
-		this.newRequest.idType = this.selectedRequestList.id;
-		this.newRequest.IdAuthor =this.simplemesService.observableUser.value.id;
+		// this.newRequest.placeOfService = this.jobPlace;
+		// this.newRequest.idPriority = this.selectedPriority.id;
+		// this.newRequest.text = this.inputText;
+		// this.newRequest.idType = this.selectedRequestList.id;
+		// this.newRequest.IdAuthor =this.simplemesService.observableUser.value.id;
 
-		this.isPutRequestLoading = true;
-	 	this.requestService.putRequest(this.newRequest); 
+		// this.isPutRequestLoading = true;
+	 	// this.requestService.putRequest(this.newRequest); 
 
 	
 		this.toastService.show("Заявка успешно создана", undefined, ToastType.success);

@@ -4,12 +4,13 @@ import { catchError, lastValueFrom } from 'rxjs';
 import { ClaimModel } from 'src/app/models/ClaimModel';
 import { Person } from 'src/app/models/Person';
 import { Priority } from 'src/app/models/Priority';
-import { RequestModel } from 'src/app/models/RequestModel';
+import { RequestModel } from 'src/app/newModels/RequestModel';
 import { State } from 'src/app/models/State';
 import { TypeRequest } from 'src/app/models/TypeRequest';
 import { BaseApiService } from 'src/app/services/BaseAPIService/base-api.service';
 import { ErrorService } from 'src/app/services/ErrorService/error.service';
 import { SimpleMessageService } from 'src/app/services/SimpleMessageService/simple-message.service';
+import { ProductsForPosition } from 'src/app/newModels/ProductsForPosition';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,40 @@ export class RequestService extends BaseApiService {
       .pipe(catchError(this.errorService.errorHandlerList)));
     return retValue;
   }
+  getCountRequest(): Promise<number> {
+
+    var retValue = lastValueFrom(this.http.get<number>(this.APIUrl + '/request/countRequest')
+      .pipe(catchError(this.errorService.errorHandlerNumber)));
+    return retValue;
+  }
+ 
+
+  getRequests(): Promise<RequestModel[]> {
+
+    var retValue = lastValueFrom(this.http.get<RequestModel[]>(this.APIUrl + '/request')
+      .pipe(catchError(this.errorService.errorHandlerList)));
+    return retValue;
+  }
+
+  getProductsForPosition(request: RequestModel): Promise<ProductsForPosition[]> {
+
+    var retValue = lastValueFrom(this.http.post<ProductsForPosition[]>(this.APIUrl + '/request/productsForPosition', request)
+      .pipe(catchError(this.errorService.errorHandlerList)));
+    return retValue;
+  }
+  
+
+  getLastRequests(count:number): Promise<RequestModel[]> {
+
+    let countDto = {Count:count};
+    var retValue = lastValueFrom(this.http.post<RequestModel[]>(this.APIUrl + '/request/last',countDto)
+      .pipe(catchError(this.errorService.errorHandlerList)));
+    return retValue;
+  }
+
+
+
+
 
   getExecutors(): Promise<Person[]> {
 
@@ -34,7 +69,6 @@ export class RequestService extends BaseApiService {
     console.debug("person", retValue);
     return retValue;
   }
-
   //принять в работу
   toWork(request: RequestModel) {
 
@@ -78,12 +112,7 @@ export class RequestService extends BaseApiService {
     return retValue;
   }
 
-  getRequest(): Promise<RequestModel[]> {
 
-    var retValue = lastValueFrom(this.http.get<RequestModel[]>(this.APIUrl + '/request')
-      .pipe(catchError(this.errorService.errorHandlerList)));
-    return retValue;
-  }
 
   putRequest(newRequest: RequestModel) {
     var retValue = lastValueFrom(this.http.put(this.APIUrl + '/request/save', newRequest)

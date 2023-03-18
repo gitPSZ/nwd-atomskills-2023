@@ -4,3 +4,9 @@
     background-color:#007ad9 ;
     background-image: none;
 }
+
+.p-picklist-buttons button {
+    -webkit-appearance: button;
+    background-color:#007ad9 ;
+    background-image: none;
+}

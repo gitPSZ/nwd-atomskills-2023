@@ -17,6 +17,7 @@ using AtomSkillsTemplate.Repositories;
 using AtomSkillsTemplate.Repositories.Contracts;
 using AtomSkillsTemplate.Services.Interfaces;
 using AtomSkillsTemplate.Services;
+using System.Net;
 
 namespace AtomSkillsTemplate
 {
@@ -40,9 +41,11 @@ namespace AtomSkillsTemplate
             services.AddScoped<IPersonRepository, PersonRepository>();
             services.AddScoped<ITypeRequestRepository, TypeRequestRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
+            services.AddSingleton<IEmailService, EmailService>();
             services.AddSingleton<IConnectionFactory, ConnectionFactory>();
             services.AddSingleton<IReloadRequestsService, ReloadRequestsService>();
             services.AddSingleton<IMachineRepository, NewMachineRepository>();
+            services.AddSingleton<IMonitoringService, MonitoringService>();
             services.AddScoped<INewRequestRepository, NewRequestRepository>();
             services.AddControllers();
             
@@ -53,15 +56,20 @@ namespace AtomSkillsTemplate
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IReloadRequestsService connection)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IReloadRequestsService connection, IMonitoringService monitoringService)
         {
+            ServicePointManager.ServerCertificateValidationCallback +=
+                (se, cert, chain, sslerror) =>
+                {
+                    return true;
+                };
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AtomSkillsTemplate v1"));
             }
-
+            monitoringService.SetupEnvironment();
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseHttpsRedirection();
 

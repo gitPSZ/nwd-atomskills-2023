@@ -38,8 +38,6 @@ namespace AtomSkillsTemplate.Repositories
             {
                 var machine = await connection.QueryAsync<Machine>($"select m.*, s.caption as State from {schemaName}.{tableName} as m left join atom.machine_state s on s.id = m.id_state");
 
-
-
                 return machine;
 
             }

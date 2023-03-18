@@ -1,0 +1,6 @@
+.main-grid{
+    height:85vh;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr 1fr;
+}

@@ -11,6 +11,9 @@ namespace AtomSkillsTemplate.Repositories.Contracts
     public interface IRequestRepository
     {
         public Task<IEnumerable<Request>> GetRequest();
+        public Task<IEnumerable<Request>> GetLastRequest(long count);
+        public Task<IEnumerable<ProductForPosition>> GetProductsRequest(Request request);
+        
         public Task<IEnumerable<ClaimsForTableModel>> GetRequestForTable(PersonDTO roleUser);
         public Task<RequestDTO> SaveRequest(RequestDTO personInfo);
         public Task<ClaimsForTableModel> SaveExecutor(ClaimsForTableModel personInfo);
@@ -20,6 +23,8 @@ namespace AtomSkillsTemplate.Repositories.Contracts
         public Task<RequestDTO> CancelClaim(RequestDTO claim);
         public Task<IEnumerable<Priority>> GetPriorities();
         public Task<IEnumerable<State>> GetStates();
+        public Task<long> GetCountRequest();
+        
 
     }
 }

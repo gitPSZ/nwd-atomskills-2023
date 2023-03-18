@@ -30,7 +30,7 @@ namespace AtomSkillsTemplate.Controllers
             this.personRepository = personRepository;
             this.configuration = configuration;
         }
-        [AllowAnonymous]
+       
         [HttpGet("all")]
         public async Task<ActionResult<PersonDTO>> GetUsers()
         {
@@ -84,7 +84,7 @@ namespace AtomSkillsTemplate.Controllers
             return Ok(personDTOs);
         }
 
-        [AllowAnonymous]
+      
         [HttpGet("sendmail")]
 
         public async Task<ActionResult<PersonDTO>> SendMail()
@@ -93,7 +93,7 @@ namespace AtomSkillsTemplate.Controllers
                 await emailService.SendEmailAsync("te5se@yandex.ru", "Тема письма", "Тест письма: тест!");                   
             return Ok("ok");
         }
-        [AllowAnonymous]
+  
         [HttpPut("registration")]
 
         public async Task<ActionResult<long?>> Registration(PersonDTO personInfo)
@@ -164,7 +164,7 @@ namespace AtomSkillsTemplate.Controllers
         {
             return UserHelper.GetUserFromRequest(Request);
         }
-        [AllowAnonymous]
+   
         [HttpPost("checkReply")]
 
         public async Task<bool> PersonGetReply(PersonDTO personInfo)

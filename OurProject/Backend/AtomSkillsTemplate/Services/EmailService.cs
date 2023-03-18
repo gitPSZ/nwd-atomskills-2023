@@ -19,7 +19,7 @@ namespace AtomSkillsTemplate.Services
     /// <summary>
    
     /// </summary>
-    public class EmailService
+    public class EmailService : IEmailService
     {
         public async Task SendEmailAsync(string email, string subject, string message)
         {

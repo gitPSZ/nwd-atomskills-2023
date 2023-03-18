@@ -11,7 +11,7 @@ import { ToastService } from '../services/ToastService/toast.service';
 import { BaseComponent } from '../base-component/base.component';
 import * as FileSaver from 'file-saver';
 import { timer } from 'rxjs';
-import { RequestModel } from '../models/RequestModel';
+import { RequestModel } from '../newModels/RequestModel';
 
 
 
@@ -53,7 +53,7 @@ export class InitCheckTableComponent  extends BaseComponent implements OnInit {
       if(user.id == null){
         return;
       }
-    this.customers = await this.requestService.getRequest();
+    this.customers = await this.requestService.getRequests();
     })
     this.subscriptions.push(userSubscription);
     this.primengConfig.ripple = true;
@@ -109,7 +109,7 @@ else
   }
 
   async refeshBtn(){
-    this.customers = await this.requestService.getRequest();
+    this.customers = await this.requestService.getRequests();
     console.log(this.customers);
     
   }

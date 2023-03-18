@@ -1,69 +1,26 @@
-<div class="main-grid h-screen">
+<div class="h-screen main-grid">
     <!-- content -->
-    <div class="grid w-64 sm:w-96 col-start-2 row-start-2" (keydown)="onKeyDown($event)">
-        <span class="p-float-label mb-6">
-            <input id="float-input-name" [(ngModel)]="person.login" pInputText class="w-full shadow-md">
-            <label for="float-input-name">Имя пользователя</label>
-        </span>
-        <span class="p-float-label mb-6">
-           
-            <input id="" [(ngModel)]="person.password" type="password" pInputText class="w-full shadow-md">
-            <label for="float-input">Пароль</label>
-        </span>
-        <button label="Войти" [loading]="isLoading" (click)="authoriseClick()" pButton class="shadow-md"></button>
-
-        <div (click)="showRegisterWindow()" class="flex justify-end pt-1 cursor-pointer">Регистрация</div>
-
+    <div class="flex  col-start-1 row-start-2">
+        <div class="grid w-64 sm:w-96  mx-auto" (keydown)="onKeyDown($event)">
+            <span class="p-float-label mb-6">
+                <input id="float-input-name" [(ngModel)]="person.login" pInputText class="w-full shadow-md">
+                <label for="float-input-name">Имя пользователя</label>
+            </span>
+            <span class="p-float-label mb-6">
+               
+                <input id="" [(ngModel)]="person.password" type="password" pInputText class="w-full shadow-md">
+                <label for="float-input">Пароль</label>
+            </span>
+            <button label="Войти" [loading]="isLoading" (click)="authoriseClick()" pButton class="shadow-md"></button>
+    
+            <!-- <div (click)="showRegisterWindow()" class="flex justify-end pt-1 cursor-pointer">Регистрация</div> -->
+            
+        </div>
+    </div>
+    
+    <div class=" col-start-2 row-span-3  h-screen" >
+        <img src="https://controleng.ru/wp-content/uploads/01_70_01.jpg"   class="h-screen  rounded-l-xl border-4  border-indigo-500/100"/>
     </div>
 </div>
 
 
-<p-dialog header="Регистрация" [(visible)]="visible" >
-    <form [formGroup]="formGroup" >
-        <div class="grid w-64 sm:w-96 col-start-2 row-start-2">
-            <span class="p-float-label mb-3">
-                <a>ФИО</a>
-                <input formControlName="nameClient" pInputText class="w-full shadow-md" >
-                <a class="text-red-500 text-xs" *ngIf="shouldShow('nameClient')">Не указано ФИО</a>
-            </span>
-            <span class="p-float-label mb-3">
-                <a>Логин</a>
-                <input id="float-input-newPerson" formControlName="login" pInputText class="w-full shadow-md">
-                <a class="text-red-500 text-xs" *ngIf="shouldShow('login')">Не указан логин</a>
-            </span>
-            <!-- <span class="p-float-label mb-3">
-                <a>Пароль</a>
-                <input id="float-input-registerPassword" formControlName="passwordForm" [(ngModel)]="newPerson.password" pInputText
-                    class="w-full shadow-md">                   
-                    <a  class="text-red-500 text-xs" *ngIf="shouldShow('passwordForm')">Не указан пароль</a>
-            </span> -->
-
-            <span class="p-float-label mb-3 w-full">
-                <a>Пароль</a>
-                <p-password styleClass="w-full" class="w-full" formControlName="password" [toggleMask]="true"
-                    placeholder="Введите пароль" promptLabel="Введите пароль" weakLabel="Пароль слабый"
-                    mediumLabel="Пароль средний" strongLabel="Пароль надежный" >
-                    
-                    <!-- <ng-template pTemplate="footer">
-                          <p-divider></p-divider>
-                          <p class="mt-2">Предложения:</p>
-                          <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
-                              <li>По крайней мере, одна строчная буква</li>
-                              <li>По крайней мере, одна заглавная буква</li>
-                              <li>По крайней мере, один числовой</li>
-                              <li>Минимум 8 символов</li>
-                          </ul>
-                      </ng-template> -->
-                </p-password>
-                <a class="text-red-500 text-xs" *ngIf="shouldShow('password')">Не указан пароль</a>
-            </span>
-
-            <button [disabled]="formGroup.invalid" [loading]="isLoadingRegistration" label="Зарегистрироваться"
-                (click)="registrationClick()" pButton class="shadow-md mt-4"></button>
-        </div>
-        <p-footer>
-            Регистрируясь, вы соглашаетесь с политикой сайта!
-        </p-footer>
-    </form>
-
-</p-dialog>

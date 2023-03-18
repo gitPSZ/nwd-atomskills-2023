@@ -38,6 +38,33 @@ namespace AtomSkillsTemplate.Controllers
             return Ok(reqeustDto);
         }
 
+        
+        [HttpPost("last")]
+
+        public async Task<ActionResult<Request>> GetLastRequests(CountDto Count)
+        {
+            var reqeustDto = await requestRepository.GetLastRequest(Count.Count);
+            if (reqeustDto == null)
+            {
+                return NotFound();
+            }
+            return Ok(reqeustDto);
+        }
+
+        [HttpPost("productsForPosition")]
+
+        public async Task<ActionResult<ProductForPosition>> GetProductsRequest(Request request)
+        {
+            var products = await requestRepository.GetProductsRequest(request);
+            if (products == null)
+            {
+                return NotFound();
+            }
+            return Ok(products);
+        }
+
+
+
         [HttpGet("priorities")]
 
         public async Task<ActionResult<List<Priority>>> GetPriorities()
@@ -75,6 +102,18 @@ namespace AtomSkillsTemplate.Controllers
             return Ok(states);
         }
 
+
+        [HttpGet("countRequest")]
+
+        public async Task<ActionResult<long>> GetCountRequest()
+        {
+            var count = await requestRepository.GetCountRequest();
+            if (count == null)
+            {
+                return NotFound();
+            }
+            return Ok(count);
+        }
 
 
 
@@ -131,6 +170,8 @@ namespace AtomSkillsTemplate.Controllers
             }
             return Ok(claims);
         }
+
+
 
 
 

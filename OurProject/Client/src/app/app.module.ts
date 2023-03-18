@@ -24,6 +24,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
+import { Listbox, ListboxModule} from 'primeng/listbox';
 import { AuthenticationService } from './services/AuthenticationService/authentication.service';
 import { TokenInterceptorService } from './services/Interceptors/token-interceptor.service';
 import { PasswordModule } from 'primeng/password';
@@ -38,13 +39,18 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { UserListComponent } from './admin/user-list/user-list.component';
 import { NavigationCardsComponent } from './starting-components/NavigationCardsComponent/navigation-cards/navigation-cards.component';
 import {TooltipModule} from 'primeng/tooltip';
+import {ScrollPanelModule} from 'primeng/scrollpanel';
 import {InputTextareaModule} from 'primeng/inputtextarea';
-import {saveAs} from 'file-saver';
-import * as FileSaver from 'file-saver';
 import { ChipModule } from 'primeng/chip';
 import { DictionaryComponent } from './dictionary/dictionary.component';
 import { ProfileComponent } from './starting-components/ProfileComponent/profile/profile.component';
+import {BadgeModule} from 'primeng/badge';
+import {OverlayPanelModule} from 'primeng/overlaypanel';
 import { PlanningComponent } from './planning/planning/planning.component';
+import {CardModule} from 'primeng/card';
+import {PickListModule} from 'primeng/picklist';
+import {DragDropModule} from 'primeng/dragdrop';
+
 
 @NgModule({
   declarations: [
@@ -57,7 +63,8 @@ import { PlanningComponent } from './planning/planning/planning.component';
     NavigationCardsComponent,
     DictionaryComponent,
     ProfileComponent,
-    PlanningComponent,
+    PlanningComponent
+    
   ],
   imports: [
     HttpClientModule,
@@ -85,7 +92,14 @@ import { PlanningComponent } from './planning/planning/planning.component';
     InputTextareaModule,
     ContextMenuModule,
     MultiSelectModule,
-    ChipModule
+    ChipModule,
+    BadgeModule,
+    OverlayPanelModule,
+    ListboxModule,
+    CardModule,
+    ScrollPanelModule,
+    PickListModule,
+    DragDropModule
   ],
   providers: [ErrorService, StatusService, ConfigService, MessageService, AuthenticationService, CookieService, SimpleMessageService, AuthenticationService,
     {
