@@ -18,14 +18,14 @@ import { ToastService, ToastType } from 'src/app/services/ToastService/toast.ser
 export class PlanningComponent extends BaseComponent{
 
     @ViewChild("requestListBox") requestListBox : Listbox | undefined;
+    timeFrez:number = 0;
+    timeTokerov:number = 0;
     requests : RequestModel[] = [];
     requestsShared: RequestSharedModel[] = [];
     products: ProductsForPosition[]= [];
     machine: MachineModel[] = [];
-    // selectedRequest: RequestSharedModel = {
-    //     machine: [],
-    //     selectedMachine: []
-    // }
+    priorities:PrioritiesModel[]=[{id:3,name:"низкий"}, {id:2,name:"средний"},{id:1, name:"высокий"}];
+    selectedPriorities: PrioritiesModel = {id:2, name:"средний"};
     selectedRequest: RequestSharedModel = {
         machines: [],
         selectedMachines: []
@@ -58,14 +58,61 @@ export class PlanningComponent extends BaseComponent{
           this.selectedRequest = this.requestsShared[0];
           
       //  this.products = await this.requestService.getProductsForPosition(this.selectedRequest.request);
-       
-     
+       if (this.selectedRequest.request!=null || undefined)
+       {
+      this.products = await this.requestService.getProductsForPosition(this.selectedRequest.request);
+      this.products.forEach(x=>{
+        this.timeFrez = 0;
+        this.timeTokerov = 0;
+        console.log(x.quantity);
+        if(x.quantity != null && x.millingTime != null)
+        {
+            this.timeFrez = this.timeFrez + x.quantity*x.millingTime;
+         
+        }
+        if(x.quantity != null && x.latheTime != null)
+        {
+            this.timeTokerov = this.timeTokerov + x.quantity*x.latheTime;
+        }
+    })
+    if ((this.timeFrez+this.timeTokerov)>86400)
+    {
+        this.selectedPriorities = {id:2,name:"средний"};
+    }
+    else{
+        this.selectedPriorities = {id:3,name:"низкий"};
+    }
+       }
     }
     myResetFunction(options:any){
 
     }
     async onChangeRequest(event: any) {
+
         this.products = await this.requestService.getProductsForPosition(this.selectedRequest.request);
+      
+this.products.forEach(x=>{
+    this.timeFrez = 0;
+    this.timeTokerov = 0;
+    console.log(x.quantity);
+    if(x.quantity != null && x.millingTime != null)
+    {
+        this.timeFrez = this.timeFrez + x.quantity*x.millingTime;
+     
+    }
+    if(x.quantity != null && x.latheTime != null)
+    {
+        this.timeTokerov = this.timeTokerov + x.quantity*x.latheTime;
+    }
+    if ((this.timeFrez+this.timeTokerov)>86400)
+    {
+        this.selectedPriorities = {id:2,name:"средний"};
+    }
+    else{
+        this.selectedPriorities = {id:3,name:"низкий"};
+    }
+})
+
 
     }
     async acceptClick(){
@@ -102,13 +149,12 @@ export class PlanningComponent extends BaseComponent{
                 let position = this.requestsShared.findIndex(value => value.request?.id == this.selectedRequest.request?.id);
                 this.requestsShared.splice(position,1);
         
-                this.selectedRequest = this.requestsShared[0];
-                
+                this.selectedRequest = this.requestsShared[0];               
 		}
-
-
-
-
- 
     }
+}
+export interface PrioritiesModel
+{
+    id?:number;
+    name?:string;
 }

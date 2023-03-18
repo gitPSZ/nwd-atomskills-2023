@@ -113,7 +113,7 @@ namespace AtomSkillsTemplate.Services
         }
         private async Task LoadMachineStatus()
         {
-            using var conn = connectionFactory.GetConnection();
+          /*  using var conn = connectionFactory.GetConnection();
             var ports = await conn.QueryAsync<long>($"select port from {DBHelper.Schema}.{DBHelper.Machines}");
             var states = await conn.QueryAsync<MachineState>($"select * from {DBHelper.Schema}.{DBHelper.MachineState}");
 
@@ -126,7 +126,7 @@ namespace AtomSkillsTemplate.Services
 
                 await conn.QueryAsync($"update {DBHelper.Schema}.{DBHelper.Machines} set id_state= :idStatus where port = :port",
                     new { idStatus = states.FirstOrDefault(o => o.Code == status.State.Code.ToLower()).Id, port = port }); ;
-            }
+            } */
         }
         private async Task LoadMachines()
         {

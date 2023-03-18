@@ -4,13 +4,14 @@ export interface ProductsForPosition
 {
 Id?:number;
 RequestId?:number;
-Quantity?: number;
+quantity?: number;
 QuantityExec?: number;
 ProductId?: number;
 Code?: string;
 Caption?: string;
-MillingTime?:number;
-LatheTime?:number
+millingTime?:number;
+latheTime?:number;
+
 
 
 }
