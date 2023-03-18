@@ -41,35 +41,32 @@
 </p-dialog>
 
 
-<p-dialog header="Просмотр карточки" [(visible)]="visible" >
+<p-dialog header="Просмотр заказа" [(visible)]="visible" >
     <div class="main-grid mt-4" style="height: 40vh; width: 65vh;">
        
         <div   class="grid   col-start-2 row-start-2">
 
             <span class="p-float-label mb-6">
-                <input id="float-input-name" readonly="true" [(ngModel)]="claim.author"  pInputText class="w-full shadow-md"> 
-                <label for="float-input-name" >Инициатор</label>
+                <input id="float-input-name" readonly="true" [(ngModel)]="claim.number"  pInputText class="w-full shadow-md"> 
+                <label for="float-input-name" >Номер заявки</label>
             </span>
 
             <span class="p-float-label mb-6">
-                <input id="float-input-name"  readonly="true" [(ngModel)]="claim.state_code"  pInputText class="w-full shadow-md"> 
-                <label for="float-input-name" >Рабочее место</label>
+                <input id="float-input-name"  readonly="true" [(ngModel)]="claim.contractorName"  pInputText class="w-full shadow-md"> 
+                <label for="float-input-name" >Контрагент</label>
             </span>
     
-            <span class="p-float-label mb-6">
-                <input id="float-input-password"  readonly="true" [(ngModel)]="claim.text"   pInputText class="w-full shadow-md"> 
-                <label for="float-input">Текст обращения</label>
-            </span>
+            <!-- <span class="p-float-label mb-6">
+                <input id="float-input-password"  readonly="true"   [(ngModel)]="claim.releaseDate | date: 'dd.MM.yyyy'"  pInputText class="w-full shadow-md"> 
+                <label for="float-input">Дата создания</label>
+            </span> -->
     
             <span class="p-float-label mb-6">
-                <input id="float-input-password" readonly="true" [(ngModel)]="claim.number"   pInputText class="w-full shadow-md"> 
-                <label for="float-dropdown">Тип заявки</label>
+                <input id="float-input-password" readonly="true"  [(ngModel)]="claim.stateCaption"   pInputText class="w-full shadow-md"> 
+                <label for="float-dropdown">Статус</label>
             </span>
+            
 
-            <span class="p-float-label mb-6">
-                <input id="float-input-password" readonly="true" [(ngModel)]="claim.state"   pInputText class="w-full shadow-md"> 
-                <label for="float-dropdown">Тип заявки</label>
-            </span>
             <!-- <span class="p-float-label mb-6">
                 <p-calendar  ></p-calendar>
                 <label for="float-dropdown">Исполнить до:</label>

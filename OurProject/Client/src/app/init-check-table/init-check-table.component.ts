@@ -97,7 +97,9 @@ else
   }
 
   showDialogCancelClaim(customer: any) {
+   
     this.claim = customer;
+    console.log(this.claim);
     this.visibleCancelClaim = true;
   }
   commandCancelClaim(){
