@@ -133,7 +133,7 @@ this.products.forEach(x=>{
         console.log(frezCount, tokarnCount);
         if (frezCount<1||tokarnCount<1)
         {
-            this.toastService.show("Должен быть назначен хотя бы один токарный или фрезерный станок", "", ToastType.warn);
+            this.toastService.show("Должен быть назначен хотя бы один токарный и фрезерный станок", "", ToastType.warn);
             return;
         }
 
@@ -151,6 +151,10 @@ this.products.forEach(x=>{
         
                 this.selectedRequest = this.requestsShared[0];               
 		}
+        if(this.selectedRequest.request != null){
+            this.requestService.startMonitoringRequest(this.selectedRequest.request);
+
+        }
     }
 }
 export interface PrioritiesModel
