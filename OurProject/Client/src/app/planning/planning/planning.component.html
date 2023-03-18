@@ -55,7 +55,19 @@
             </ng-template>     
         </p-listbox>
     </div>
+
     <div class="row-span-3 col-span-1">
+        <p-pickList sourceHeader="Станки" targetHeader="Станки" [source]="machine" [target]="machine">
+            <ng-template let-machin pTemplate="item">
+                <div>
+                    <img  style="display:inline-block;margin:2px 0 2px 2px" width="48">
+                    <div style="font-size:14px;float:right;margin:15px 5px 0 0">{{machin.machineTypeCaption}}</div>
+                </div>
+            </ng-template>
+        </p-pickList>
+    </div>
+
+    <!-- <div class="row-span-3 col-span-1">
         <p-listbox [options]="machine"  [multiple]="false" optionLabel="Id" filterBy="label"  [listStyle]="{'max-height':'80vh'}">
             <ng-template pTemplate="header" >
                 <div class="font-bold">
@@ -80,6 +92,6 @@
                 </div>
             </ng-template>     
         </p-listbox>
-    </div>
+    </div> -->
 
 </div>

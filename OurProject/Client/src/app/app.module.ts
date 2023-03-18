@@ -41,8 +41,6 @@ import { NavigationCardsComponent } from './starting-components/NavigationCardsC
 import {TooltipModule} from 'primeng/tooltip';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import {InputTextareaModule} from 'primeng/inputtextarea';
-import {saveAs} from 'file-saver';
-import * as FileSaver from 'file-saver';
 import { ChipModule } from 'primeng/chip';
 import { DictionaryComponent } from './dictionary/dictionary.component';
 import { ProfileComponent } from './starting-components/ProfileComponent/profile/profile.component';
@@ -50,6 +48,10 @@ import {BadgeModule} from 'primeng/badge';
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import { PlanningComponent } from './planning/planning/planning.component';
 import {CardModule} from 'primeng/card';
+import {PickListModule} from 'primeng/picklist';
+import {DragDropModule} from 'primeng/dragdrop';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -62,6 +64,7 @@ import {CardModule} from 'primeng/card';
     DictionaryComponent,
     ProfileComponent,
     PlanningComponent
+    
   ],
   imports: [
     HttpClientModule,
@@ -94,7 +97,9 @@ import {CardModule} from 'primeng/card';
     OverlayPanelModule,
     ListboxModule,
     CardModule,
-    ScrollPanelModule
+    ScrollPanelModule,
+    PickListModule,
+    DragDropModule
   ],
   providers: [ErrorService, StatusService, ConfigService, MessageService, AuthenticationService, CookieService, SimpleMessageService, AuthenticationService,
     {
