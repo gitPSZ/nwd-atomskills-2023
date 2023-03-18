@@ -207,6 +207,8 @@ export class AppComponent extends BaseComponent {
             }
         })
 
+        this.allEquipment = equipmentActual;
+
     }
 	async checkMessage()
 	{
