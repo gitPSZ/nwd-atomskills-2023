@@ -15,7 +15,7 @@ import { MachineModel } from '../newModels/MachineModel';
 @Injectable({
   providedIn: 'root'
 })
-export class dictionaryService extends BaseApiService {
+export class DictionaryService extends BaseApiService {
 
   constructor(private errorService: ErrorService, private http: HttpClient, private messageService : SimpleMessageService) {
     super();
