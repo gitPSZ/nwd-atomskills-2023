@@ -44,7 +44,7 @@ export class ErrorService {
       /* this.toastService.show("Недостаточно прав для выполнения операции",'',ToastType.error); */
       return;
   }
-    console.debug(error);
+    console.log(error);
     this.toastService.show("Ошибка выполнения запроса",error.message,ToastType.error);
     this.observableException.next(error);
   }

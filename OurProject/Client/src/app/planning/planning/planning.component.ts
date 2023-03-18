@@ -71,6 +71,7 @@ export class PlanningComponent extends BaseComponent{
     async acceptClick(){
 
 
+        let requestLocal = this.selectedRequest;
         let frezCount = 0;
         let tokarnCount = 0;
         this.selectedRequest.selectedMachines.forEach(x=>{
@@ -105,8 +106,8 @@ export class PlanningComponent extends BaseComponent{
                 this.selectedRequest = this.requestsShared[0];
                 
 		}
-        if(this.selectedRequest.request != null){
-            this.requestService.startMonitoringRequest(this.selectedRequest.request);
+        if(requestLocal.request != null){
+            this.requestService.startMonitoringRequest(requestLocal.request);
 
         }
 
