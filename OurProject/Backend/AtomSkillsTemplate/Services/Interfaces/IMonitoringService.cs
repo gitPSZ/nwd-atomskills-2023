@@ -6,5 +6,6 @@ namespace AtomSkillsTemplate.Services.Interfaces
     {
         public Task AddRequest(long requestID);
         public void SetupEnvironment();
+        public long GetRequestIDThatMachineWorksOn(string machineID);
     }
 }

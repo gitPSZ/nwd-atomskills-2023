@@ -118,6 +118,7 @@ this.products.forEach(x=>{
     async acceptClick(){
 
 
+        let requestLocal = this.selectedRequest;
         let frezCount = 0;
         let tokarnCount = 0;
         this.selectedRequest.selectedMachines.forEach(x=>{
@@ -151,8 +152,8 @@ this.products.forEach(x=>{
         
                 this.selectedRequest = this.requestsShared[0];               
 		}
-        if(this.selectedRequest.request != null){
-            this.requestService.startMonitoringRequest(this.selectedRequest.request);
+        if(requestLocal.request != null){
+            this.requestService.startMonitoringRequest(requestLocal.request);
 
         }
     }

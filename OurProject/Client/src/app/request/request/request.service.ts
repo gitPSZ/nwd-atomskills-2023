@@ -30,7 +30,7 @@ export class RequestService extends BaseApiService {
   }
   startMonitoringRequest(request : RequestModel): Promise<boolean> {
 
-    var retValue = lastValueFrom(this.http.post<boolean>(this.APIUrl + '/startMonitoringRequest', request)
+    var retValue = lastValueFrom(this.http.post<boolean>(this.APIUrl + '/request/startMonitoringRequest', request)
       .pipe(catchError(this.errorService.errorHandlerBoolean)));
     return retValue;
   }

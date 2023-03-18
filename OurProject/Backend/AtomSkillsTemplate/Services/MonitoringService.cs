@@ -63,7 +63,7 @@ namespace AtomSkillsTemplate.Services
         public async void SetupEnvironment()
         {
             using var connection = connectionFactory.GetConnection();
-            var requests = await connection.QueryAsync<RequestForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.Requests} where state_code = 'PRODUCTION'");
+            var requests = await connection.QueryAsync<RequestForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.Requests} where state_code = 'IN_PRODUCTION'");
             var requestPositions = await connection.QueryAsync<RequestPositionForMonitoring>($"select * from {DBHelper.Schema}.{DBHelper.RequestPositions}");
             requestRepository = new List<RequestForMonitoring>();
 
@@ -119,12 +119,16 @@ namespace AtomSkillsTemplate.Services
                 machineWrappers.Add(wrapper);
             }
         }
+        public long GetRequestIDThatMachineWorksOn(string machineID)
+        {
+            return machineWrappers.FirstOrDefault(p => p.Machine.Id == machineID).RequestID;
+        }
         public async Task ProcessEquipment(Machine machine)
         {
             Console.WriteLine("Начался опрос оборудования с ID = " + machine.Id);
 
 #if DEBUG
-            if(machine.Port == 1045)
+            if(machine.Port == 1054)
             {
                 return;
             }
@@ -172,7 +176,7 @@ namespace AtomSkillsTemplate.Services
                         await Task.Delay(10000);
                         continue;
                     }
-
+                    
                     if (machine.MachineType == "lathe")
                     {
                         RequestPositionForMonitoring positionToProcess = null;
@@ -184,6 +188,9 @@ namespace AtomSkillsTemplate.Services
                         }
                         if(positionToProcess != null)
                         {
+                            var currentMachine = machineWrappers.FirstOrDefault(o => o.Machine.Id == machine.Id);
+                            currentMachine.RequestID = positionToProcess.ProductId;
+
                             var client = new HttpClient();
                             if (machine.IdState != 2)
                             {
@@ -237,6 +244,9 @@ namespace AtomSkillsTemplate.Services
                         {
                             Console.WriteLine("Взята в работу позиция " + positionToProcess.Id + " машиной " + machine.Id);
                             positionToProcess.QuantityMillingInProgress++;
+
+                            var currentMachine = machineWrappers.FirstOrDefault(o => o.Machine.Id == machine.Id);
+                            currentMachine.RequestID = positionToProcess.ProductId;
 
                             var client = new HttpClient();
                             if (machine.IdState !=2)
@@ -305,6 +315,7 @@ namespace AtomSkillsTemplate.Services
     {
         public Machine Machine { get; set; }
 
+        public long RequestID { get; set; }
         public bool ShouldStop { get; set; }
         public Task MonitoringTask { get; set; }
     }

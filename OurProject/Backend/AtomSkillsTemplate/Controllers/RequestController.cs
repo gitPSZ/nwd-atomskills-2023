@@ -66,7 +66,6 @@ namespace AtomSkillsTemplate.Controllers
                 return NotFound();
             }
 
-            await monitoringService.AddRequest(machineRequest.IdRequest);
             return Ok(machineRequest);
         }
         [HttpPost("startMonitoringRequest")]
