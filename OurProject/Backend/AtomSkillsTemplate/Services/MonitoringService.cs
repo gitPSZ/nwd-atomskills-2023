@@ -123,6 +123,13 @@ namespace AtomSkillsTemplate.Services
         {
             Console.WriteLine("Начался опрос оборудования с ID = " + machine.Id);
 
+#if DEBUG
+            if(machine.Port == 1045)
+            {
+                return;
+            }
+#endif
+
             if(machine.IdState != 3 && machine.IdState != 4)
             {
                 try

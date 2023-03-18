@@ -69,7 +69,12 @@ namespace AtomSkillsTemplate.Controllers
             await monitoringService.AddRequest(machineRequest.IdRequest);
             return Ok(machineRequest);
         }
-
+        [HttpPost("startMonitoringRequest")]
+        public async Task<ActionResult<bool>> AddMachineRequest(Request request)
+        {
+            await monitoringService.AddRequest(request.Id);
+            return Ok(true);
+        }
 
         [HttpPost("productsForPosition")]
 
