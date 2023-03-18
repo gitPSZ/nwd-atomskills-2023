@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AtomSkillsTemplate.NewModels
 {
@@ -11,6 +12,7 @@ namespace AtomSkillsTemplate.NewModels
         public string IsDeleted { get; set; }
         public int IdState { get; set; }
         public string State { get; set; }
+        public long? IdRequest { get; set; }
 
 
 

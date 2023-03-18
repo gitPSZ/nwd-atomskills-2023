@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Shared.authorization;
 using AtomSkillsTemplate.Services;
 using AtomSkillsTemplate.NewModels;
+using AtomSkillsTemplate.Services.Interfaces;
 
 namespace AtomSkillsTemplate.Controllers
 {
@@ -26,16 +27,26 @@ namespace AtomSkillsTemplate.Controllers
     {
         private IMachineRepository machineRepository { get; set; }
         private IConfiguration configuration { get; set; }
-        public MachineController(IMachineRepository machineRepository, IConfiguration configuration)
+        private IMonitoringService monitoring { get; set; }
+        public MachineController(IMachineRepository machineRepository, IConfiguration configuration, IMonitoringService monitoringService)
         {
             this.machineRepository = machineRepository;
             this.configuration = configuration;
+            this.monitoring = monitoringService;
+
         }
 
         [HttpGet("all")]
         public async Task<ActionResult<Machine>> GetMachine()
         {
             var machineDTOs = await machineRepository.GetMachineDTOs();
+            foreach (Machine machine in machineDTOs)
+            {
+                if ( machine.IdState == 2)
+                {
+                    machine.IdRequest = monitoring.GetRequestIDThatMachineWorksOn(machine.Id);
+                }
+            }
             if (machineDTOs == null)
             {
                 return NotFound();
@@ -52,6 +63,17 @@ namespace AtomSkillsTemplate.Controllers
                 return NotFound();
             }
             return Ok(machineDTOs);
+        }
+
+        [HttpPost("getRequestOrders")]
+        public async Task<ActionResult<Request>> GetRequestOrders(Machine machine)
+        {
+            var request = await monitoring.GetRequestOrderedForMachine(machine.Id);
+            if (request == null)
+            {
+                return NotFound();
+            }
+            return Ok(request);
         }
 
 

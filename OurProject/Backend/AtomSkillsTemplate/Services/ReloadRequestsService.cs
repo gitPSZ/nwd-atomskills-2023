@@ -122,7 +122,7 @@ namespace AtomSkillsTemplate.Services
         {
             
             using var conn = connectionFactory.GetConnection();
-            if (cachedMachines == null)
+            if (cachedMachines.Any()==false)
             {
                 cachedMachines = await conn.QueryAsync<Machine>($"select * from {DBHelper.Schema}.{DBHelper.Machines}");
             }
@@ -138,24 +138,37 @@ namespace AtomSkillsTemplate.Services
                     var jsonString = await result.Content.ReadAsStringAsync();
                     var status = JsonConvert.DeserializeObject<MachineStatus>(jsonString);
 
-                    if(status.Id == 3 && cachedMachines.FirstOrDefault(p=>p.Port == port).IdState != 3)
+                    if(status.State != null)
                     {
-                        var machine = cachedMachines.FirstOrDefault(p => p.Port == port);
-                        cachedMachines.FirstOrDefault(p => p.Port == port).IdState = 3;
-                        var peopleToSend = await conn.QueryAsync<PersonDTO>($"select * from {DBHelper.Schema}.{DBHelper.People} where role_id = 1");
-                        foreach (var person in peopleToSend)
+                        var incomingStatus = states.FirstOrDefault(o => o.Code == status.State.Code.ToLower()).Id;
+
+#if DEBUG
+                        if(port == 1042)
                         {
-                            try
+
+                        }
+#endif
+
+                        if (incomingStatus == 3 && cachedMachines.FirstOrDefault(p => p.Port == port).IdState != 3)
+                        {
+                            var machine = cachedMachines.FirstOrDefault(p => p.Port == port);
+                            cachedMachines.FirstOrDefault(p => p.Port == port).IdState = 3;
+                            var peopleToSend = await conn.QueryAsync<PersonDTO>($"select * from {DBHelper.Schema}.{DBHelper.People} where role_id = 1");
+                            foreach (var person in peopleToSend)
                             {
-                                await mailService.SendEmailAsync(person.Email, "Произошла поломка оборудования", $"Оборудование {machine.Id} перешло в состояние поломки");
-                                Console.WriteLine("Почтовое уведомление успешно отправлено");
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine("Возникла ошибка при отправлении уведомлений о поступлении новых сообщений");
+                                try
+                                {
+                                    await mailService.SendEmailAsync(person.Email, "Произошла поломка оборудования", $"Оборудование {machine.Id} перешло в состояние поломки");
+                                    Console.WriteLine("Почтовое уведомление успешно отправлено");
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine("Возникла ошибка при отправлении уведомлений о поступлении новых сообщений");
+                                }
                             }
                         }
                     }
+                    
 
                     if(status.State != null)
                     {

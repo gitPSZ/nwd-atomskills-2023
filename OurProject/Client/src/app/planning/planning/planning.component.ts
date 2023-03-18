@@ -20,6 +20,7 @@ export class PlanningComponent extends BaseComponent{
     @ViewChild("requestListBox") requestListBox : Listbox | undefined;
     timeFrez:number = 0;
     timeTokerov:number = 0;
+    timeAll:number = 0;
     requests : RequestModel[] = [];
     requestsShared: RequestSharedModel[] = [];
     products: ProductsForPosition[]= [];
@@ -74,6 +75,7 @@ export class PlanningComponent extends BaseComponent{
         {
             this.timeTokerov = this.timeTokerov + x.quantity*x.latheTime;
         }
+        this.timeAll = this.timeFrez+this.timeTokerov;
     })
     if ((this.timeFrez+this.timeTokerov)>172800)
     {
@@ -94,6 +96,7 @@ export class PlanningComponent extends BaseComponent{
 this.products.forEach(x=>{
     this.timeFrez = 0;
     this.timeTokerov = 0;
+    this.timeAll = 0;
     console.log(x.quantity);
     if(x.quantity != null && x.millingTime != null)
     {
@@ -104,6 +107,7 @@ this.products.forEach(x=>{
     {
         this.timeTokerov = this.timeTokerov + x.quantity*x.latheTime;
     }
+    this.timeAll = this.timeFrez + this.timeTokerov;
     if ((this.timeFrez+this.timeTokerov)>86400)
     {
         this.selectedPriorities = {id:2,name:"средний"};
