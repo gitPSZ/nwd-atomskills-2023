@@ -119,6 +119,31 @@ this.products.forEach(x=>{
 
 
     }
+async acceptAutoClick(){
+  
+
+    let requestLocal = this.selectedRequest;
+
+    if (this.selectedRequest.selectedMachines != null) {
+    
+        this.selectedRequest.machines.forEach(x=>
+            {
+                  this.requestService.SaveMachineRequest(x.id,this.selectedRequest.request?.id, this.selectedPriorities.id)
+            })
+            this.toastService.show("Заявки для данной заявки распределены", "", ToastType.success)
+
+            let position = this.requestsShared.findIndex(value => value.request?.id == this.selectedRequest.request?.id);
+            this.requestsShared.splice(position,1);
+    
+            this.selectedRequest = this.requestsShared[0];               
+    }
+    if(requestLocal.request != null){
+        this.requestService.startMonitoringRequest(requestLocal.request);
+
+    }
+}
+
+
     async acceptClick(){
 
 
