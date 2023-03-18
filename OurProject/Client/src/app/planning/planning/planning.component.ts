@@ -153,6 +153,7 @@ this.products.forEach(x=>{
                 this.selectedRequest = this.requestsShared[0];               
 		}
         if(requestLocal.request != null){
+            requestLocal.request.priority = this.selectedPriorities.id
             this.requestService.startMonitoringRequest(requestLocal.request);
 
         }
