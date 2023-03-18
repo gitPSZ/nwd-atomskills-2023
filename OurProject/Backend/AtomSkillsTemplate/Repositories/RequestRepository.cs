@@ -13,7 +13,11 @@ using AtomSkillsTemplate.Connection;
 using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 namespace AtomSkillsTemplate.Repositories
 {
     public class RequestRepository : IRequestRepository
@@ -60,6 +64,12 @@ namespace AtomSkillsTemplate.Repositories
                       id_request = machineRequest.IdRequest
 
                   });
+                //обновляем статус заявки
+                var client = new HttpClient();
+                var result = await client.PostAsync($@"http://localhost:1040/crm/requests/{machineRequest.IdRequest}/set-state/in-production",null);
+                var jsonString = await result.Content.ReadAsStringAsync();
+                var requestPositions = JsonConvert.DeserializeObject<List<int>>(jsonString);
+                //
                 if (machineRequestResult == null)
                 {
                     return default(MachineRequestDto);
