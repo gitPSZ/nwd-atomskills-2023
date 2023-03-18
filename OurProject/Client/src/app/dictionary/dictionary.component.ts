@@ -45,7 +45,7 @@ export class DictionaryComponent  extends BaseComponent implements OnInit{
     this.dialogInfo = {};
     this.dialogInfo = info;
 
-this.visible = true;
+    this.visible = true;
 }
 async startTimer() {
   this.interval = setInterval(async () => {

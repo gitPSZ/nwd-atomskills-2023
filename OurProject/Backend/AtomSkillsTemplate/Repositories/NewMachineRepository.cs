@@ -53,7 +53,8 @@ namespace AtomSkillsTemplate.Repositories
                 var result = await client.PostAsync($@"http://localhost:{machine.Port}/set/repairing", new StringContent(JsonConvert.SerializeObject(new ProductID
                 {
                    
-                }))); 
+                })));
+                await connection.QueryAsync($"update {DBHelper.Schema}.{DBHelper.Machines} set id_state = 4 where id = :machine_id", new {machine_id = machine.Id});
                 var jsonString = await result.Content.ReadAsStringAsync();
                 var requestPositions = JsonConvert.DeserializeObject<List<int>>(jsonString);
                 return machine;
