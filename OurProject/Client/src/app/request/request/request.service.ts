@@ -56,8 +56,8 @@ export class RequestService extends BaseApiService {
     return retValue;
   }
   
-  SaveMachineRequest(idMachine?:string, idRequest?: number): Promise<MachineRequestModel[]> {
-   let b = { IdMachine: idMachine, IdRequest: idRequest }
+  SaveMachineRequest(idMachine?:string, idRequest?: number, idPriority?:number): Promise<MachineRequestModel[]> {
+   let b = { IdMachine: idMachine, IdRequest: idRequest, idPriority }
     var retValue = lastValueFrom(this.http.post<MachineRequestModel[]>(this.APIUrl + '/request/saveMachineRequest',b)
       .pipe(catchError(this.errorService.errorHandlerList)));
     return retValue;

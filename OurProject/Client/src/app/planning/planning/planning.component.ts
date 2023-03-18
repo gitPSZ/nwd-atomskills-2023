@@ -125,7 +125,7 @@ this.products.forEach(x=>{
             {
                 tokarnCount++;
             }
-            if (x.machineTypeCaption == "фрезеровальный станок")
+            if (x.machineTypeCaption == "фрезерный станок")
             {
                 frezCount++;
             }
@@ -141,7 +141,7 @@ this.products.forEach(x=>{
 		
             this.selectedRequest.selectedMachines.forEach(x=>
                 {
-                      this.requestService.SaveMachineRequest(x.id,this.selectedRequest.request?.id)
+                      this.requestService.SaveMachineRequest(x.id,this.selectedRequest.request?.id, this.selectedPriorities.id)
                 })
                 this.toastService.show("Заявки для данной заявки распределены", "", ToastType.success)
 
