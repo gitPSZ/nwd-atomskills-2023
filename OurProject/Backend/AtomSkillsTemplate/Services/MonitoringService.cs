@@ -6,6 +6,7 @@ using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace AtomSkillsTemplate.Services
@@ -84,6 +85,7 @@ namespace AtomSkillsTemplate.Services
             while (true)
             {
 
+                var connection = connectionFactory.GetConnection();
                 try
                 {
                     if (machineWrappers.FirstOrDefault(o=>o.Machine.Id == machine.Id).ShouldStop)
@@ -108,10 +110,97 @@ namespace AtomSkillsTemplate.Services
                         continue;
                     }
 
-                    lock (requestRepository)
+                    if (machine.MachineType == "lathe")
                     {
-                        var orderToProcess = requestRepository.OrderBy(o => o.Priority).FirstOrDefault();
+                        RequestPositionForMonitoring positionToProcess = null;
+                        lock (requestRepository)
+                        {
+                            var orderToProcess = requestRepository.OrderBy(o => o.Priority).FirstOrDefault();
+                             positionToProcess = orderToProcess.RequestPositions.FirstOrDefault(p => p.Quantity != p.QuantityLatheInProgress);
+                                
+                        }
+                        if(positionToProcess != null)
+                        {
+                            Console.WriteLine("Взята в работу позиция " + positionToProcess.Id + " машиной " + machine.Id);
+                            positionToProcess.QuantityLatheInProgress++;
+                            var product = await connection.QueryFirstOrDefaultAsync<Product>($"select * from {DBHelper.Schema}.{DBHelper.Products} where id = :id_product",
+                            new { id_product = positionToProcess.ProductId });
+
+                            var timeToWait = product.LatheTime * 1000;
+#if DEBUG
+                            timeToWait = timeToWait / 10;
+#endif
+                            await Task.Delay((int)(timeToWait));
+                            lock (requestRepository)
+                            {
+                                positionToProcess.QuantityLathe++;
+
+                                //var client = new HttpClient();
+                                //_ = client.GetAsync($"http://localhost:1040/crm/requests/{positionToProcess.RequestId}/items/{positionToProcess.Id}/add-execution-qty/1}");
+
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Нечего производить, ожидаем на машине " + machine.Id); 
+                            await Task.Delay((int)(10000));
+                        }
+                        
                     }
+                    if (machine.MachineType == "milling")
+                    {
+                        RequestPositionForMonitoring positionToProcess = null;
+                        lock (requestRepository)
+                        {
+                            var orderToProcess = requestRepository.OrderBy(o => o.Priority).FirstOrDefault();
+                            positionToProcess = orderToProcess.RequestPositions.FirstOrDefault(p => p.QuantityLathe > p.QuantityMillingInProgress);
+
+                            
+                        }
+                        if (positionToProcess != null)
+                        {
+                            Console.WriteLine("Взята в работу позиция " + positionToProcess.Id + " машиной " + machine.Id);
+                            positionToProcess.QuantityMillingInProgress++;
+
+                            var product = await connection.QueryFirstOrDefaultAsync<Product>($"select * from {DBHelper.Schema}.{DBHelper.Products} where id = :id_product",
+                            new { id_product = positionToProcess.ProductId });
+
+                            var timeToWait = product.MillingTime * 1000;
+#if DEBUG
+                            timeToWait = timeToWait / 10;
+#endif
+                            await Task.Delay((int)(timeToWait));
+                            lock (requestRepository)
+                            {
+                                positionToProcess.QuantityMilling++;
+
+                                Task.Run(async () =>
+                                {
+                                    try
+                                    {
+                                        var client = new HttpClient();
+                                        var result = await client.PutAsync($"http://localhost:1040/crm/requests/{positionToProcess.RequestId}/items/{positionToProcess.Id}/add-execution-qty/1", null);
+                                        Console.WriteLine("Произведена деталь по позиции " + positionToProcess.Id);
+
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Console.WriteLine("Ошибка при обновлении через API");
+                                    }
+
+                                });
+
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Нечего производить, ожидаем на машине " + machine.Id);
+                            await Task.Delay((int)(10000));
+                        }
+
+                    }
+                    connection.Dispose();
+                    
                 }
                 catch (Exception e)
                 {
@@ -157,6 +246,8 @@ namespace AtomSkillsTemplate.Services
         public long QuantityLatheInProgress { get; set; }
         public long QuantityMilling{ get; set; }
         public long QuantityMillingInProgress { get; set; }
+
+        
 
     }
 }

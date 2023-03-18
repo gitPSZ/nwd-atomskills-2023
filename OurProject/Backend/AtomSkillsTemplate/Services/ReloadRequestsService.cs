@@ -151,7 +151,7 @@ namespace AtomSkillsTemplate.Services
             {
                 var sqlStringContractors = $"insert into {DBHelper.Schema}.{DBHelper.Machines}(id, machine_type, port) values(:id, :machine_type, :port) " +
                    $" on conflict(id) do update set machine_type=:machine_type, port=:port";
-                var contractorParams = new { id = latheMachine.Key, machine_type = "milling", port = latheMachine.Value };
+                var contractorParams = new { id = latheMachine.Key, machine_type = "lathe", port = latheMachine.Value };
                 await conn.QueryAsync(sqlStringContractors, contractorParams);
             }
 

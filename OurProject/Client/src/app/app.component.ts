@@ -39,9 +39,10 @@ export class AppComponent extends BaseComponent {
 	cardsRequestAll: RequestModel[] = [];
 	cardsRequestNotified: RequestModel[] = [];
 	notifications: NotificationModel[] = [];
+    showNotifications = false;
 	constructor(public messageService: SimpleMessageService, private requestService : RequestService, 
 		public router: Router, public configService: ConfigService, private statusService: StatusService, private config: PrimeNGConfig,
-		toastService: ToastService, private cookieService: CookieService, private authenticationService: AuthenticationService, private agileInterfaceService : AgileInterfaceService) {
+		private toastService: ToastService, private cookieService: CookieService, private authenticationService: AuthenticationService, private agileInterfaceService : AgileInterfaceService) {
 		super();
         
 		this.config.setTranslation({
@@ -54,6 +55,7 @@ export class AppComponent extends BaseComponent {
 
 		this.setupSubscriptions();
 		//Toolbar and menu visibility
+        setTimeout(()=> this.showNotifications = true, 5000)
 		
 	}
 
@@ -199,6 +201,10 @@ export class AppComponent extends BaseComponent {
                 notificationDate : new Date(),
                 text : "От " + request.contractorName
             })
+            if(this.showNotifications){
+                this.toastService.show("Пришла новая заявка № " + request.id,"От " + request.contractorName);
+                
+            }
         })
 		this.saveMessageCount = this.messageCount;
 		this.isWarning = false;

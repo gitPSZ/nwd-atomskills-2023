@@ -11,6 +11,5 @@
         public static string Products = "\"product\"";
         public static string RequestPositions = "\"request_position\"";
         public static string People = "\"person\"";
-        public static string MachineRequest = "\"machine_request\"";
     }
 }
