@@ -12,6 +12,7 @@ using System.Security.Cryptography;
 using AtomSkillsTemplate.Helpers;
 using AtomSkillsTemplate.Models.ClaimsForTable;
 using AtomSkillsTemplate.NewModels;
+using AtomSkillsTemplate.Services.Interfaces;
 
 namespace AtomSkillsTemplate.Controllers
 {
@@ -21,8 +22,10 @@ namespace AtomSkillsTemplate.Controllers
     public class RequestController : Controller
     {
         private IRequestRepository requestRepository { get; set; }
-        public RequestController(IRequestRepository requestRepository)
+        private IMonitoringService monitoringService { get; set; }
+        public RequestController(IRequestRepository requestRepository, IMonitoringService monitoringService)
         {
+            this.monitoringService = monitoringService;
             this.requestRepository = requestRepository;
         }
 
@@ -62,9 +65,16 @@ namespace AtomSkillsTemplate.Controllers
             {
                 return NotFound();
             }
+
+            await monitoringService.AddRequest(machineRequest.IdRequest);
             return Ok(machineRequest);
         }
-
+        [HttpPost("startMonitoringRequest")]
+        public async Task<ActionResult<bool>> AddMachineRequest(Request request)
+        {
+            await monitoringService.AddRequest(request.Id);
+            return Ok(true);
+        }
 
         [HttpPost("productsForPosition")]
 

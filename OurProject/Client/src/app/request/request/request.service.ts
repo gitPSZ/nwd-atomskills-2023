@@ -28,6 +28,12 @@ export class RequestService extends BaseApiService {
       .pipe(catchError(this.errorService.errorHandlerList)));
     return retValue;
   }
+  startMonitoringRequest(request : RequestModel): Promise<boolean> {
+
+    var retValue = lastValueFrom(this.http.post<boolean>(this.APIUrl + '/startMonitoringRequest', request)
+      .pipe(catchError(this.errorService.errorHandlerBoolean)));
+    return retValue;
+  }
   getCountRequest(): Promise<number> {
 
     var retValue = lastValueFrom(this.http.get<number>(this.APIUrl + '/request/countRequest')

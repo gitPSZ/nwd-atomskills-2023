@@ -69,8 +69,10 @@ export class PlanningComponent extends BaseComponent{
 
     }
     async acceptClick(){
-let frezCount = 0;
-let tokarnCount = 0;
+
+
+        let frezCount = 0;
+        let tokarnCount = 0;
         this.selectedRequest.selectedMachines.forEach(x=>{
             if (x.machineTypeCaption == "токарный станок")
             {
@@ -84,7 +86,7 @@ let tokarnCount = 0;
         console.log(frezCount, tokarnCount);
         if (frezCount<1||tokarnCount<1)
         {
-            this.toastService.show("Должен быть назначен хотя бы один токарный или фрезерный станок", "", ToastType.warn);
+            this.toastService.show("Должен быть назначен хотя бы один токарный и фрезерный станок", "", ToastType.warn);
             return;
         }
 
@@ -94,8 +96,19 @@ let tokarnCount = 0;
                 {
                       this.requestService.SaveMachineRequest(x.id,this.selectedRequest.request?.id)
                 })
-                this.toastService.show("Заявки распределены", "", ToastType.success)
+                this.toastService.show("Заявки для данной заявки распределены", "", ToastType.success)
+
+
+                let position = this.requestsShared.findIndex(value => value.request?.id == this.selectedRequest.request?.id);
+                this.requestsShared.splice(position,1);
+        
+                this.selectedRequest = this.requestsShared[0];
+                
 		}
+        if(this.selectedRequest.request != null){
+            this.requestService.startMonitoringRequest(this.selectedRequest.request);
+
+        }
 
 
 

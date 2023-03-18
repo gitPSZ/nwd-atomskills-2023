@@ -120,12 +120,25 @@ namespace AtomSkillsTemplate.Services
             var client = new HttpClient();
             foreach(var port in ports)
             {
-                var result = await client.GetAsync($"http://localhost:{port}/status");
-                var jsonString = await result.Content.ReadAsStringAsync();
-                var status = JsonConvert.DeserializeObject<MachineStatus>(jsonString);
+                try
+                {
+                    var result = await client.GetAsync($"http://localhost:{port}/status");
+                    var jsonString = await result.Content.ReadAsStringAsync();
+                    var status = JsonConvert.DeserializeObject<MachineStatus>(jsonString);
 
-                await conn.QueryAsync($"update {DBHelper.Schema}.{DBHelper.Machines} set id_state= :idStatus where port = :port",
-                    new { idStatus = states.FirstOrDefault(o => o.Code == status.State.Code.ToLower()).Id, port = port }); ;
+                    if(status.State != null)
+                    {
+                        await conn.QueryAsync($"update {DBHelper.Schema}.{DBHelper.Machines} set id_state= :idStatus where port = :port",
+                        new { idStatus = states.FirstOrDefault(o => o.Code == status.State.Code.ToLower()).Id, port = port }); ;
+                    }
+
+                    
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("StatusError: " + e.ToString());
+                }
             }
         }
         private async Task LoadMachines()
@@ -151,7 +164,7 @@ namespace AtomSkillsTemplate.Services
             {
                 var sqlStringContractors = $"insert into {DBHelper.Schema}.{DBHelper.Machines}(id, machine_type, port) values(:id, :machine_type, :port) " +
                    $" on conflict(id) do update set machine_type=:machine_type, port=:port";
-                var contractorParams = new { id = latheMachine.Key, machine_type = "milling", port = latheMachine.Value };
+                var contractorParams = new { id = latheMachine.Key, machine_type = "lathe", port = latheMachine.Value };
                 await conn.QueryAsync(sqlStringContractors, contractorParams);
             }
 
