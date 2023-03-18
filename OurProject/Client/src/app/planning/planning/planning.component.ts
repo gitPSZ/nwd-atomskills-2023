@@ -27,7 +27,7 @@ export class PlanningComponent extends BaseComponent{
     machine: MachineModel[] = [];
     priorities:PrioritiesModel[]=[{id:3,name:"низкий"}, {id:2,name:"средний"},{id:1, name:"высокий"}];
     selectedPriorities: PrioritiesModel = {id:2, name:"средний"};
-    selectedRequest: RequestSharedModel = {
+    selectedRequest?: RequestSharedModel = {
         machines: [],
         selectedMachines: []
     };
@@ -91,7 +91,7 @@ export class PlanningComponent extends BaseComponent{
     }
     async onChangeRequest(event: any) {
 
-        this.products = await this.requestService.getProductsForPosition(this.selectedRequest.request);
+        this.products = await this.requestService.getProductsForPosition(this.selectedRequest?.request);
       
 this.products.forEach(x=>{
     this.timeFrez = 0;
@@ -124,20 +124,28 @@ async acceptAutoClick(){
 
     let requestLocal = this.selectedRequest;
 
-    if (this.selectedRequest.selectedMachines != null) {
+    if (this.selectedRequest?.selectedMachines != null) {
     
         this.selectedRequest.machines.forEach(x=>
             {
-                  this.requestService.SaveMachineRequest(x.id,this.selectedRequest.request?.id, this.selectedPriorities.id)
+                  this.requestService.SaveMachineRequest(x.id,this.selectedRequest?.request?.id, this.selectedPriorities.id)
             })
             this.toastService.show("Заявки для данной заявки распределены", "", ToastType.success)
 
-            let position = this.requestsShared.findIndex(value => value.request?.id == this.selectedRequest.request?.id);
+            let position = this.requestsShared.findIndex(value => value.request?.id == this.selectedRequest?.request?.id);
+            if (this.requestsShared.length==1)
+            {
+                this.requestsShared=[];
+                return;
+            }    
+            
             this.requestsShared.splice(position,1);
+           
     
-            this.selectedRequest = this.requestsShared[0];               
+            this.selectedRequest = this.requestsShared[0];      
+                 
     }
-    if(requestLocal.request != null){
+    if(requestLocal?.request != null){
         this.requestService.startMonitoringRequest(requestLocal.request);
 
     }
@@ -152,12 +160,17 @@ async acceptAutoClick(){
 
 
     async acceptClick(){
+if (this.selectedRequest?.request!=null)
+{
 
+return;
+
+}
 
         let requestLocal = this.selectedRequest;
         let frezCount = 0;
         let tokarnCount = 0;
-        this.selectedRequest.selectedMachines.forEach(x=>{
+        this.selectedRequest?.selectedMachines.forEach(x=>{
             if (x.machineTypeCaption == "токарный станок")
             {
                 tokarnCount++;
@@ -174,23 +187,28 @@ async acceptAutoClick(){
             return;
         }
 
-		if (this.selectedRequest.selectedMachines != null) {
+		if (this.selectedRequest?.selectedMachines != null) {
 		
             this.selectedRequest.selectedMachines.forEach(x=>
                 {
-                      this.requestService.SaveMachineRequest(x.id,this.selectedRequest.request?.id, this.selectedPriorities.id)
+                      this.requestService.SaveMachineRequest(x.id,this.selectedRequest?.request?.id, this.selectedPriorities.id)
                 })
                 this.toastService.show("Заявки для данной заявки распределены", "", ToastType.success)
 
-
-                let position = this.requestsShared.findIndex(value => value.request?.id == this.selectedRequest.request?.id);
+                if (this.requestsShared.length==1)
+                {
+                    this.requestsShared=[];
+                    return;
+                } 
+                let position = this.requestsShared.findIndex(value => value.request?.id == this.selectedRequest?.request?.id);
                 this.requestsShared.splice(position,1);
         
-                this.selectedRequest = this.requestsShared[0];               
+                this.selectedRequest = this.requestsShared[0];    
+                          
 		}
-        if(requestLocal.request != null){
+        if(requestLocal?.request != null){
             requestLocal.request.priority = this.selectedPriorities.id
-            this.requestService.startMonitoringRequest(requestLocal.request);
+            this.requestService.startMonitoringRequest(requestLocal?.request);
 
         }
 
