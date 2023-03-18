@@ -2,8 +2,9 @@ import { Timestamp } from "rxjs";
 
 export interface NotificationModel
 {
-Id?:number;
-Text?:string;
-Header?:string;
-IsRead?:boolean;
+    id?:number;
+    text?:string;
+    header?:string;
+    isRead?:boolean;
+    notificationDate? : Date;
 }
