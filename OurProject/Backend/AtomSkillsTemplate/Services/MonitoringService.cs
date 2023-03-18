@@ -119,6 +119,10 @@ namespace AtomSkillsTemplate.Services
                 machineWrappers.Add(wrapper);
             }
         }
+        public long GetRequestIDThatMachineWorksOn(string machineID)
+        {
+            return machineWrappers.FirstOrDefault(p => p.Machine.Id == machineID).RequestID;
+        }
         public async Task ProcessEquipment(Machine machine)
         {
             Console.WriteLine("Начался опрос оборудования с ID = " + machine.Id);
