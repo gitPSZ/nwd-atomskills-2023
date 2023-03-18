@@ -6,7 +6,7 @@ import { RequestSharedModel } from 'src/app/newModels/RequestSharedModel';
 import { RequestModel } from 'src/app/newModels/RequestModel';
 import { MachineRequestModel } from 'src/app/newModels/MachineRequestModel';
 import { RequestService } from 'src/app/request/request/request.service';
-import { dictionaryService } from '../../dictionary/dictionary.service';
+import { DictionaryService } from '../../dictionary/dictionary.service';
 import { Listbox } from 'primeng/listbox';
 import { ToastService, ToastType } from 'src/app/services/ToastService/toast.service';
 
@@ -33,7 +33,7 @@ export class PlanningComponent extends BaseComponent{
     selectedProduct: ProductsForPosition = {};
     
     filterValue : string = '';
-    constructor(private requestService : RequestService, private dictionaryService : dictionaryService, private toastService : ToastService){
+    constructor(private requestService : RequestService, private dictionaryService : DictionaryService, private toastService : ToastService){
         super();
     }
     async ngOnInit(){

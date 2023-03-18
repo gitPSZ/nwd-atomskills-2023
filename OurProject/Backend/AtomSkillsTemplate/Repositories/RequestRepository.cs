@@ -51,7 +51,7 @@ namespace AtomSkillsTemplate.Repositories
 
             }
         }
-
+        
         public async Task<MachineRequestDto> SaveMachineRequest(MachineRequestDto machineRequest)
         {
             using (var connection = connectionFactory.GetConnection())

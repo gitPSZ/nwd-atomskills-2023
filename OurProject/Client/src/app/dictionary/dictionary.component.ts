@@ -13,7 +13,7 @@ import { ToastService } from '../services/ToastService/toast.service';
 import * as FileSaver from 'file-saver';
 import { timer } from 'rxjs';
 import { RequestModel } from '../models/RequestModel';
-import { dictionaryService } from './dictionary.service';
+import { DictionaryService } from './dictionary.service';
 
 @Component({
   selector: 'app-dictionary',
@@ -26,7 +26,7 @@ export class DictionaryComponent  extends BaseComponent implements OnInit{
   globalText = '';
   customers: MachineModel[] = [];
   @ViewChild("dt") dataGrid : Table | undefined;
-  constructor(private primengConfig: PrimeNGConfig,private dictionaryService : dictionaryService,  private http: HttpClient, private simplemesService: SimpleMessageService, private requestService : RequestService, private toastService: ToastService,) {
+  constructor(private primengConfig: PrimeNGConfig,private dictionaryService : DictionaryService,  private http: HttpClient, private simplemesService: SimpleMessageService, private requestService : RequestService, private toastService: ToastService,) {
     super();
   }
   async ngOnInit() {

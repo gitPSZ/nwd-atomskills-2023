@@ -9,6 +9,7 @@ using AtomSkillsTemplate.Connection.Interface;
 using AtomSkillsTemplate.Helpers;
 using AtomSkillsTemplate.Models;
 using AtomSkillsTemplate.Models.DTOs;
+using AtomSkillsTemplate.NewModels;
 using AtomSkillsTemplate.Repositories.Contracts;
 
 using Dapper;
