@@ -141,6 +141,13 @@ async acceptAutoClick(){
         this.requestService.startMonitoringRequest(requestLocal.request);
 
     }
+
+    this.machine = await this.dictionaryService.getDictionary().finally(()=>{
+        
+    });
+    this.requestsShared.forEach(x=>{
+        x.machines =this.machine;
+    })
 }
 
 
@@ -186,6 +193,13 @@ async acceptAutoClick(){
             this.requestService.startMonitoringRequest(requestLocal.request);
 
         }
+
+        this.machine = await this.dictionaryService.getDictionary().finally(()=>{
+        
+        });
+        this.requestsShared.forEach(x=>{
+            x.machines =this.machine;
+        })
     }
 }
 export interface PrioritiesModel
