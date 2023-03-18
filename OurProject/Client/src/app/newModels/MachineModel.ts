@@ -2,10 +2,11 @@ import { Timestamp } from "rxjs";
 
 export interface MachineModel
 {
-Id?:number;
-MachineType?:string;
-Port?:number;
-IsActive?:string;
-IdState?:number;
-State?:string;
+    id?:number;
+    machineType?:string;
+    machineTypeCaption?:string;
+    port?:number;
+    isDeleted?:string;
+    idState?:number;
+    state?:string;
 }
